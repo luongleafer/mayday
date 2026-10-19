@@ -38,3 +38,4 @@ out/
 
 ### Database config ###
 src/main/resources/database.properties
+docker-compose.yml
