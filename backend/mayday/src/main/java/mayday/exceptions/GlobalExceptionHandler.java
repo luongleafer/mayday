@@ -3,6 +3,8 @@ package mayday.exceptions;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import mayday.dtos.ApiResponse;
+import mayday.utils.PersistenceUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,5 +33,15 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse<Object>> handleMalformedRequest(Exception exception) {
         return ResponseEntity.badRequest()
                 .body(new ApiResponse<>("2003", "Invalid parameter value", Map.of()));
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<ApiResponse<Object>> handleDataIntegrity(DataIntegrityViolationException exception) {
+        if (PersistenceUtils.isUniqueConstraintViolation(exception)) {
+            return ResponseEntity.status(409)
+                    .body(new ApiResponse<>("2004", "Data already exists", Map.of()));
+        }
+        return ResponseEntity.badRequest()
+                .body(new ApiResponse<>("2003", "Data violates a database constraint", Map.of()));
     }
 }

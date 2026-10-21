@@ -7,9 +7,9 @@ import mayday.dtos.requests.UpdateBranchRequest;
 import mayday.dtos.responses.BranchResponse;
 import mayday.entities.ChiNhanh;
 import mayday.exceptions.ConflictException;
-import mayday.exceptions.InvalidRequestException;
 import mayday.exceptions.NotFoundException;
 import mayday.repositories.ChiNhanhRepository;
+import mayday.utils.TextUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +25,13 @@ public class ChiNhanhService {
 
     @Transactional
     public BranchResponse create(CreateBranchRequest request) {
-        ChiNhanh branch = new ChiNhanh(required(request.name(), "name"),
-                required(request.address(), "address"), trimToNull(request.phone()));
-        return toResponse(repository.save(branch));
+        ChiNhanh branch = new ChiNhanh(TextUtils.requireNonBlank(request.name(), "name"),
+                TextUtils.requireNonBlank(request.address(), "address"), TextUtils.trimToNull(request.phone()));
+        return toResponse(repository.saveAndFlush(branch));
     }
 
     public List<BranchResponse> findAll() {
-        return repository.findAll().stream().map(this::toResponse).toList();
+        return repository.findAllByOrderByIdAsc().stream().map(this::toResponse).toList();
     }
 
     public BranchResponse findById(Long id) {
@@ -41,11 +41,11 @@ public class ChiNhanhService {
     @Transactional
     public BranchResponse update(Long id, UpdateBranchRequest request) {
         ChiNhanh branch = get(id);
-        if (request.name() != null) branch.setName(required(request.name(), "name"));
-        if (request.address() != null) branch.setAddress(required(request.address(), "address"));
-        if (request.phone() != null) branch.setPhone(trimToNull(request.phone()));
+        if (request.name() != null) branch.setName(TextUtils.requireNonBlank(request.name(), "name"));
+        if (request.address() != null) branch.setAddress(TextUtils.requireNonBlank(request.address(), "address"));
+        if (request.phone() != null) branch.setPhone(TextUtils.trimToNull(request.phone()));
         if (request.active() != null) branch.setActive(request.active());
-        return toResponse(repository.save(branch));
+        return toResponse(repository.saveAndFlush(branch));
     }
 
     @Transactional
@@ -67,17 +67,5 @@ public class ChiNhanhService {
     private BranchResponse toResponse(ChiNhanh branch) {
         return new BranchResponse(branch.getId(), branch.getName(), branch.getAddress(),
                 branch.getPhone(), branch.isActive());
-    }
-
-    static String required(String value, String field) {
-        String result = trimToNull(value);
-        if (result == null) throw new InvalidRequestException(field + " must not be blank");
-        return result;
-    }
-
-    static String trimToNull(String value) {
-        if (value == null) return null;
-        String trimmed = value.trim();
-        return trimmed.isEmpty() ? null : trimmed;
     }
 }

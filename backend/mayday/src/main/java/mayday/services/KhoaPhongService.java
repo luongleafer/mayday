@@ -8,9 +8,12 @@ import mayday.dtos.responses.DepartmentResponse;
 import mayday.entities.ChiNhanh;
 import mayday.entities.KhoaPhong;
 import mayday.exceptions.ConflictException;
+import mayday.exceptions.InvalidRequestException;
 import mayday.exceptions.NotFoundException;
 import mayday.repositories.ChiNhanhRepository;
 import mayday.repositories.KhoaPhongRepository;
+import mayday.utils.PersistenceUtils;
+import mayday.utils.TextUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,19 +32,19 @@ public class KhoaPhongService {
     @Transactional
     public DepartmentResponse create(CreateDepartmentRequest request) {
         ChiNhanh branch = getBranch(request.branchId());
-        String name = ChiNhanhService.required(request.name(), "name");
+        String name = TextUtils.requireNonBlank(request.name(), "name");
         if (repository.existsByBranchIdAndNameIgnoreCase(branch.getId(), name)) {
             throw ConflictException.duplicate("Department name already exists in this branch");
         }
-        KhoaPhong department = new KhoaPhong(name, ChiNhanhService.required(request.type(), "type"),
-                ChiNhanhService.trimToNull(request.description()), branch);
-        return toResponse(repository.save(department));
+        KhoaPhong department = new KhoaPhong(name, TextUtils.requireNonBlank(request.type(), "type"),
+                TextUtils.trimToNull(request.description()), branch);
+        return toResponse(save(department));
     }
 
     public List<DepartmentResponse> findAll(Long branchId) {
         List<KhoaPhong> departments;
         if (branchId == null) {
-            departments = repository.findAll();
+            departments = repository.findAllByOrderByIdAsc();
         } else {
             getBranch(branchId);
             departments = repository.findAllByBranchIdOrderByIdAsc(branchId);
@@ -58,15 +61,15 @@ public class KhoaPhongService {
         KhoaPhong department = get(id);
         ChiNhanh branch = request.branchId() == null ? department.getBranch() : getBranch(request.branchId());
         String name = request.name() == null ? department.getName()
-                : ChiNhanhService.required(request.name(), "name");
+                : TextUtils.requireNonBlank(request.name(), "name");
         if (repository.existsByBranchIdAndNameIgnoreCaseAndIdNot(branch.getId(), name, id)) {
             throw ConflictException.duplicate("Department name already exists in this branch");
         }
         department.setName(name);
         department.setBranch(branch);
-        if (request.type() != null) department.setType(ChiNhanhService.required(request.type(), "type"));
-        if (request.description() != null) department.setDescription(ChiNhanhService.trimToNull(request.description()));
-        return toResponse(repository.save(department));
+        if (request.type() != null) department.setType(TextUtils.requireNonBlank(request.type(), "type"));
+        if (request.description() != null) department.setDescription(TextUtils.trimToNull(request.description()));
+        return toResponse(save(department));
     }
 
     @Transactional
@@ -87,6 +90,17 @@ public class KhoaPhongService {
 
     private ChiNhanh getBranch(Long id) {
         return branchRepository.findById(id).orElseThrow(() -> new NotFoundException("Branch", id));
+    }
+
+    private KhoaPhong save(KhoaPhong department) {
+        try {
+            return repository.saveAndFlush(department);
+        } catch (DataIntegrityViolationException exception) {
+            if (PersistenceUtils.isUniqueConstraintViolation(exception)) {
+                throw ConflictException.duplicate("Department name already exists in this branch");
+            }
+            throw new InvalidRequestException("Department data violates a database constraint");
+        }
     }
 
     private DepartmentResponse toResponse(KhoaPhong department) {
