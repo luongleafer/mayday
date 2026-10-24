@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import mayday.dtos.ApiResponse;
-import mayday.dtos.requests.CreateRoomRequest;
-import mayday.dtos.requests.UpdateRoomRequest;
+import mayday.dtos.requests.SetRoomRequest;
+import mayday.dtos.requests.EditRoomRequest;
 import mayday.dtos.responses.RoomResponse;
 import mayday.services.PhongKhamService;
 import org.springframework.http.HttpStatus;
@@ -30,29 +30,29 @@ public class PhongKhamController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<RoomResponse>> create(@Valid @RequestBody CreateRoomRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(service.create(request)));
+    public ResponseEntity<ApiResponse<RoomResponse>> setRoom(@Valid @RequestBody SetRoomRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(service.setRoom(request)));
     }
 
     @GetMapping
-    public ApiResponse<List<RoomResponse>> findAll(
+    public ApiResponse<List<RoomResponse>> getListRoom(
             @RequestParam(name = "department_id", required = false) Long departmentId) {
-        return ApiResponse.ok(service.findAll(departmentId));
+        return ApiResponse.ok(service.getListRoom(departmentId));
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<RoomResponse> findById(@PathVariable Long id) {
-        return ApiResponse.ok(service.findById(id));
+    public ApiResponse<RoomResponse> getRoomDetail(@PathVariable Long id) {
+        return ApiResponse.ok(service.getRoomDetail(id));
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<RoomResponse> update(@PathVariable Long id,
-                                              @Valid @RequestBody UpdateRoomRequest request) {
-        return ApiResponse.ok(service.update(id, request));
+    public ApiResponse<RoomResponse> editRoom(@PathVariable Long id,
+                                              @Valid @RequestBody EditRoomRequest request) {
+        return ApiResponse.ok(service.editRoom(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Map<String, Object>> delete(@PathVariable Long id) {
-        return ApiResponse.ok(service.delete(id));
+    public ApiResponse<Map<String, Object>> deleteRoom(@PathVariable Long id) {
+        return ApiResponse.ok(service.deleteRoom(id));
     }
 }

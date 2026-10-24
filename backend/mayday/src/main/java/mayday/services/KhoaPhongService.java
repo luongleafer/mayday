@@ -2,8 +2,8 @@ package mayday.services;
 
 import java.util.List;
 import java.util.Map;
-import mayday.dtos.requests.CreateDepartmentRequest;
-import mayday.dtos.requests.UpdateDepartmentRequest;
+import mayday.dtos.requests.SetDepartmentRequest;
+import mayday.dtos.requests.EditDepartmentRequest;
 import mayday.dtos.responses.DepartmentResponse;
 import mayday.entities.ChiNhanh;
 import mayday.entities.KhoaPhong;
@@ -30,7 +30,7 @@ public class KhoaPhongService {
     }
 
     @Transactional
-    public DepartmentResponse create(CreateDepartmentRequest request) {
+    public DepartmentResponse setDepartment(SetDepartmentRequest request) {
         ChiNhanh branch = getBranch(request.branchId());
         String name = TextUtils.requireNonBlank(request.name(), "name");
         if (repository.existsByBranchIdAndNameIgnoreCase(branch.getId(), name)) {
@@ -41,7 +41,7 @@ public class KhoaPhongService {
         return toResponse(save(department));
     }
 
-    public List<DepartmentResponse> findAll(Long branchId) {
+    public List<DepartmentResponse> getListDepartment(Long branchId) {
         List<KhoaPhong> departments;
         if (branchId == null) {
             departments = repository.findAllByOrderByIdAsc();
@@ -52,12 +52,12 @@ public class KhoaPhongService {
         return departments.stream().map(this::toResponse).toList();
     }
 
-    public DepartmentResponse findById(Long id) {
+    public DepartmentResponse getDepartmentDetail(Long id) {
         return toResponse(get(id));
     }
 
     @Transactional
-    public DepartmentResponse update(Long id, UpdateDepartmentRequest request) {
+    public DepartmentResponse editDepartment(Long id, EditDepartmentRequest request) {
         KhoaPhong department = get(id);
         ChiNhanh branch = request.branchId() == null ? department.getBranch() : getBranch(request.branchId());
         String name = request.name() == null ? department.getName()
@@ -73,7 +73,7 @@ public class KhoaPhongService {
     }
 
     @Transactional
-    public Map<String, Object> delete(Long id) {
+    public Map<String, Object> deleteDepartment(Long id) {
         KhoaPhong department = get(id);
         try {
             repository.delete(department);

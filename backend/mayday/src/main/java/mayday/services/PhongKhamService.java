@@ -2,8 +2,8 @@ package mayday.services;
 
 import java.util.List;
 import java.util.Map;
-import mayday.dtos.requests.CreateRoomRequest;
-import mayday.dtos.requests.UpdateRoomRequest;
+import mayday.dtos.requests.SetRoomRequest;
+import mayday.dtos.requests.EditRoomRequest;
 import mayday.dtos.responses.RoomResponse;
 import mayday.entities.KhoaPhong;
 import mayday.entities.PhongKham;
@@ -30,7 +30,7 @@ public class PhongKhamService {
     }
 
     @Transactional
-    public RoomResponse create(CreateRoomRequest request) {
+    public RoomResponse setRoom(SetRoomRequest request) {
         KhoaPhong department = getDepartment(request.departmentId());
         String name = TextUtils.requireNonBlank(request.name(), "name");
         if (repository.existsByDepartmentIdAndNameIgnoreCase(department.getId(), name)) {
@@ -39,7 +39,7 @@ public class PhongKhamService {
         return toResponse(save(new PhongKham(name, department)));
     }
 
-    public List<RoomResponse> findAll(Long departmentId) {
+    public List<RoomResponse> getListRoom(Long departmentId) {
         List<PhongKham> rooms;
         if (departmentId == null) {
             rooms = repository.findAllByOrderByIdAsc();
@@ -50,12 +50,12 @@ public class PhongKhamService {
         return rooms.stream().map(this::toResponse).toList();
     }
 
-    public RoomResponse findById(Long id) {
+    public RoomResponse getRoomDetail(Long id) {
         return toResponse(get(id));
     }
 
     @Transactional
-    public RoomResponse update(Long id, UpdateRoomRequest request) {
+    public RoomResponse editRoom(Long id, EditRoomRequest request) {
         PhongKham room = get(id);
         KhoaPhong department = request.departmentId() == null ? room.getDepartment()
                 : getDepartment(request.departmentId());
@@ -70,7 +70,7 @@ public class PhongKhamService {
     }
 
     @Transactional
-    public Map<String, Object> delete(Long id) {
+    public Map<String, Object> deleteRoom(Long id) {
         PhongKham room = get(id);
         try {
             repository.delete(room);

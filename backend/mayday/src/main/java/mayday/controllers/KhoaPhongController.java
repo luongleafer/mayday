@@ -4,8 +4,8 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import mayday.dtos.ApiResponse;
-import mayday.dtos.requests.CreateDepartmentRequest;
-import mayday.dtos.requests.UpdateDepartmentRequest;
+import mayday.dtos.requests.SetDepartmentRequest;
+import mayday.dtos.requests.EditDepartmentRequest;
 import mayday.dtos.responses.DepartmentResponse;
 import mayday.services.KhoaPhongService;
 import org.springframework.http.HttpStatus;
@@ -30,30 +30,30 @@ public class KhoaPhongController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<DepartmentResponse>> create(
-            @Valid @RequestBody CreateDepartmentRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(service.create(request)));
+    public ResponseEntity<ApiResponse<DepartmentResponse>> setDepartment(
+            @Valid @RequestBody SetDepartmentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(service.setDepartment(request)));
     }
 
     @GetMapping
-    public ApiResponse<List<DepartmentResponse>> findAll(
+    public ApiResponse<List<DepartmentResponse>> getListDepartment(
             @RequestParam(name = "branch_id", required = false) Long branchId) {
-        return ApiResponse.ok(service.findAll(branchId));
+        return ApiResponse.ok(service.getListDepartment(branchId));
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<DepartmentResponse> findById(@PathVariable Long id) {
-        return ApiResponse.ok(service.findById(id));
+    public ApiResponse<DepartmentResponse> getDepartmentDetail(@PathVariable Long id) {
+        return ApiResponse.ok(service.getDepartmentDetail(id));
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<DepartmentResponse> update(@PathVariable Long id,
-                                                    @Valid @RequestBody UpdateDepartmentRequest request) {
-        return ApiResponse.ok(service.update(id, request));
+    public ApiResponse<DepartmentResponse> editDepartment(@PathVariable Long id,
+                                                    @Valid @RequestBody EditDepartmentRequest request) {
+        return ApiResponse.ok(service.editDepartment(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Map<String, Object>> delete(@PathVariable Long id) {
-        return ApiResponse.ok(service.delete(id));
+    public ApiResponse<Map<String, Object>> deleteDepartment(@PathVariable Long id) {
+        return ApiResponse.ok(service.deleteDepartment(id));
     }
 }
