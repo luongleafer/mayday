@@ -1,14 +1,13 @@
 package mayday.controllers;
 
 import lombok.RequiredArgsConstructor;
+import mayday.dto.CreatePatientRequestDto;
+import mayday.dto.CreatePatientResponseDto;
 import mayday.dto.PatientSearchResponseDto;
 import mayday.entities.Gender;
 import mayday.services.BenhnhanService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/doctor/patients")
@@ -29,6 +28,12 @@ public class BenhnhanController {
         PatientSearchResponseDto response = benhnhanService.searchPatients(
                 keyword, gender, minYear, maxYear, page, limit
         );
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping({"", "/"})
+    public ResponseEntity<CreatePatientResponseDto> createPatient(@RequestBody CreatePatientRequestDto req) {
+        CreatePatientResponseDto response = benhnhanService.createPatient(req);
         return ResponseEntity.ok(response);
     }
 }
