@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mayday.entities.Gender;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +25,7 @@ public class PatientItemDto {
     private String phone;
 
     @JsonProperty("gender")
-    private String gender;
+    private Gender gender;
 
     @JsonProperty("year_of_birth")
     private Integer yearOfBirth;

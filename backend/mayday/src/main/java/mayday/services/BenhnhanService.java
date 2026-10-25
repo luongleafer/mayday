@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mayday.dto.PatientItemDto;
 import mayday.dto.PatientSearchResponseDto;
 import mayday.entities.Benhnhan;
+import mayday.entities.Gender;
 import mayday.entities.Nguoi;
 import mayday.repositories.BenhnhanRepository;
 import org.springframework.data.domain.Page;
@@ -23,7 +24,7 @@ public class BenhnhanService {
     @Transactional(readOnly = true)
     public PatientSearchResponseDto searchPatients(
             String keyword,
-            String gender,
+            Gender gender,
             Integer minYear,
             Integer maxYear,
             int page,
@@ -35,15 +36,13 @@ public class BenhnhanService {
             minYear = maxYear;
         }
         String searchKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
-        String searchGender = (gender != null && !gender.trim().isEmpty()) ? gender.trim() : null;
-
         int pageIndex = Math.max(0, page - 1);
         int pageSize = limit > 0 ? limit : 20;
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
         Page<Benhnhan> benhnhanPage = benhnhanRepository.timKiemBenhNhan(
                 searchKeyword,
-                searchGender,
+                gender,
                 minYear,
                 maxYear,
                 pageable

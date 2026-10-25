@@ -28,8 +28,9 @@ public class Nguoi {
     @Column(name = "ngay_sinh")
     private LocalDate ngaySinh;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "gioi_tinh", length = 3)
-    private String gioiTinh;
+    private Gender gioiTinh;
 
     @Column(name = "so_dien_thoai", nullable = false, length = 10)
     private String soDienThoai;

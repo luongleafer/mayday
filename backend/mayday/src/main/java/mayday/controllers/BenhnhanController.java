@@ -2,6 +2,7 @@ package mayday.controllers;
 
 import lombok.RequiredArgsConstructor;
 import mayday.dto.PatientSearchResponseDto;
+import mayday.entities.Gender;
 import mayday.services.BenhnhanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,7 @@ public class BenhnhanController {
     @GetMapping({"", "/"})
     public ResponseEntity<PatientSearchResponseDto> searchPatients(
             @RequestParam(name = "keyword", required = false) String keyword,
-            @RequestParam(name = "gender", required = false) String gender,
+            @RequestParam(name = "gender", required = false) Gender gender,
             @RequestParam(name = "min_year", required = false) Integer minYear,
             @RequestParam(name = "max_year", required = false) Integer maxYear,
             @RequestParam(name = "page", defaultValue = "1") int page,
