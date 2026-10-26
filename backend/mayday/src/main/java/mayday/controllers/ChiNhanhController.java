@@ -1,9 +1,9 @@
 package mayday.controllers;
 
-import mayday.dto.requests.SetBranchRequest;
-import mayday.dto.requests.EditBranchRequest;
-import mayday.dto.responses.ApiResponse;
-import mayday.dto.responses.BranchResponse;
+import mayday.dtos.requests.SetBranchRequest;
+import mayday.dtos.requests.EditBranchRequest;
+import mayday.dtos.responses.ApiResponse;
+import mayday.dtos.responses.BranchResponse;
 import mayday.services.ChiNhanhService;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;

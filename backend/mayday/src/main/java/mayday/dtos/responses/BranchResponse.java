@@ -1,4 +1,4 @@
-package mayday.dto.responses;
+package mayday.dtos.responses;
 
 public class BranchResponse {
     private Long id;

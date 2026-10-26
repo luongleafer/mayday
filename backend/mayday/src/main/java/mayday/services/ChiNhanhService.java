@@ -1,8 +1,8 @@
 package mayday.services;
 
-import mayday.dto.requests.SetBranchRequest;
-import mayday.dto.requests.EditBranchRequest;
-import mayday.dto.responses.BranchResponse;
+import mayday.dtos.requests.SetBranchRequest;
+import mayday.dtos.requests.EditBranchRequest;
+import mayday.dtos.responses.BranchResponse;
 import mayday.entities.ChiNhanh;
 import mayday.repositories.ChiNhanhRepository;
 import org.springframework.stereotype.Service;
@@ -74,7 +74,7 @@ public class ChiNhanhService {
     @Transactional
     public BranchResponse editBranch(Long id, EditBranchRequest req) {
         ChiNhanh entity = chiNhanhRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tồn tại chi nhánh với id: " + id));
+                .orElseThrow(() -> new IllegalArgumentException("Chi nhánh với id " + id + " không tồn tại"));
 
         if (req.getName() != null && !req.getName().trim().isEmpty()) {
             entity.setTenChiNhanh(req.getName().trim());

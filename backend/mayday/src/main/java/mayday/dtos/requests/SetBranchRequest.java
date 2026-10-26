@@ -1,11 +1,11 @@
-package mayday.dto.requests;
+package mayday.dtos.requests;
 
-public class EditBranchRequest {
+public class SetBranchRequest {
     private String name;
     private String address;
     private String phone;
 
-    public EditBranchRequest() {
+    public SetBranchRequest() {
     }
 
     public String getName() {
