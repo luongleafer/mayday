@@ -1,10 +1,7 @@
 package mayday.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +13,7 @@ import java.time.OffsetDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Hosobenhan {
 
     @Id
@@ -29,6 +27,13 @@ public class Hosobenhan {
 
     @Column(name = "loai_benh_an", nullable = false)
     private String loaiBenhAn; // 'CAP' hoặc 'MAN'
+
+    // Cột GENERATED ALWAYS STORED trong Postgres -> Cấm JPA insert/update
+    @Column(name = "ma_subtype_cap", insertable = false, updatable = false)
+    private Long maSubtypeCap;
+
+    @Column(name = "ma_subtype_man", insertable = false, updatable = false)
+    private Long maSubtypeMan;
 
     @Column(name = "thoi_diem_kham_lan_dau")
     private OffsetDateTime thoiDiemKhamLanDau;
@@ -51,6 +56,7 @@ public class Hosobenhan {
     @Column(name = "thoi_gian_khoi_phat_tuan", precision = 12, scale = 2)
     private BigDecimal thoiGianKhoiPhatTuan;
 
+    @Builder.Default
     @Column(name = "trang_thai", nullable = false)
     private String trangThai = "draft"; // draft, pending, in_progress, completed, cancelled
 
@@ -62,4 +68,11 @@ public class Hosobenhan {
 
     @Column(name = "da_dieu_tri_truoc_kham")
     private Boolean daDieuTriTruocKham;
+
+    // Quan hệ 1-1 Subtype để Cascade tự động lưu mà không dính lỗi FK PostgreSQL
+    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Benhanmaydaycap benhanmaydaycap;
+
+    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Benhanmaydayman benhanmaydayman;
 }

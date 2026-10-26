@@ -1,18 +1,28 @@
 package mayday.services;
 
-import mayday.dto.ClassifyQuestionDto;
-import mayday.dto.ClassifyQuestionsResponseDto;
-import mayday.dto.ClassifyRecordRequestDto;
-import mayday.dto.ClassifyRecordResponseDto;
+import lombok.RequiredArgsConstructor;
+import mayday.dto.*;
+import mayday.entities.Benhanmaydaycap;
+import mayday.entities.Benhanmaydayman;
+import mayday.entities.Benhnhan;
+import mayday.entities.Hosobenhan;
+import mayday.repositories.BenhnhanRepository;
+import mayday.repositories.HosobenhanRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class MedicalRecordService {
+
+    private final BenhnhanRepository benhnhanRepository;
+    private final HosobenhanRepository hosobenhanRepository;
 
     public static final String TMPL_URT_ACUTE = "TMPL_URT_ACUTE";
     public static final String TMPL_URT_CHRONIC = "TMPL_URT_CHRONIC";
@@ -183,7 +193,7 @@ public class MedicalRecordService {
     // =========================================================================
     // Cấu trúc Template mapping với các bảng vật lý tương ứng trong DB
     // =========================================================================
-    private Map<String, Object> buildTemplateStructure(String templateId) {
+    public Map<String, Object> buildTemplateStructure(String templateId) {
         Map<String, Object> structure = new LinkedHashMap<>();
         structure.put("template_id", templateId);
 
@@ -226,4 +236,91 @@ public class MedicalRecordService {
         }
         return structure;
     }
+
+    @Transactional
+    public CreateMedicalRecordResponseDto createMedicalRecord(CreateMedicalRecordRequestDto req) {
+        if (req == null || req.getPatientId() == null) {
+            throw new IllegalArgumentException("patient_id is required");
+        }
+
+        String templateId = req.getTemplateId();
+        String loaiBenhAn;
+        if ("TMPL_URT_ACUTE".equalsIgnoreCase(templateId)) {
+            loaiBenhAn = "CAP";
+        } else if ("TMPL_URT_CHRONIC".equalsIgnoreCase(templateId)) {
+            loaiBenhAn = "MAN";
+        } else {
+            return CreateMedicalRecordResponseDto.builder()
+                    .code("4101")
+                    .message("Template not found")
+                    .data(null)
+                    .build();
+        }
+
+        Benhnhan benhNhan = benhnhanRepository.findById(req.getPatientId())
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bệnh nhân có ID: " + req.getPatientId()));
+
+        Hosobenhan hoSo = Hosobenhan.builder()
+                .benhnhan(benhNhan)
+                .loaiBenhAn(loaiBenhAn)
+                .trangThai("pending")
+                .thoiDiemKhamLanDau(OffsetDateTime.now())
+                .build();
+
+        // Bóc tách mảng answers để lưu vào các cột tương ứng trong CSDL
+        if (req.getAnswers() != null) {
+            for (CreateMedicalRecordRequestDto.AnswerItem ans : req.getAnswers()) {
+                String qId = ans.getQuestionId();
+                String val = ans.getAnswerText() != null ? ans.getAnswerText()
+                        : (ans.getAnswerValue() != null ? ans.getAnswerValue().toString() : null);
+
+                if (qId != null && val != null) {
+                    if (qId.contains(Q_DURATION_WEEKS)) {
+                        try {
+                            hoSo.setThoiGianKhoiPhatTuan(new java.math.BigDecimal(val.trim()));
+                        } catch (Exception ignored) {}
+                    } else if (qId.contains(Q_TREATED_BEFORE)) {
+                        hoSo.setDaDieuTriTruocKham(Boolean.parseBoolean(val.trim()) || "Có".equalsIgnoreCase(val.trim()));
+                    } else if (qId.contains(Q_FAMILY_HISTORY)) {
+                        if (val.contains("Co") || val.contains("Có")) {
+                            hoSo.setTienSuGiaDinh("Co");
+                        } else if (val.contains("Khong") || val.contains("Không")) {
+                            hoSo.setTienSuGiaDinh("Khong");
+                        } else {
+                            hoSo.setTienSuGiaDinh("Khong ro");
+                        }
+                    }
+                }
+            }
+        }
+
+        // Gắn subtype để Hibernate Cascade tự động lưu cùng bảng cha
+        if ("CAP".equals(loaiBenhAn)) {
+            hoSo.setBenhanmaydaycap(Benhanmaydaycap.builder().hoSoBenhAn(hoSo).build());
+        } else {
+            hoSo.setBenhanmaydayman(Benhanmaydayman.builder().hoSoBenhAn(hoSo).build());
+        }
+
+        Hosobenhan savedHoSo = hosobenhanRepository.save(hoSo);
+
+        return CreateMedicalRecordResponseDto.builder()
+                .code("1001")
+                .message("Tạo hồ sơ bệnh án thành công")
+                .data(CreateMedicalRecordResponseDto.MedicalRecordData.builder()
+                        .medicalRecordId(savedHoSo.getMaHoSo())
+                        .patientId(benhNhan.getMaBenhNhan())
+                        .templateId(templateId)
+                        .status(savedHoSo.getTrangThai())
+                        .createdAt(savedHoSo.getThoiDiemKhamLanDau().toString())
+                        .build())
+                .build();
+    }
+
+
+
+
+
+
+
+
 }

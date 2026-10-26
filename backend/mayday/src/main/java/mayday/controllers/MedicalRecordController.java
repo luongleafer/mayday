@@ -1,9 +1,7 @@
 package mayday.controllers;
 
 import lombok.RequiredArgsConstructor;
-import mayday.dto.ClassifyQuestionsResponseDto;
-import mayday.dto.ClassifyRecordRequestDto;
-import mayday.dto.ClassifyRecordResponseDto;
+import mayday.dto.*;
 import mayday.services.MedicalRecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,4 +25,13 @@ public class MedicalRecordController {
         return ResponseEntity.ok(medicalRecordService.classifyRecord(request));
 
     }
+    @PostMapping({"", "/"})
+    public ResponseEntity<CreateMedicalRecordResponseDto> set_medicalrecords_create(
+            @RequestBody CreateMedicalRecordRequestDto request
+            ){
+        return ResponseEntity.ok(medicalRecordService.createMedicalRecord(request));
+
+    }
+
+
 }
