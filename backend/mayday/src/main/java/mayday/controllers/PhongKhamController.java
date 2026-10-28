@@ -3,10 +3,10 @@ package mayday.controllers;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import mayday.dtos.ApiResponse;
-import mayday.dtos.requests.SetRoomRequest;
-import mayday.dtos.requests.EditRoomRequest;
-import mayday.dtos.responses.RoomResponse;
+import mayday.dto.responses.ApiResponse;
+import mayday.dto.requests.SetRoomRequest;
+import mayday.dto.requests.EditRoomRequest;
+import mayday.dto.responses.RoomResponse;
 import mayday.services.PhongKhamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Cung cap API quan ly phong kham; department_id la bo loc tuy chon. */
 @RestController
 @RequestMapping("/api/v1/rooms")
 public class PhongKhamController {
@@ -53,6 +54,7 @@ public class PhongKhamController {
 
     @DeleteMapping("/{id}")
     public ApiResponse<Map<String, Object>> deleteRoom(@PathVariable Long id) {
-        return ApiResponse.ok(service.deleteRoom(id));
+        service.deleteRoom(id);
+        return ApiResponse.ok(Map.of());
     }
 }

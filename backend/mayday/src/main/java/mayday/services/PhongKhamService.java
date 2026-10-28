@@ -1,10 +1,10 @@
 package mayday.services;
 
 import java.util.List;
-import java.util.Map;
-import mayday.dtos.requests.SetRoomRequest;
-import mayday.dtos.requests.EditRoomRequest;
-import mayday.dtos.responses.RoomResponse;
+import mayday.dto.requests.SetRoomRequest;
+import mayday.dto.requests.EditRoomRequest;
+import mayday.dto.responses.RoomResponse;
+import mayday.mappers.TopologyMapper;
 import mayday.entities.KhoaPhong;
 import mayday.entities.PhongKham;
 import mayday.exceptions.ConflictException;
@@ -18,14 +18,18 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** Quan ly phong thuoc khoa; kiem tra khoa ton tai va ten phong trong cung khoa. */
 @Service
 @Transactional(readOnly = true)
 public class PhongKhamService {
     private final PhongKhamRepository repository;
     private final KhoaPhongRepository departmentRepository;
 
-    public PhongKhamService(PhongKhamRepository repository, KhoaPhongRepository departmentRepository) {
+    private final TopologyMapper mapper;
+
+    public PhongKhamService(PhongKhamRepository repository, KhoaPhongRepository departmentRepository, TopologyMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
         this.departmentRepository = departmentRepository;
     }
 
@@ -36,7 +40,7 @@ public class PhongKhamService {
         if (repository.existsByDepartmentIdAndNameIgnoreCase(department.getId(), name)) {
             throw ConflictException.duplicate("Room name already exists in this department");
         }
-        return toResponse(save(new PhongKham(name, department)));
+        return mapper.toResponse(save(new PhongKham(name, department)));
     }
 
     public List<RoomResponse> getListRoom(Long departmentId) {
@@ -47,13 +51,14 @@ public class PhongKhamService {
             getDepartment(departmentId);
             rooms = repository.findAllByDepartmentIdOrderByIdAsc(departmentId);
         }
-        return rooms.stream().map(this::toResponse).toList();
+        return rooms.stream().map(mapper::toResponse).toList();
     }
 
     public RoomResponse getRoomDetail(Long id) {
-        return toResponse(get(id));
+        return mapper.toResponse(get(id));
     }
 
+    // Cap nhat tung phan: field null trong request duoc giu nguyen gia tri hien tai.
     @Transactional
     public RoomResponse editRoom(Long id, EditRoomRequest request) {
         PhongKham room = get(id);
@@ -61,21 +66,21 @@ public class PhongKhamService {
                 : getDepartment(request.departmentId());
         String name = request.name() == null ? room.getName()
                 : TextUtils.requireNonBlank(request.name(), "name");
+        // Loai ban ghi dang sua khoi phep kiem tra trung ten.
         if (repository.existsByDepartmentIdAndNameIgnoreCaseAndIdNot(department.getId(), name, id)) {
             throw ConflictException.duplicate("Room name already exists in this department");
         }
-        room.setName(name);
-        room.setDepartment(department);
-        return toResponse(save(room));
+        room.updateDetails(name, department);
+        return mapper.toResponse(save(room));
     }
 
     @Transactional
-    public Map<String, Object> deleteRoom(Long id) {
+    public void deleteRoom(Long id) {
         PhongKham room = get(id);
         try {
             repository.delete(room);
+            // Day lenh DELETE xuong DB ngay de bat loi khoa ngoai trong request nay.
             repository.flush();
-            return Map.of();
         } catch (DataIntegrityViolationException exception) {
             throw ConflictException.inUse("Room cannot be deleted because it is in use");
         }
@@ -91,6 +96,7 @@ public class PhongKhamService {
 
     private PhongKham save(PhongKham room) {
         try {
+            // Flush ngay de loi unique/FK phat sinh truoc khi ket thuc transaction.
             return repository.saveAndFlush(room);
         } catch (DataIntegrityViolationException exception) {
             if (PersistenceUtils.isUniqueConstraintViolation(exception)) {
@@ -100,7 +106,4 @@ public class PhongKhamService {
         }
     }
 
-    private RoomResponse toResponse(PhongKham room) {
-        return new RoomResponse(room.getId(), room.getName(), room.getDepartment().getId());
-    }
 }

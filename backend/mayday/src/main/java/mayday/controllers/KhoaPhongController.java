@@ -3,10 +3,10 @@ package mayday.controllers;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import mayday.dtos.ApiResponse;
-import mayday.dtos.requests.SetDepartmentRequest;
-import mayday.dtos.requests.EditDepartmentRequest;
-import mayday.dtos.responses.DepartmentResponse;
+import mayday.dto.responses.ApiResponse;
+import mayday.dto.requests.SetDepartmentRequest;
+import mayday.dto.requests.EditDepartmentRequest;
+import mayday.dto.responses.DepartmentResponse;
 import mayday.services.KhoaPhongService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Cung cap API quan ly khoa; branch_id la bo loc tuy chon khi lay danh sach. */
 @RestController
 @RequestMapping("/api/v1/departments")
 public class KhoaPhongController {
@@ -54,6 +55,7 @@ public class KhoaPhongController {
 
     @DeleteMapping("/{id}")
     public ApiResponse<Map<String, Object>> deleteDepartment(@PathVariable Long id) {
-        return ApiResponse.ok(service.deleteDepartment(id));
+        service.deleteDepartment(id);
+        return ApiResponse.ok(Map.of());
     }
 }

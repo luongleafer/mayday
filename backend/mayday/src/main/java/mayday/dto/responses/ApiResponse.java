@@ -1,43 +1,12 @@
 package mayday.dto.responses;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
-    private String code;
-    private String message;
-    private T data;
-
-    public ApiResponse() {
+/** Dinh dang response chung: code la ma nghiep vu, message la thong bao, data la ket qua. */
+public record ApiResponse<T>(String code, String message, T data) {
+    public static <T> ApiResponse<T> ok(T data) {
+        return new ApiResponse<>("1000", "OK", data);
     }
 
-    public ApiResponse(String code, String message, T data) {
-        this.code = code;
-        this.message = message;
-        this.data = data;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
+    public static <T> ApiResponse<T> created(T data) {
+        return new ApiResponse<>("1001", "Created successfully", data);
     }
 }

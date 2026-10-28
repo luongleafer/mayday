@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+/** Anh xa bang khoaphong; moi khoa bat buoc thuoc mot chi nhanh. */
 @Entity
 @Table(name = "khoaphong", uniqueConstraints =
         @UniqueConstraint(name = "uq_khoa_phong_chi_nhanh_ten", columnNames = {"ma_chi_nhanh", "ten_khoa_phong"}))
@@ -29,6 +30,7 @@ public class KhoaPhong {
     @Column(name = "mo_ta", columnDefinition = "text")
     private String description;
 
+    // Chi tai entity cha khi can; khong cascade xoa cha khi xoa entity nay.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ma_chi_nhanh", nullable = false)
     private ChiNhanh branch;
@@ -44,6 +46,12 @@ public class KhoaPhong {
     }
 
     public Long getId() { return id; }
+    public void updateDetails(String name, String type, String description, ChiNhanh branch) {
+        this.name = name;
+        this.type = type;
+        this.description = description;
+        this.branch = java.util.Objects.requireNonNull(branch, "branch");
+    }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getType() { return type; }

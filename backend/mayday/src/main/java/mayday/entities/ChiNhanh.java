@@ -2,8 +2,9 @@ package mayday.entities;
 
 import jakarta.persistence.*;
 
+/** Anh xa bang chi_nhanh; ID duoc database tu sinh khi them ban ghi. */
 @Entity
-@Table(name = "chi_nhanh")
+@Table(name = "chinhanh")
 public class ChiNhanh {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,12 @@ public class ChiNhanh {
     private Boolean trangThai = true;
 
     public ChiNhanh() {
+    }
+
+    public void updateDetails(String name, String address, String phone) {
+        this.tenChiNhanh = name;
+        this.diaChi = address;
+        this.soDienThoai = phone;
     }
 
     public ChiNhanh(Long id, String tenChiNhanh, String diaChi, String soDienThoai, Boolean trangThai) {

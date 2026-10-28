@@ -22,7 +22,14 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest(properties = "spring.jpa.hibernate.ddl-auto=create-drop")
+@SpringBootTest(properties = {
+        "spring.config.import=",
+        "spring.datasource.url=jdbc:h2:mem:topology-test;DB_CLOSE_DELAY=-1",
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.datasource.username=sa",
+        "spring.datasource.password=",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
+})
 @AutoConfigureMockMvc
 class ClinicTopologyApiTests {
     @Autowired
@@ -127,6 +134,47 @@ class ClinicTopologyApiTests {
                                 """.formatted(branch.getId())))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.code").value("2004"));
+    }
+
+    @Test
+    void rejectsBlankBranchFieldsAndInvalidPathIds() throws Exception {
+        mockMvc.perform(post("/api/v1/branches")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"  \",\"address\":\"Address\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("2003"));
+        mockMvc.perform(get("/api/v1/rooms/not-a-number"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("2003"));
+    }
+
+    @Test
+    void preservesOmittedBranchFieldsAndRejectsBlankUpdates() throws Exception {
+        ChiNhanh branch = branchRepository.save(new ChiNhanh(null, "Original", "Address", "0900000000", true));
+        mockMvc.perform(put("/api/v1/branches/{id}", branch.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\" Updated \"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.name").value("Updated"))
+                .andExpect(jsonPath("$.data.address").value("Address"))
+                .andExpect(jsonPath("$.data.phone").value("0900000000"));
+        mockMvc.perform(put("/api/v1/branches/{id}", branch.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"   \"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("2003"));
+    }
+
+    @Test
+    void rejectsDeletingBranchWithDepartmentsAndReturnsNotFound() throws Exception {
+        ChiNhanh branch = branchRepository.save(new ChiNhanh(null, "Branch", "Address", null, true));
+        departmentRepository.save(new KhoaPhong("Department", "LAM_SANG", null, branch));
+        mockMvc.perform(delete("/api/v1/branches/{id}", branch.getId()))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.code").value("2005"));
+        mockMvc.perform(get("/api/v1/branches/999999"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("2001"));
     }
 
     @Test

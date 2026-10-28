@@ -4,6 +4,7 @@ import java.util.List;
 import mayday.entities.KhoaPhong;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/** Truy van khoa theo chi nhanh va kiem tra trung ten trong pham vi chi nhanh. */
 public interface KhoaPhongRepository extends JpaRepository<KhoaPhong, Long> {
     List<KhoaPhong> findAllByOrderByIdAsc();
     List<KhoaPhong> findAllByBranchIdOrderByIdAsc(Long branchId);

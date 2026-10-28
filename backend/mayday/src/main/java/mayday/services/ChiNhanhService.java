@@ -1,101 +1,75 @@
 package mayday.services;
 
+import java.util.List;
 import mayday.dto.requests.SetBranchRequest;
 import mayday.dto.requests.EditBranchRequest;
 import mayday.dto.responses.BranchResponse;
 import mayday.entities.ChiNhanh;
+import mayday.exceptions.ConflictException;
+import mayday.exceptions.NotFoundException;
+import mayday.mappers.TopologyMapper;
 import mayday.repositories.ChiNhanhRepository;
+import mayday.utils.TextUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/** Dieu phoi nghiep vu chi nhanh trong transaction; chi cac thao tac ghi moi thay doi du lieu. */
 @Service
+@Transactional(readOnly = true)
 public class ChiNhanhService {
+    private final ChiNhanhRepository repository;
+    private final TopologyMapper mapper;
 
-    private final ChiNhanhRepository chiNhanhRepository;
-
-    public ChiNhanhService(ChiNhanhRepository chiNhanhRepository) {
-        this.chiNhanhRepository = chiNhanhRepository;
+    public ChiNhanhService(ChiNhanhRepository repository, TopologyMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
     }
 
-    private BranchResponse toResponse(ChiNhanh entity) {
-        return new BranchResponse(
-                entity.getId(),
-                entity.getTenChiNhanh(),
-                entity.getDiaChi(),
-                entity.getSoDienThoai(),
-                entity.getTrangThai()
-        );
-    }
-
-    // set_branch (branch01
     @Transactional
-    public BranchResponse setBranch(SetBranchRequest req) {
-        if (req.getName() == null || req.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Tên chi nhánh không được để trống");
-        }
-        if (req.getAddress() == null || req.getAddress().trim().isEmpty()) {
-            throw new IllegalArgumentException("Địa chỉ không được để trống");
-        }
-
-        ChiNhanh entity = new ChiNhanh();
-        entity.setTenChiNhanh(req.getName().trim());
-        entity.setDiaChi(req.getAddress().trim());
-        entity.setSoDienThoai(req.getPhone() != null ? req.getPhone().trim() : null);
-        entity.setTrangThai(true);
-
-        ChiNhanh saved = chiNhanhRepository.save(entity);
-        return toResponse(saved);
+    public BranchResponse setBranch(SetBranchRequest request) {
+        ChiNhanh branch = new ChiNhanh();
+        branch.updateDetails(TextUtils.requireNonBlank(request.getName(), "name"),
+                TextUtils.requireNonBlank(request.getAddress(), "address"),
+                TextUtils.trimToNull(request.getPhone()));
+        return mapper.toResponse(repository.saveAndFlush(branch));
     }
 
-    // get_list_branches (branch02)
-    // Lấy danh sách tất cả các chi nhánh
     public List<BranchResponse> getListBranches() {
-        List<ChiNhanh> list = chiNhanhRepository.findAll();
-        List<BranchResponse> responseList = new ArrayList<>();
-        for (ChiNhanh c : list) {
-            responseList.add(toResponse(c));
-        }
-        return responseList;
+        return repository.findAllByOrderByIdAsc().stream().map(mapper::toResponse).toList();
     }
 
-    // get_branch_detail (branch03)
-    // Lấy thông tin chi tiết của một chi nhánh theo ID
     public BranchResponse getBranchDetail(Long id) {
-        ChiNhanh entity = chiNhanhRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tồn tại chi nhánh với id: " + id));
-        return toResponse(entity);
+        return mapper.toResponse(getBranch(id));
     }
 
-    // edit_branch (branch04)
-    // Cập nhật thông tin (tên, địa chỉ, SĐT) của một chi nhánh
+    // Cap nhat tung phan: field null trong request duoc giu nguyen gia tri hien tai.
     @Transactional
-    public BranchResponse editBranch(Long id, EditBranchRequest req) {
-        ChiNhanh entity = chiNhanhRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Không tồn tại chi nhánh với id: " + id));
-
-        if (req.getName() != null && !req.getName().trim().isEmpty()) {
-            entity.setTenChiNhanh(req.getName().trim());
-        }
-        if (req.getAddress() != null && !req.getAddress().trim().isEmpty()) {
-            entity.setDiaChi(req.getAddress().trim());
-        }
-        if (req.getPhone() != null && !req.getPhone().trim().isEmpty()) {
-            entity.setSoDienThoai(req.getPhone().trim());
-        }
-
-        ChiNhanh updated = chiNhanhRepository.save(entity);
-        return toResponse(updated);
+    public BranchResponse editBranch(Long id, EditBranchRequest request) {
+        ChiNhanh branch = getBranch(id);
+        branch.updateDetails(
+                request.getName() == null ? branch.getTenChiNhanh()
+                        : TextUtils.requireNonBlank(request.getName(), "name"),
+                request.getAddress() == null ? branch.getDiaChi()
+                        : TextUtils.requireNonBlank(request.getAddress(), "address"),
+                request.getPhone() == null ? branch.getSoDienThoai()
+                        : TextUtils.trimToNull(request.getPhone()));
+        return mapper.toResponse(repository.saveAndFlush(branch));
     }
 
-    // delete_branch (branch05)
     @Transactional
     public void deleteBranch(Long id) {
-        if (!chiNhanhRepository.existsById(id)) {
-            throw new IllegalArgumentException("Không tồn tại chi nhánh với ID: " + id);
+        ChiNhanh branch = getBranch(id);
+        try {
+            repository.delete(branch);
+            // Day lenh DELETE xuong DB ngay de bat loi khoa ngoai trong request nay.
+            repository.flush();
+        } catch (DataIntegrityViolationException exception) {
+            throw ConflictException.inUse("Branch cannot be deleted because it is in use");
         }
-        chiNhanhRepository.deleteById(id);
+    }
+
+    private ChiNhanh getBranch(Long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Branch", id));
     }
 }

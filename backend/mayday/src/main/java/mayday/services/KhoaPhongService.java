@@ -1,10 +1,10 @@
 package mayday.services;
 
 import java.util.List;
-import java.util.Map;
-import mayday.dtos.requests.SetDepartmentRequest;
-import mayday.dtos.requests.EditDepartmentRequest;
-import mayday.dtos.responses.DepartmentResponse;
+import mayday.dto.requests.SetDepartmentRequest;
+import mayday.dto.requests.EditDepartmentRequest;
+import mayday.dto.responses.DepartmentResponse;
+import mayday.mappers.TopologyMapper;
 import mayday.entities.ChiNhanh;
 import mayday.entities.KhoaPhong;
 import mayday.exceptions.ConflictException;
@@ -18,14 +18,18 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** Quan ly khoa thuoc chi nhanh; kiem tra khoa cha va trung ten truoc khi luu. */
 @Service
 @Transactional(readOnly = true)
 public class KhoaPhongService {
     private final KhoaPhongRepository repository;
     private final ChiNhanhRepository branchRepository;
 
-    public KhoaPhongService(KhoaPhongRepository repository, ChiNhanhRepository branchRepository) {
+    private final TopologyMapper mapper;
+
+    public KhoaPhongService(KhoaPhongRepository repository, ChiNhanhRepository branchRepository, TopologyMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
         this.branchRepository = branchRepository;
     }
 
@@ -38,7 +42,7 @@ public class KhoaPhongService {
         }
         KhoaPhong department = new KhoaPhong(name, TextUtils.requireNonBlank(request.type(), "type"),
                 TextUtils.trimToNull(request.description()), branch);
-        return toResponse(save(department));
+        return mapper.toResponse(save(department));
     }
 
     public List<DepartmentResponse> getListDepartment(Long branchId) {
@@ -49,36 +53,38 @@ public class KhoaPhongService {
             getBranch(branchId);
             departments = repository.findAllByBranchIdOrderByIdAsc(branchId);
         }
-        return departments.stream().map(this::toResponse).toList();
+        return departments.stream().map(mapper::toResponse).toList();
     }
 
     public DepartmentResponse getDepartmentDetail(Long id) {
-        return toResponse(get(id));
+        return mapper.toResponse(get(id));
     }
 
+    // Cap nhat tung phan: field null trong request duoc giu nguyen gia tri hien tai.
     @Transactional
     public DepartmentResponse editDepartment(Long id, EditDepartmentRequest request) {
         KhoaPhong department = get(id);
         ChiNhanh branch = request.branchId() == null ? department.getBranch() : getBranch(request.branchId());
         String name = request.name() == null ? department.getName()
                 : TextUtils.requireNonBlank(request.name(), "name");
+        // Loai ban ghi dang sua khoi phep kiem tra trung ten.
         if (repository.existsByBranchIdAndNameIgnoreCaseAndIdNot(branch.getId(), name, id)) {
             throw ConflictException.duplicate("Department name already exists in this branch");
         }
-        department.setName(name);
-        department.setBranch(branch);
-        if (request.type() != null) department.setType(TextUtils.requireNonBlank(request.type(), "type"));
-        if (request.description() != null) department.setDescription(TextUtils.trimToNull(request.description()));
-        return toResponse(save(department));
+        department.updateDetails(name,
+                request.type() == null ? department.getType() : TextUtils.requireNonBlank(request.type(), "type"),
+                request.description() == null ? department.getDescription()
+                        : TextUtils.trimToNull(request.description()), branch);
+        return mapper.toResponse(save(department));
     }
 
     @Transactional
-    public Map<String, Object> deleteDepartment(Long id) {
+    public void deleteDepartment(Long id) {
         KhoaPhong department = get(id);
         try {
             repository.delete(department);
+            // Day lenh DELETE xuong DB ngay de bat loi khoa ngoai trong request nay.
             repository.flush();
-            return Map.of();
         } catch (DataIntegrityViolationException exception) {
             throw ConflictException.inUse("Department cannot be deleted because it is in use");
         }
@@ -94,6 +100,7 @@ public class KhoaPhongService {
 
     private KhoaPhong save(KhoaPhong department) {
         try {
+            // Flush ngay de loi unique/FK phat sinh truoc khi ket thuc transaction.
             return repository.saveAndFlush(department);
         } catch (DataIntegrityViolationException exception) {
             if (PersistenceUtils.isUniqueConstraintViolation(exception)) {
@@ -103,8 +110,4 @@ public class KhoaPhongService {
         }
     }
 
-    private DepartmentResponse toResponse(KhoaPhong department) {
-        return new DepartmentResponse(department.getId(), department.getName(), department.getType(),
-                department.getDescription(), department.getBranch().getId());
-    }
 }
