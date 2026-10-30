@@ -13,14 +13,18 @@ public class PhienKham {
     @Column(name = "ma_phien_kham")
     private Long maPhienKham;
 
-    @Column(name = "ma_ho_so")
+    @Column(name = "ma_ho_so", insertable = false, updatable = false)
     private Long maHoSo;
+
+    public HoSoBenhAn getHoSoBenhAn() {
+        return hoSoBenhAn;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ma_ho_so", referencedColumnName = "ma_ho_so")
     private HoSoBenhAn hoSoBenhAn;
 
-    @Column(name = "ma_bac_si")
+    @Column(name = "ma_bac_si", insertable = false, updatable = false)
     private Long maBacSi;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,10 +37,10 @@ public class PhienKham {
     @Column(name = "loai_benh_an")
     private String loaiBenhAn;
 
-    @Column(name = "ma_subtype_cap")
+    @Column(name = "ma_subtype_cap", updatable = false, insertable = false)
     private Long maSubtypeCap;
 
-    @Column(name = "ma_subtype_man")
+    @Column(name = "ma_subtype_man", insertable = false, updatable = false)
     private Long maSubtypeMan;
 
     @Column(name = "ngay_kham")
@@ -68,6 +72,10 @@ public class PhienKham {
 
     @Column(name = "dan_do")
     private String danDo;
+
+    public void setDanDo(String danDo) {
+        this.danDo = danDo;
+    }
 
 
 }

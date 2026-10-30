@@ -25,10 +25,10 @@ public class HoSoBenhAn {
     @Column(name = "loai_benh_an")
     private String loaiBenhAn;
 
-    @Column(name = "ma_subtype_cap")
+    @Column(name = "ma_subtype_cap", insertable = false, updatable = false)
     private Long maSubtypeCap;
 
-    @Column(name = "ma_subtype_man")
+    @Column(name = "ma_subtype_man", insertable = false, updatable = false)
     private Long maSubtypeMan;
 
     @Column(name = "thoi_diem_kham_lan_dau")
@@ -56,6 +56,10 @@ public class HoSoBenhAn {
         this.trangThai = trangThai;
     }
 
+    public String getTrangThai() {
+        return trangThai;
+    }
+
     @Column(name = "trang_thai")
     private String trangThai;
 
@@ -69,4 +73,7 @@ public class HoSoBenhAn {
     private Boolean daDieuTriTruocKham;
 
 
+    public Long getMaHoSo() {
+        return maHoSo;
+    }
 }

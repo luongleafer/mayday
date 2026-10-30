@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "nhanvien")
 public class NhanVien {
     @Id
-    @Column(name = "ma_nhan_vien")
+    @Column(name = "ma_nhan_vien", insertable = false, updatable = false)
     private Long maNhanVien;
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
