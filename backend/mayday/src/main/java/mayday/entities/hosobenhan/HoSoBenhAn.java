@@ -1,6 +1,7 @@
-package mayday.entities;
+package mayday.entities.hosobenhan;
 
 import jakarta.persistence.*;
+import mayday.entities.BenhNhan;
 import mayday.entities.phienkham.PhienKham;
 
 import java.math.BigDecimal;
@@ -27,8 +28,15 @@ public class HoSoBenhAn {
 
     private String loaiBenhAn;
 
+
     @Column(insertable = false, updatable = false)
     private Long maSubtypeCap;
+
+    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
+    private BenhAnMayDayCap benhAnMayDayCap;
+
+    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
+    private BenhAnMayDayMan benhAnMayDayMan;
 
     @Column(insertable = false, updatable = false)
     private Long maSubtypeMan;

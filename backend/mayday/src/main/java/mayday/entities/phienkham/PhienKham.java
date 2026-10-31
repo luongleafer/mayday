@@ -1,7 +1,7 @@
 package mayday.entities.phienkham;
 
 import jakarta.persistence.*;
-import mayday.entities.HoSoBenhAn;
+import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.NhanVien;
 
 import java.math.BigDecimal;
@@ -28,6 +28,12 @@ public class PhienKham {
     public Long getMaBacSi() {
         return maBacSi;
     }
+
+    @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
+    PhienKhamCap phienKhamCap;
+
+    @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
+    PhienKhamMan phienKhamMan;
 
     @Column(insertable = false, updatable = false)
     private Long maBacSi;

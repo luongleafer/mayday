@@ -1,6 +1,6 @@
 package mayday.repositories;
 
-import mayday.entities.HoSoBenhAn;
+import mayday.entities.hosobenhan.HoSoBenhAn;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

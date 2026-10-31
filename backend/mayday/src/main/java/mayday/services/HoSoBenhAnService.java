@@ -3,8 +3,8 @@ package mayday.services;
 import mayday.dtos.ApiResponse;
 import mayday.dtos.response.ChotPhienKhamResponse;
 import mayday.dtos.response.NhanPhienKhamResponse;
-import mayday.entities.HoSoBenhAn;
-import mayday.entities.PhienKham;
+import mayday.entities.hosobenhan.HoSoBenhAn;
+import mayday.entities.phienkham.PhienKham;
 import mayday.repositories.HoSoBenhAnRepository;
 import mayday.repositories.PhienKhamRepository;
 import org.springframework.stereotype.Service;
@@ -55,5 +55,10 @@ public class HoSoBenhAnService {
         phienKham.setDanDo(chiDan);
         khoPhienKham.save(phienKham);
         return ApiResponse.ok(new ChotPhienKhamResponse(phienKham));
+    }
+
+    public ApiResponse<Void> xoaBenhAn(Long maBenhAn) {
+        khoBenhAn.deleteById(maBenhAn);
+        return ApiResponse.ok(null);
     }
 }
