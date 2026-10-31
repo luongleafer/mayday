@@ -76,4 +76,8 @@ public class HoSoBenhAn {
     public Long getMaHoSo() {
         return maHoSo;
     }
+
+    public Long getMaBenhNhan() {
+        return maBenhNhan;
+    }
 }

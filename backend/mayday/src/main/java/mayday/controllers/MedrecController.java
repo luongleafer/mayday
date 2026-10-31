@@ -1,14 +1,11 @@
 package mayday.controllers;
 
 import mayday.dtos.ApiResponse;
+import mayday.dtos.request.ChotCaKhamRequestBody;
+import mayday.dtos.response.ChotPhienKhamResponse;
+import mayday.dtos.response.NhanPhienKhamResponse;
 import mayday.services.HoSoBenhAnService;
 import org.springframework.web.bind.annotation.*;
-
-record ChotCaKhamRequestBody(
-        String trangThai,
-        String danDo
-) {
-}
 
 
 @RestController
@@ -21,16 +18,15 @@ public class MedrecController {
         hoSoBenhAnService = service;
     }
 
-
+    // medrec07
     @PostMapping("/{id}/accept")
-    ApiResponse<HoSoBenhAnService.HoSoBenhAnServiceResponse> bacSiNhanCaKham(@PathVariable Long id) {
+    ApiResponse<NhanPhienKhamResponse> bacSiNhanCaKham(@PathVariable Long id) {
         return hoSoBenhAnService.nhanPhienKham(id);
     }
 
-
+    //medrec11
     @PutMapping("/{id}")
-    ApiResponse<HoSoBenhAnService.HoSoBenhAnServiceResponse> bacSiChotCaKham(@PathVariable Long id, @RequestBody ChotCaKhamRequestBody body) {
+    ApiResponse<ChotPhienKhamResponse> bacSiChotCaKham(@PathVariable Long id, @RequestBody ChotCaKhamRequestBody body) {
         return hoSoBenhAnService.chotPhienKham(id, body.trangThai(), body.danDo());
-
     }
 }

@@ -24,6 +24,10 @@ public class PhienKham {
     @JoinColumn(name = "ma_ho_so", referencedColumnName = "ma_ho_so")
     private HoSoBenhAn hoSoBenhAn;
 
+    public Long getMaBacSi() {
+        return maBacSi;
+    }
+
     @Column(name = "ma_bac_si", insertable = false, updatable = false)
     private Long maBacSi;
 
