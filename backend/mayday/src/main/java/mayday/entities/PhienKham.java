@@ -3,7 +3,7 @@ package mayday.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "phienkham")
@@ -48,7 +48,7 @@ public class PhienKham {
     private Long maSubtypeMan;
 
     @Column(name = "ngay_kham")
-    private Date ngayKham;
+    private LocalDate ngayKham;
 
     @Column(name = "lan_kham_thu")
     private Integer lanKhamThu;
@@ -66,7 +66,7 @@ public class PhienKham {
     private BigDecimal sotNhietDoC;
 
     @Column(name = "ngay_hen_tai_kham")
-    private Date ngayHenTaiKham;
+    private LocalDate ngayHenTaiKham;
 
     @Column(name = "tom_tat_buoi_kham")
     private String tomTatBuoiKham;

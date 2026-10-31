@@ -1,11 +1,11 @@
 package mayday.entities;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "hosobenhan")
@@ -22,6 +22,9 @@ public class HoSoBenhAn {
     @JoinColumn(name = "ma_benh_nhan", referencedColumnName = "ma_benh_nhan")
     private BenhNhan benhNhan;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "hoSoBenhAn")
+    private List<PhienKham> danhSachPhienKham;
+
     @Column(name = "loai_benh_an")
     private String loaiBenhAn;
 
@@ -32,13 +35,13 @@ public class HoSoBenhAn {
     private Long maSubtypeMan;
 
     @Column(name = "thoi_diem_kham_lan_dau")
-    private Timestamp thoiDiemKhamLanDau;
+    private OffsetDateTime thoiDiemKhamLanDau;
 
     @Column(name = "ngay_bat_dau_dieu_tri_ngoai_tru")
-    private Date ngayBatDauDieuTriNgoaiTru;
+    private LocalDate ngayBatDauDieuTriNgoaiTru;
 
     @Column(name = "ngay_ket_thuc_dieu_tri_ngoai_tru")
-    private Date ngayKetThucDieuTriNgoaiTru;
+    private LocalDate ngayKetThucDieuTriNgoaiTru;
 
     @Column(name = "chan_doan_tuyen_truoc")
     private String chanDoanTuyenTruoc;

@@ -2,7 +2,7 @@ package mayday.entities;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 
 @Entity
@@ -32,7 +32,7 @@ public class BenhNhan {
     private String bhytSoThe;
 
     @Column(name = "bhyt_gia_tri_den")
-    private Date bhytGiaTriDen;
+    private LocalDate bhytGiaTriDen;
 
     @Column(name = "nguoi_nha_ho_ten_dia_chi")
     private String nguoiNhaHoTenDiaChi;

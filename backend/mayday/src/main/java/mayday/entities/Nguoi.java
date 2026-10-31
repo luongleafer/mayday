@@ -2,8 +2,8 @@ package mayday.entities;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "nguoi")
@@ -16,7 +16,7 @@ public class Nguoi {
     private String hoTen;
 
     @Column(name = "ngay_sinh")
-    private Date ngaySinh;
+    private LocalDate ngaySinh;
 
     @Column(name = "gioi_tinh")
     private String gioiTinh;
@@ -34,9 +34,9 @@ public class Nguoi {
     private String diaChiSoNhaThonPho;
 
     @Column(name = "thoi_diem_tao")
-    private Timestamp thoiDiemTao;
+    private OffsetDateTime thoiDiemTao;
 
     @Column(name = "thoi_diem_cap_nhat")
-    private Timestamp thoiDiemCapNhat;
+    private OffsetDateTime thoiDiemCapNhat;
 
 }
