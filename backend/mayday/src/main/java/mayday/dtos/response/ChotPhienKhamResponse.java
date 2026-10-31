@@ -1,10 +1,8 @@
 package mayday.dtos.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.annotation.Nonnull;
-import mayday.entities.HoSoBenhAn;
-import mayday.entities.PhienKham;
+import mayday.entities.phienkham.PhienKham;
 
 public record ChotPhienKhamResponse(
         @JsonProperty("medical_record_id") Long maHoSo,
