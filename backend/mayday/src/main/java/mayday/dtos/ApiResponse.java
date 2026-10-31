@@ -6,6 +6,10 @@ public record ApiResponse<T>(
         T data
 ) {
     public static <T> ApiResponse<T> ok(T data) {
-        return new ApiResponse<>("1000", "OK", data);
+        return ok("OK", data);
+    }
+
+    public static <T> ApiResponse<T> ok(String message, T data) {
+        return new ApiResponse<>("1000", message, data);
     }
 }

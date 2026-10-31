@@ -29,4 +29,10 @@ public class MedrecController {
     ApiResponse<ChotPhienKhamResponse> bacSiChotCaKham(@PathVariable Long id, @RequestBody ChotCaKhamRequestBody body) {
         return hoSoBenhAnService.chotPhienKham(id, body.trangThai(), body.danDo());
     }
+
+    //medrec14
+    @DeleteMapping("/{id}")
+    ApiResponse<Void> xoaBenhAn(@PathVariable Long id) {
+        return hoSoBenhAnService.xoaBenhAn(id);
+    }
 }
