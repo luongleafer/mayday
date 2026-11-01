@@ -2,8 +2,10 @@ package mayday.controllers;
 
 import mayday.dtos.ApiResponse;
 import mayday.dtos.request.ChotCaKhamRequestBody;
+import mayday.dtos.response.BenhAnResponse;
 import mayday.dtos.response.ChotPhienKhamResponse;
 import mayday.dtos.response.NhanPhienKhamResponse;
+import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.services.HoSoBenhAnService;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +36,11 @@ public class MedrecController {
     @DeleteMapping("/{id}")
     ApiResponse<Void> xoaBenhAn(@PathVariable Long id) {
         return hoSoBenhAnService.xoaBenhAn(id);
+    }
+
+    //medrec08
+    @GetMapping("/{id}/answers")
+    ApiResponse<BenhAnResponse> layBenhAn(@PathVariable Long id) {
+        return hoSoBenhAnService.xemHoSo(id);
     }
 }

@@ -22,6 +22,10 @@ public class DauHieuSinhTon {
 
     private Long maBacSi;
 
+    public ThongTinDauHieuSinhTon getDauHieuSinhTon() {
+        return dauHieuSinhTon;
+    }
+
     @Embedded
     @EmbeddedColumnNaming("%s")
     private ThongTinDauHieuSinhTon dauHieuSinhTon;

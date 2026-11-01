@@ -1,5 +1,6 @@
 package mayday.entities.hosobenhan;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import mayday.entities.BenhNhan;
 import mayday.entities.phienkham.PhienKham;
@@ -22,6 +23,11 @@ public class HoSoBenhAn {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maBenhNhan", referencedColumnName = "maBenhNhan")
     private BenhNhan benhNhan;
+
+    @JsonIgnore
+    public List<PhienKham> getDanhSachPhienKham() {
+        return danhSachPhienKham;
+    }
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "hoSoBenhAn")
     private List<PhienKham> danhSachPhienKham;
@@ -82,4 +88,54 @@ public class HoSoBenhAn {
     public Long getMaBenhNhan() {
         return maBenhNhan;
     }
+
+
+    public String getLoaiBenhAn() {
+        return loaiBenhAn;
+    }
+
+    public Long getMaSubtypeCap() {
+        return maSubtypeCap;
+    }
+
+    public OffsetDateTime getThoiDiemKhamLanDau() {
+        return thoiDiemKhamLanDau;
+    }
+
+    public LocalDate getNgayBatDauDieuTriNgoaiTru() {
+        return ngayBatDauDieuTriNgoaiTru;
+    }
+
+    public LocalDate getNgayKetThucDieuTriNgoaiTru() {
+        return ngayKetThucDieuTriNgoaiTru;
+    }
+
+    public String getChanDoanTuyenTruoc() {
+        return chanDoanTuyenTruoc;
+    }
+
+    public String getChanDoanBanDauPhongKham() {
+        return chanDoanBanDauPhongKham;
+    }
+
+    public String getKetQuaDieuTriBaoHiem() {
+        return ketQuaDieuTriBaoHiem;
+    }
+
+    public BigDecimal getThoiGianKhoiPhatTuan() {
+        return thoiGianKhoiPhatTuan;
+    }
+
+    public String getTienSuGiaDinh() {
+        return tienSuGiaDinh;
+    }
+
+    public String getTienSuGiaDinhGhiRo() {
+        return tienSuGiaDinhGhiRo;
+    }
+
+    public Boolean getDaDieuTriTruocKham() {
+        return daDieuTriTruocKham;
+    }
+
 }

@@ -20,6 +20,7 @@ public class PhienKhamCap {
     @Column(insertable = false, updatable = false)
     private final String loaiBenhAn = "CAP";
 
+
     @Embedded
     @EmbeddedColumnNaming("%s")
     @JsonUnwrapped
@@ -28,5 +29,11 @@ public class PhienKhamCap {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamCap")
     private List<ChiTietTonThuongCapTinh> tonThuongCapTinh;
 
+    public ThongTinKhamCap getThongTinKhamCap() {
+        return thongTinKhamCap;
+    }
 
+    public List<ChiTietTonThuongCapTinh> getTonThuongCapTinh() {
+        return tonThuongCapTinh;
+    }
 }

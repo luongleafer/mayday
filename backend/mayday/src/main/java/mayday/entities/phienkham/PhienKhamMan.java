@@ -27,6 +27,14 @@ public class PhienKhamMan {
     @JsonUnwrapped
     private ThongTinKhamMan thongTinKhamMan;
 
+    public ThongTinKhamMan getThongTinKhamMan() {
+        return thongTinKhamMan;
+    }
+
+    public List<ChiTietTonThuongSanPhu> getTonThuongSanPhu() {
+        return tonThuongSanPhu;
+    }
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamMan")
     private List<ChiTietTonThuongSanPhu> tonThuongSanPhu;
 }

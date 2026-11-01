@@ -1,6 +1,7 @@
 package mayday.services;
 
 import mayday.dtos.ApiResponse;
+import mayday.dtos.response.BenhAnResponse;
 import mayday.dtos.response.ChotPhienKhamResponse;
 import mayday.dtos.response.NhanPhienKhamResponse;
 import mayday.entities.hosobenhan.HoSoBenhAn;
@@ -60,5 +61,11 @@ public class HoSoBenhAnService {
     public ApiResponse<Void> xoaBenhAn(Long maBenhAn) {
         khoBenhAn.deleteById(maBenhAn);
         return ApiResponse.ok(null);
+    }
+
+    public ApiResponse<BenhAnResponse> xemHoSo(Long maBenhAn) {
+        HoSoBenhAn benhAn = khoBenhAn.findById(maBenhAn).orElse(null);
+        if (benhAn == null) return new ApiResponse<>("4001", "Medical record not found", null);
+        return ApiResponse.ok(new BenhAnResponse(benhAn));
     }
 }

@@ -19,6 +19,10 @@ public class ChiTietTonThuongSanPhu {
     @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
     private PhienKhamMan phienKhamMan;
 
+    public ThongTinTonThuongSanPhu getThongTinTonThuongSanPhu() {
+        return thongTinTonThuongSanPhu;
+    }
+
     @Embedded
     @EmbeddedColumnNaming("%s")
     private ThongTinTonThuongSanPhu thongTinTonThuongSanPhu;
