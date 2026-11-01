@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
 import tools.jackson.databind.annotation.JsonAppend;
 
+import java.util.List;
+
 @Entity
 @Table(name = "phienkhamman")
 public class PhienKhamMan {
@@ -24,4 +26,7 @@ public class PhienKhamMan {
     @EmbeddedColumnNaming("%s")
     @JsonUnwrapped
     private ThongTinKhamMan thongTinKhamMan;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamMan")
+    private List<ChiTietTonThuongSanPhu> tonThuongSanPhu;
 }

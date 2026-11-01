@@ -76,6 +76,9 @@ public class BenhAnMayDayCap {
 
     private String benhPhu;
 
+    @OneToOne(mappedBy = "benhAnMayDayCap")
+    private TinhTrangNhiemTrung tinhTrangNhiemTrung;
+
     public Long getMaHoSo() {
         return maHoSo;
     }

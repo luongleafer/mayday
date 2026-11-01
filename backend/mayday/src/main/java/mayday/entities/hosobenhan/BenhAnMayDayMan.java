@@ -41,6 +41,12 @@ public class BenhAnMayDayMan {
     @Enumerated(EnumType.STRING)
     private BieuHienQuaTrinhBenhType bieuHienQuaTrinhBenh;
 
+    @OneToOne(mappedBy = "benhAnMayDayMan")
+    private TienSuBanThan tienSuBanThan;
+
+    @OneToOne(mappedBy = "benhAnMayDayMan")
+    private BenhSuCacDotBenhTruoc benhSuCacDotBenhTruoc;
+
     public Long getMaHoSo() {
         return maHoSo;
     }

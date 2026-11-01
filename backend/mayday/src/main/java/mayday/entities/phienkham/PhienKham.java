@@ -6,6 +6,7 @@ import mayday.entities.NhanVien;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "phienkham")
@@ -41,6 +42,9 @@ public class PhienKham {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maBacSi", referencedColumnName = "maNhanVien")
     private NhanVien bacSi;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKham")
+    private List<DauHieuSinhTon> bangDauHieuSinhTon;
 
     private Long maPhongKham;
 
