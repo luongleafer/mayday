@@ -1,4 +1,4 @@
-package mayday.dtos.request;
+package mayday.dto.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

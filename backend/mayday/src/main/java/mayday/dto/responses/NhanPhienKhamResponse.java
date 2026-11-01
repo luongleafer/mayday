@@ -1,4 +1,4 @@
-package mayday.dtos.response;
+package mayday.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import mayday.entities.hosobenhan.HoSoBenhAn;

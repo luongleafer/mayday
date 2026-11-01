@@ -1,11 +1,10 @@
 package mayday.controllers;
 
-import mayday.dtos.ApiResponse;
-import mayday.dtos.request.ChotCaKhamRequestBody;
-import mayday.dtos.response.BenhAnResponse;
-import mayday.dtos.response.ChotPhienKhamResponse;
-import mayday.dtos.response.NhanPhienKhamResponse;
-import mayday.entities.hosobenhan.HoSoBenhAn;
+import mayday.dto.responses.ApiResponse;
+import mayday.dto.requests.ChotCaKhamRequestBody;
+import mayday.dto.responses.BenhAnResponse;
+import mayday.dto.responses.ChotPhienKhamResponse;
+import mayday.dto.responses.NhanPhienKhamResponse;
 import mayday.services.HoSoBenhAnService;
 import org.springframework.web.bind.annotation.*;
 

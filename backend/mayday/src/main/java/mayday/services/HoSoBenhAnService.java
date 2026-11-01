@@ -1,9 +1,9 @@
 package mayday.services;
 
-import mayday.dtos.ApiResponse;
-import mayday.dtos.response.BenhAnResponse;
-import mayday.dtos.response.ChotPhienKhamResponse;
-import mayday.dtos.response.NhanPhienKhamResponse;
+import mayday.dto.responses.ApiResponse;
+import mayday.dto.responses.BenhAnResponse;
+import mayday.dto.responses.ChotPhienKhamResponse;
+import mayday.dto.responses.NhanPhienKhamResponse;
 import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.phienkham.PhienKham;
 import mayday.repositories.HoSoBenhAnRepository;

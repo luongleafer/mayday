@@ -1,4 +1,4 @@
-package mayday.dtos.response;
+package mayday.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
