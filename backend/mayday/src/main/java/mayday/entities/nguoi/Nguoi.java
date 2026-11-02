@@ -1,12 +1,16 @@
 package mayday.entities.nguoi;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "nguoi")
+@Getter
+@Setter
 public class Nguoi {
     @Id
     private Long maNguoi;
@@ -15,7 +19,8 @@ public class Nguoi {
 
     private LocalDate ngaySinh;
 
-    private String gioiTinh;
+    @Enumerated(EnumType.STRING)
+    private Gender gioiTinh;
 
     private String soDienThoai;
 
