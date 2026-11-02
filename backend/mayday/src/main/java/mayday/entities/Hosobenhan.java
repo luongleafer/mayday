@@ -2,6 +2,7 @@ package mayday.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import mayday.entities.nguoi.Benhnhan;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

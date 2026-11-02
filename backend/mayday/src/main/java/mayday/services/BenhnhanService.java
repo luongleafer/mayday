@@ -1,11 +1,11 @@
 package mayday.services;
 
 import lombok.RequiredArgsConstructor;
-import mayday.dto.CreatePatientRequestDto;
-import mayday.dto.CreatePatientResponseDto;
+import mayday.dto.requests.CreatePatientRequestDto;
+import mayday.dto.responses.CreatePatientResponseDto;
 import mayday.dto.PatientItemDto;
-import mayday.dto.PatientSearchResponseDto;
-import mayday.entities.*;
+import mayday.dto.responses.PatientSearchResponseDto;
+import mayday.entities.nguoi.*;
 import mayday.repositories.BenhnhanRepository;
 import mayday.repositories.NguoiRepository;
 import mayday.repositories.TaikhoanRepository;
@@ -35,7 +35,7 @@ public class BenhnhanService {
             Integer maxYear,
             int page,
             int limit
-    ){
+    ) {
         if (minYear != null && maxYear == null) {
             maxYear = minYear;
         } else if (maxYear != null && minYear == null) {

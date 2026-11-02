@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mayday.entities.Gender;
+import mayday.entities.nguoi.Gender;
 
 @Getter
 @Setter

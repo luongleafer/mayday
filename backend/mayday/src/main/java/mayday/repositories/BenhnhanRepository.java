@@ -1,7 +1,7 @@
 package mayday.repositories;
 
-import mayday.entities.Benhnhan;
-import mayday.entities.Gender;
+import mayday.entities.nguoi.Benhnhan;
+import mayday.entities.nguoi.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

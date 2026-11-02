@@ -1,10 +1,10 @@
 package mayday.controllers;
 
 import lombok.RequiredArgsConstructor;
-import mayday.dto.CreatePatientRequestDto;
-import mayday.dto.CreatePatientResponseDto;
-import mayday.dto.PatientSearchResponseDto;
-import mayday.entities.Gender;
+import mayday.dto.requests.CreatePatientRequestDto;
+import mayday.dto.responses.CreatePatientResponseDto;
+import mayday.dto.responses.PatientSearchResponseDto;
+import mayday.entities.nguoi.Gender;
 import mayday.services.BenhnhanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

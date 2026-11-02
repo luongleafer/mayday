@@ -1,7 +1,6 @@
 package mayday.repositories;
 
-import mayday.entities.Nguoi;
-import mayday.entities.Vaitro;
+import mayday.entities.nguoi.Vaitro;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
