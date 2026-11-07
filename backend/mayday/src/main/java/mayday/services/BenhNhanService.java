@@ -8,8 +8,8 @@ import mayday.dto.responses.PatientSearchResponseDto;
 import mayday.entities.nguoi.*;
 import mayday.repositories.BenhNhanRepository;
 import mayday.repositories.NguoiRepository;
-import mayday.repositories.TaikhoanRepository;
-import mayday.repositories.VaitroRepository;
+import mayday.repositories.TaiKhoanRepository;
+import mayday.repositories.VaiTroRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,11 +21,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BenhnhanService {
+public class BenhNhanService {
     private final NguoiRepository nguoiRepository;
-    private final BenhNhanRepository benhnhanRepository;
-    private final TaikhoanRepository taikhoanRepository;
-    private final VaitroRepository vaitroRepository;
+    private final BenhNhanRepository benhNhanRepository;
+    private final TaiKhoanRepository taiKhoanRepository;
+    private final VaiTroRepository vaiTroRepository;
 
     @Transactional(readOnly = true)
     public PatientSearchResponseDto searchPatients(
@@ -46,7 +46,7 @@ public class BenhnhanService {
         int pageSize = limit > 0 ? limit : 20;
         Pageable pageable = PageRequest.of(pageIndex, pageSize);
 
-        Page<Benhnhan> benhnhanPage = benhnhanRepository.timKiemBenhNhan(
+        Page<BenhNhan> benhNhanPage = benhNhanRepository.timKiemBenhNhan(
                 searchKeyword,
                 gender,
                 minYear,
@@ -55,9 +55,9 @@ public class BenhnhanService {
         );
 
         List<PatientItemDto> danhSachDto = new ArrayList<>();
-        List<Benhnhan> danhSachEntity = benhnhanPage.getContent();
+        List<BenhNhan> danhSachEntity = benhNhanPage.getContent();
 
-        for (Benhnhan bn : danhSachEntity) {
+        for (BenhNhan bn : danhSachEntity) {
             Nguoi ng = bn.getNguoi();
 
             Integer namSinh = null;
@@ -79,7 +79,7 @@ public class BenhnhanService {
         response.setCode("1000");
         response.setMessage("Thành công");
         response.setData(danhSachDto);
-        response.setTotalRecords(String.valueOf(benhnhanPage.getTotalElements()));
+        response.setTotalRecords(String.valueOf(benhNhanPage.getTotalElements()));
 
         return response;
     }
@@ -87,7 +87,7 @@ public class BenhnhanService {
     @Transactional
     public CreatePatientResponseDto createPatient(CreatePatientRequestDto req) {
         // 1. Kiểm tra số điện thoại đã tồn tại
-        if (taikhoanRepository.existsByTenDangNhap(req.getPhone())) {
+        if (taiKhoanRepository.existsByTenDangNhap(req.getPhone())) {
             return CreatePatientResponseDto.builder()
                     .code("3006")
                     .message("User phone already exists.")
@@ -118,28 +118,28 @@ public class BenhnhanService {
         benhnhan.setNguoiNhaHoTenDiaChi(req.getGuardianInfo());
         benhnhan.setNguoiNhaSoDienThoai(req.getGuardianPhone());
 
-        BenhNhan benhnhanDaLuu = benhnhanRepository.save(benhnhan);
+        BenhNhan benhnhanDaLuu = benhNhanRepository.save(benhnhan);
 
         // 4. Lấy vai trò Bệnh nhân (đưa ra ngoài để lấy roleId cho response)
-        Vaitro vaiTroBenhNhan = vaitroRepository.findByTenVaiTro("BENH_NHAN")
+        VaiTro vaiTroBenhNhan = vaiTroRepository.findByTenVaiTro("BENH_NHAN")
                 .orElseGet(() -> {
-                    Vaitro role = new Vaitro();
+                    VaiTro role = new VaiTro();
                     role.setTenVaiTro("BENH_NHAN");
                     role.setTenHienThi("Bệnh nhân");
-                    return vaitroRepository.save(role);
+                    return vaiTroRepository.save(role);
                 });
 
         // 5. Lưu tài khoản nếu có mật khẩu khởi tạo[cite: 2]
-        Taikhoan taikhoanDaLuu = null;
+        TaiKhoan taikhoanDaLuu = null;
         if (req.getPassword() != null && !req.getPassword().isBlank()) {
-            Taikhoan taikhoan = new Taikhoan();
+            TaiKhoan taikhoan = new TaiKhoan();
             taikhoan.setNguoi(nguoiDaLuu);
             taikhoan.setVaiTro(vaiTroBenhNhan);
             taikhoan.setTenDangNhap(req.getPhone());
             taikhoan.setMatKhauMaHoa(req.getPassword());
             taikhoan.setTrangThaiHoatDong(true);
 
-            taikhoanDaLuu = taikhoanRepository.save(taikhoan);
+            taikhoanDaLuu = taiKhoanRepository.save(taikhoan);
         }
 
         // 6. Đóng gói dữ liệu trả về

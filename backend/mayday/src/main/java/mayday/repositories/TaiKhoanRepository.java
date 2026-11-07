@@ -1,8 +1,8 @@
 package mayday.repositories;
 
-import mayday.entities.nguoi.Taikhoan;
+import mayday.entities.nguoi.TaiKhoan;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TaikhoanRepository extends JpaRepository<Taikhoan, Long> {
+public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long> {
     boolean existsByTenDangNhap(String tenDangNhap);
 }

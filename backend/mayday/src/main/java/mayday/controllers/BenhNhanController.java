@@ -5,16 +5,16 @@ import mayday.dto.requests.CreatePatientRequestDto;
 import mayday.dto.responses.CreatePatientResponseDto;
 import mayday.dto.responses.PatientSearchResponseDto;
 import mayday.entities.nguoi.Gender;
-import mayday.services.BenhnhanService;
+import mayday.services.BenhNhanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/doctor/patients")
 @RequiredArgsConstructor
-public class BenhnhanController {
+public class BenhNhanController {
 
-    private final BenhnhanService benhnhanService;
+    private final BenhNhanService benhnhanService;
 
     @GetMapping({"", "/"})
     public ResponseEntity<PatientSearchResponseDto> searchPatients(

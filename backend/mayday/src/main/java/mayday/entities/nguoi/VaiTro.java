@@ -19,7 +19,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Vaitro {
+public class VaiTro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

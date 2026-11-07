@@ -24,7 +24,7 @@ import java.time.OffsetDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Taikhoan {
+public class TaiKhoan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class Taikhoan {
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_tai_khoan_vai_tro")
     )
-    private Vaitro vaiTro;
+    private VaiTro vaiTro;
 
     @Column(name = "ten_dang_nhap", nullable = false, length = 100)
     private String tenDangNhap;

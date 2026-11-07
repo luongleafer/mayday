@@ -9,8 +9,8 @@ import mayday.dto.responses.ClassifyRecordResponseDto;
 import mayday.dto.responses.CreateMedicalRecordResponseDto;
 import mayday.entities.hosobenhan.BenhAnMayDayCap;
 import mayday.entities.hosobenhan.BenhAnMayDayMan;
-import mayday.entities.nguoi.BenhNhan;
 import mayday.entities.hosobenhan.HoSoBenhAn;
+import mayday.entities.nguoi.BenhNhan;
 import mayday.repositories.BenhNhanRepository;
 import mayday.repositories.HoSoBenhAnRepository;
 import org.springframework.stereotype.Service;
@@ -26,8 +26,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TaoPhanLoaiBenhAnService {
 
-    private final BenhNhanRepository benhnhanRepository;
-    private final HoSoBenhAnRepository hosobenhanRepository;
+    private final BenhNhanRepository benhNhanRepository;
+    private final HoSoBenhAnRepository hoSoBenhAnRepository;
 
     public static final String TMPL_URT_ACUTE = "TMPL_URT_ACUTE";
     public static final String TMPL_URT_CHRONIC = "TMPL_URT_CHRONIC";
@@ -263,7 +263,7 @@ public class TaoPhanLoaiBenhAnService {
                     .build();
         }
 
-        BenhNhan benhNhan = benhnhanRepository.findById(req.getPatientId())
+        BenhNhan benhNhan = benhNhanRepository.findById(req.getPatientId())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bệnh nhân có ID: " + req.getPatientId()));
 
         HoSoBenhAn hoSo = HoSoBenhAn.builder()
@@ -308,7 +308,7 @@ public class TaoPhanLoaiBenhAnService {
             hoSo.setBenhAnMayDayMan(BenhAnMayDayMan.builder().hoSoBenhAn(hoSo).build());
         }
 
-        HoSoBenhAn savedHoSo = hosobenhanRepository.save(hoSo);
+        HoSoBenhAn savedHoSo = hoSoBenhAnRepository.save(hoSo);
 
         return CreateMedicalRecordResponseDto.builder()
                 .code("1001")

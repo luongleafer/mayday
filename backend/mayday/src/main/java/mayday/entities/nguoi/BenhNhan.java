@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-
 @Entity
 @Table(name = "benhnhan")
 @Getter
@@ -16,12 +15,15 @@ import java.time.LocalDate;
 public class BenhNhan {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long maBenhNhan;
 
-
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "maBenhNhan", referencedColumnName = "maNguoi")
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "maBenhNhan",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_benh_nhan_nguoi")
+    )
     private Nguoi nguoi;
 
     private String maHis;
