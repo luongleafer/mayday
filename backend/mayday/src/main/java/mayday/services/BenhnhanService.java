@@ -6,7 +6,7 @@ import mayday.dto.responses.CreatePatientResponseDto;
 import mayday.dto.PatientItemDto;
 import mayday.dto.responses.PatientSearchResponseDto;
 import mayday.entities.nguoi.*;
-import mayday.repositories.BenhnhanRepository;
+import mayday.repositories.BenhNhanRepository;
 import mayday.repositories.NguoiRepository;
 import mayday.repositories.TaikhoanRepository;
 import mayday.repositories.VaitroRepository;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BenhnhanService {
     private final NguoiRepository nguoiRepository;
-    private final BenhnhanRepository benhnhanRepository;
+    private final BenhNhanRepository benhnhanRepository;
     private final TaikhoanRepository taikhoanRepository;
     private final VaitroRepository vaitroRepository;
 
@@ -108,7 +108,7 @@ public class BenhnhanService {
         Nguoi nguoiDaLuu = nguoiRepository.save(nguoi);
 
         // 3. Lưu thông tin bảng 'benhnhan'
-        Benhnhan benhnhan = new Benhnhan();
+        BenhNhan benhnhan = new BenhNhan();
         benhnhan.setNguoi(nguoiDaLuu); // @MapsId tự gán ma_benh_nhan = ma_nguoi
         benhnhan.setMaHis(req.getHisCode());
         benhnhan.setNgheNghiep(req.getOccupation());
@@ -118,7 +118,7 @@ public class BenhnhanService {
         benhnhan.setNguoiNhaHoTenDiaChi(req.getGuardianInfo());
         benhnhan.setNguoiNhaSoDienThoai(req.getGuardianPhone());
 
-        Benhnhan benhnhanDaLuu = benhnhanRepository.save(benhnhan);
+        BenhNhan benhnhanDaLuu = benhnhanRepository.save(benhnhan);
 
         // 4. Lấy vai trò Bệnh nhân (đưa ra ngoài để lấy roleId cho response)
         Vaitro vaiTroBenhNhan = vaitroRepository.findByTenVaiTro("BENH_NHAN")

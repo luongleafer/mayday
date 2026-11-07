@@ -1,5 +1,6 @@
 package mayday.repositories;
 
+import mayday.entities.nguoi.BenhNhan;
 import mayday.entities.nguoi.Benhnhan;
 import mayday.entities.nguoi.Gender;
 import org.springframework.data.domain.Page;
@@ -10,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BenhnhanRepository extends JpaRepository<Benhnhan, Long> {
+public interface BenhNhanRepository extends JpaRepository<BenhNhan, Long> {
     @Query("SELECT b FROM Benhnhan b JOIN b.nguoi n WHERE " +
             "(:tuKhoa IS NULL OR n.hoTen LIKE %:tuKhoa% OR n.soDienThoai LIKE %:tuKhoa%) AND " +
             "(:gioiTinh IS NULL OR n.gioiTinh = :gioiTinh) AND " +

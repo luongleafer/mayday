@@ -1,12 +1,18 @@
 package mayday.entities.nguoi;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 
 @Entity
 @Table(name = "benhnhan")
+@Getter
+@Setter
+@NoArgsConstructor
 public class BenhNhan {
 
     @Id

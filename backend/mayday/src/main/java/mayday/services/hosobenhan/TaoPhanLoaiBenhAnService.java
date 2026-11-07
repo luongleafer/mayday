@@ -7,12 +7,12 @@ import mayday.dto.requests.CreateMedicalRecordRequestDto;
 import mayday.dto.responses.ClassifyQuestionsResponseDto;
 import mayday.dto.responses.ClassifyRecordResponseDto;
 import mayday.dto.responses.CreateMedicalRecordResponseDto;
-import mayday.entities.Benhanmaydaycap;
-import mayday.entities.Benhanmaydayman;
-import mayday.entities.nguoi.Benhnhan;
-import mayday.entities.Hosobenhan;
-import mayday.repositories.BenhnhanRepository;
-import mayday.repositories.HosobenhanRepository;
+import mayday.entities.hosobenhan.BenhAnMayDayCap;
+import mayday.entities.hosobenhan.BenhAnMayDayMan;
+import mayday.entities.nguoi.BenhNhan;
+import mayday.entities.hosobenhan.HoSoBenhAn;
+import mayday.repositories.BenhNhanRepository;
+import mayday.repositories.HoSoBenhAnRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +26,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TaoPhanLoaiBenhAnService {
 
-    private final BenhnhanRepository benhnhanRepository;
-    private final HosobenhanRepository hosobenhanRepository;
+    private final BenhNhanRepository benhnhanRepository;
+    private final HoSoBenhAnRepository hosobenhanRepository;
 
     public static final String TMPL_URT_ACUTE = "TMPL_URT_ACUTE";
     public static final String TMPL_URT_CHRONIC = "TMPL_URT_CHRONIC";
@@ -263,11 +263,11 @@ public class TaoPhanLoaiBenhAnService {
                     .build();
         }
 
-        Benhnhan benhNhan = benhnhanRepository.findById(req.getPatientId())
+        BenhNhan benhNhan = benhnhanRepository.findById(req.getPatientId())
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy bệnh nhân có ID: " + req.getPatientId()));
 
-        Hosobenhan hoSo = Hosobenhan.builder()
-                .benhnhan(benhNhan)
+        HoSoBenhAn hoSo = HoSoBenhAn.builder()
+                .benhNhan(benhNhan)
                 .loaiBenhAn(loaiBenhAn)
                 .trangThai("pending")
                 .thoiDiemKhamLanDau(OffsetDateTime.now())
@@ -303,12 +303,12 @@ public class TaoPhanLoaiBenhAnService {
 
         // Gắn subtype để Hibernate Cascade tự động lưu cùng bảng cha
         if ("CAP".equals(loaiBenhAn)) {
-            hoSo.setBenhanmaydaycap(Benhanmaydaycap.builder().hoSoBenhAn(hoSo).build());
+            hoSo.setBenhAnMayDayCap(BenhAnMayDayCap.builder().hoSoBenhAn(hoSo).build());
         } else {
-            hoSo.setBenhanmaydayman(Benhanmaydayman.builder().hoSoBenhAn(hoSo).build());
+            hoSo.setBenhAnMayDayMan(BenhAnMayDayMan.builder().hoSoBenhAn(hoSo).build());
         }
 
-        Hosobenhan savedHoSo = hosobenhanRepository.save(hoSo);
+        HoSoBenhAn savedHoSo = hosobenhanRepository.save(hoSo);
 
         return CreateMedicalRecordResponseDto.builder()
                 .code("1001")
