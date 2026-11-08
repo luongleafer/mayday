@@ -47,7 +47,7 @@ public class KhoaPhongController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<DepartmentResponse>> getDepartmentDetail(@PathVariable Long id) {
         try {
-            DepartmentResponse result = (DepartmentResponse) khoaPhongService.getDepartmentDetail(id);
+            DepartmentResponse result = khoaPhongService.getDepartmentDetail(id);
             return ResponseEntity.ok(new ApiResponse<>("1000", "OK", result));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ApiResponse<>("2003", e.getMessage(), null));

@@ -26,8 +26,13 @@ public class ChiNhanhService {
                 entity.getTenChiNhanh(),
                 entity.getDiaChi(),
                 entity.getSoDienThoai(),
-                entity.getTrangThai()
+                formatTimestamp(entity.getCreatedAt()),
+                formatTimestamp(entity.getUpdatedAt())
         );
+    }
+
+    private String formatTimestamp(java.time.OffsetDateTime timestamp) {
+        return timestamp == null ? null : timestamp.toString();
     }
 
     // set_branch (branch01

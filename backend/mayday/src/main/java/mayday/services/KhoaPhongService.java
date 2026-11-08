@@ -10,12 +10,13 @@ import mayday.repositories.ChiNhanhRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class KhoaPhongService {
+    private static final String DEFAULT_LOAI_KHOA = "KHOA";
+
     private final KhoaPhongRepository khoaPhongRepository;
     private final ChiNhanhRepository chiNhanhRepository;
 
@@ -29,8 +30,14 @@ public class KhoaPhongService {
                 entity.getId(),
                 entity.getChiNhanh().getId(),
                 entity.getTenKhoaPhong(),
-                entity.getMoTa()
+                entity.getMoTa(),
+                formatTimestamp(entity.getCreatedAt()),
+                formatTimestamp(entity.getUpdatedAt())
         );
+    }
+
+    private String formatTimestamp(java.time.OffsetDateTime timestamp) {
+        return timestamp == null ? null : timestamp.toString();
     }
 
     // set_department (dept01)
@@ -42,17 +49,17 @@ public class KhoaPhongService {
         if (req.getName() == null || req.getName().trim().isEmpty()) {
             throw new IllegalArgumentException("Tên khoa/phòng ban không được trống");
         }
-        if (req.getDescription() == null || req.getDescription().trim().isEmpty()) {
-            throw new IllegalArgumentException("Mô tả khoa/phòng ban không được trống");
-        }
 
         ChiNhanh chiNhanh = chiNhanhRepository.findById(req.getBranch_id())
-                .orElseThrow(() -> new RuntimeException("Chi nhánh không tồn tại"));
+                .orElseThrow(() -> new IllegalArgumentException("Chi nhánh không tồn tại"));
 
         KhoaPhong entity = new KhoaPhong();
         entity.setChiNhanh(chiNhanh);
-        entity.setTenKhoaPhong(req.getName());
-        entity.setMoTa(req.getDescription());
+        entity.setTenKhoaPhong(req.getName().trim());
+        if (req.getDescription() != null && !req.getDescription().trim().isEmpty()) {
+            entity.setMoTa(req.getDescription().trim());
+        }
+        entity.setLoaiKhoa(DEFAULT_LOAI_KHOA);
 
         return toResponse(khoaPhongRepository.save(entity));
     }
@@ -65,10 +72,10 @@ public class KhoaPhongService {
     }
 
     // get_department_detail (dept03)
-    public List<DepartmentResponse> getDepartmentDetail(Long id) {
+    public DepartmentResponse getDepartmentDetail(Long id) {
         KhoaPhong entity = khoaPhongRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Khoa/phòng ban không tồn tại"));
-        return Collections.singletonList(toResponse(entity));
+        return toResponse(entity);
     }
 
     // edit_department (dept04)
@@ -81,7 +88,18 @@ public class KhoaPhongService {
             entity.setTenKhoaPhong(req.getName().trim());
         }
         if (req.getDescription() != null) {
-            entity.setMoTa(req.getDescription().trim());
+            String description = req.getDescription().trim();
+            if (!description.isEmpty()) {
+                entity.setMoTa(description);
+            }
+        }
+        if (req.getBranch_id() != null) {
+            ChiNhanh chiNhanh = chiNhanhRepository.findById(req.getBranch_id())
+                    .orElseThrow(() -> new IllegalArgumentException("Chi nhánh không tồn tại"));
+            entity.setChiNhanh(chiNhanh);
+        }
+        if (entity.getLoaiKhoa() == null || entity.getLoaiKhoa().trim().isEmpty()) {
+            entity.setLoaiKhoa(DEFAULT_LOAI_KHOA);
         }
 
         return toResponse(khoaPhongRepository.save(entity));

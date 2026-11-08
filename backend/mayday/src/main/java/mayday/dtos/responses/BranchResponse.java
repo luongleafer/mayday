@@ -5,17 +5,19 @@ public class BranchResponse {
     private String name;
     private String address;
     private String phone;
-    private Boolean is_active;
+    private String created_at;
+    private String updated_at;
 
     public BranchResponse() {
     }
 
-    public BranchResponse(Long id, String name, String address, String phone, Boolean is_active) {
+    public BranchResponse(Long id, String name, String address, String phone, String created_at, String updated_at) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phone = phone;
-        this.is_active = is_active;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
     }
 
     public Long getId() {
@@ -50,11 +52,19 @@ public class BranchResponse {
         this.phone = phone;
     }
 
-    public Boolean getIs_active() {
-        return is_active;
+    public String getCreated_at() {
+        return created_at;
     }
 
-    public void setIs_active(Boolean is_active) {
-        this.is_active = is_active;
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(String updated_at) {
+        this.updated_at = updated_at;
     }
 }
