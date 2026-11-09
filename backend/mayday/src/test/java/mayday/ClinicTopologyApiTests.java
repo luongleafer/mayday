@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import mayday.entities.ChiNhanh;
-import mayday.entities.KhoaPhong;
-import mayday.entities.PhongKham;
+import mayday.entities.cosovatchat.ChiNhanh;
+import mayday.entities.cosovatchat.KhoaPhong;
+import mayday.entities.cosovatchat.PhongKham;
 import mayday.repositories.ChiNhanhRepository;
 import mayday.repositories.KhoaPhongRepository;
 import mayday.repositories.PhongKhamRepository;
@@ -54,10 +54,10 @@ class ClinicTopologyApiTests {
     @Test
     void supportsAllFifteenCrudEndpoints() throws Exception {
         mockMvc.perform(post("/api/v1/branches")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"name":"Co so Trung tam","address":"1 Nguyen Trai","phone":"0901000000"}
-                                """))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                                 {"name":"Co so Trung tam","address":"1 Nguyen Trai","phone":"0901000000"}
+                                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("1001"))
                 .andExpect(jsonPath("$.data.is_active").value(true));
@@ -68,15 +68,15 @@ class ClinicTopologyApiTests {
         mockMvc.perform(get("/api/v1/branches/{id}", branchId))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.data.name").value("Co so Trung tam"));
         mockMvc.perform(put("/api/v1/branches/{id}", branchId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{" + "\"phone\":\"0902000000\"}"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{" + "\"phone\":\"0902000000\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.data.phone").value("0902000000"));
 
         mockMvc.perform(post("/api/v1/departments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"name":"Khoa Da lieu","type":"LAM_SANG","description":"Kham da lieu","branchId":%d}
-                                """.formatted(branchId)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                                 {"name":"Khoa Da lieu","type":"LAM_SANG","description":"Kham da lieu","branchId":%d}
+                                                 """.formatted(branchId)))
                 .andExpect(status().isCreated()).andExpect(jsonPath("$.code").value("1001"));
         Long departmentId = departmentRepository.findAll().getFirst().getId();
 
@@ -85,15 +85,15 @@ class ClinicTopologyApiTests {
         mockMvc.perform(get("/api/v1/departments/{id}", departmentId))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.data.branchId").value(branchId));
         mockMvc.perform(put("/api/v1/departments/{id}", departmentId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"description\":\"Da lieu cap nhat\"}"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"description\":\"Da lieu cap nhat\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.data.description").value("Da lieu cap nhat"));
 
         mockMvc.perform(post("/api/v1/rooms")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"name":"Phong 101","departmentId":%d}
-                                """.formatted(departmentId)))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                                 {"name":"Phong 101","departmentId":%d}
+                                                 """.formatted(departmentId)))
                 .andExpect(status().isCreated()).andExpect(jsonPath("$.code").value("1001"));
         Long roomId = roomRepository.findAll().getFirst().getId();
 
@@ -102,8 +102,8 @@ class ClinicTopologyApiTests {
         mockMvc.perform(get("/api/v1/rooms/{id}", roomId))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.data.departmentId").value(departmentId));
         mockMvc.perform(put("/api/v1/rooms/{id}", roomId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Phong 102\"}"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"Phong 102\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.data.name").value("Phong 102"));
 
         mockMvc.perform(delete("/api/v1/rooms/{id}", roomId))
@@ -117,10 +117,10 @@ class ClinicTopologyApiTests {
     @Test
     void rejectsInvalidForeignKeysAndDuplicateNames() throws Exception {
         mockMvc.perform(post("/api/v1/departments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"name":"Khoa Da lieu","type":"LAM_SANG","branchId":999999}
-                                """))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                                 {"name":"Khoa Da lieu","type":"LAM_SANG","branchId":999999}
+                                                 """))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("2001"));
 
@@ -128,10 +128,10 @@ class ClinicTopologyApiTests {
         departmentRepository.save(new KhoaPhong("Khoa Da lieu", "LAM_SANG", null, branch));
 
         mockMvc.perform(post("/api/v1/departments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("""
-                                {"name":"khoa da lieu","type":"LAM_SANG","branchId":%d}
-                                """.formatted(branch.getId())))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                                 {"name":"khoa da lieu","type":"LAM_SANG","branchId":%d}
+                                                 """.formatted(branch.getId())))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.code").value("2004"));
     }
@@ -139,8 +139,8 @@ class ClinicTopologyApiTests {
     @Test
     void rejectsBlankBranchFieldsAndInvalidPathIds() throws Exception {
         mockMvc.perform(post("/api/v1/branches")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"  \",\"address\":\"Address\"}"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"  \",\"address\":\"Address\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("2003"));
         mockMvc.perform(get("/api/v1/rooms/not-a-number"))
@@ -152,15 +152,15 @@ class ClinicTopologyApiTests {
     void preservesOmittedBranchFieldsAndRejectsBlankUpdates() throws Exception {
         ChiNhanh branch = branchRepository.save(new ChiNhanh(null, "Original", "Address", "0900000000", true));
         mockMvc.perform(put("/api/v1/branches/{id}", branch.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\" Updated \"}"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\" Updated \"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.name").value("Updated"))
                 .andExpect(jsonPath("$.data.address").value("Address"))
                 .andExpect(jsonPath("$.data.phone").value("0900000000"));
         mockMvc.perform(put("/api/v1/branches/{id}", branch.getId())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"   \"}"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"   \"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("2003"));
     }

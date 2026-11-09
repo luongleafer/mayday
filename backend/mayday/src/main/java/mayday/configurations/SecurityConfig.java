@@ -37,7 +37,7 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/medical_records", "/api/v1/medical_records/**").authenticated()
+                        .requestMatchers("/api/v1/medical_records", "/api/v1/medical_records/**").permitAll()
                         .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(converter))

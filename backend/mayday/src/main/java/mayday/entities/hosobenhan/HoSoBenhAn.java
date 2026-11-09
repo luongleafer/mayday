@@ -2,7 +2,8 @@ package mayday.entities.hosobenhan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import mayday.entities.BenhNhan;
+import lombok.*;
+import mayday.entities.nguoi.BenhNhan;
 import mayday.entities.phienkham.PhienKham;
 
 import java.math.BigDecimal;
@@ -12,6 +13,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "hosobenhan")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class HoSoBenhAn {
 
     @Id
@@ -64,14 +70,6 @@ public class HoSoBenhAn {
 
     private BigDecimal thoiGianKhoiPhatTuan;
 
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
-    }
-
-    public String getTrangThai() {
-        return trangThai;
-    }
-
     private String trangThai;
 
     private String tienSuGiaDinh;
@@ -80,62 +78,5 @@ public class HoSoBenhAn {
 
     private Boolean daDieuTriTruocKham;
 
-
-    public Long getMaHoSo() {
-        return maHoSo;
-    }
-
-    public Long getMaBenhNhan() {
-        return maBenhNhan;
-    }
-
-
-    public String getLoaiBenhAn() {
-        return loaiBenhAn;
-    }
-
-    public Long getMaSubtypeCap() {
-        return maSubtypeCap;
-    }
-
-    public OffsetDateTime getThoiDiemKhamLanDau() {
-        return thoiDiemKhamLanDau;
-    }
-
-    public LocalDate getNgayBatDauDieuTriNgoaiTru() {
-        return ngayBatDauDieuTriNgoaiTru;
-    }
-
-    public LocalDate getNgayKetThucDieuTriNgoaiTru() {
-        return ngayKetThucDieuTriNgoaiTru;
-    }
-
-    public String getChanDoanTuyenTruoc() {
-        return chanDoanTuyenTruoc;
-    }
-
-    public String getChanDoanBanDauPhongKham() {
-        return chanDoanBanDauPhongKham;
-    }
-
-    public String getKetQuaDieuTriBaoHiem() {
-        return ketQuaDieuTriBaoHiem;
-    }
-
-    public BigDecimal getThoiGianKhoiPhatTuan() {
-        return thoiGianKhoiPhatTuan;
-    }
-
-    public String getTienSuGiaDinh() {
-        return tienSuGiaDinh;
-    }
-
-    public String getTienSuGiaDinhGhiRo() {
-        return tienSuGiaDinhGhiRo;
-    }
-
-    public Boolean getDaDieuTriTruocKham() {
-        return daDieuTriTruocKham;
-    }
 
 }

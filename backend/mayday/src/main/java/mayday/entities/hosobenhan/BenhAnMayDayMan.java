@@ -1,10 +1,16 @@
 package mayday.entities.hosobenhan;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "benhanmaydayman")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BenhAnMayDayMan {
     @Id
     private Long maHoSo;
@@ -47,108 +53,5 @@ public class BenhAnMayDayMan {
     @OneToOne(mappedBy = "benhAnMayDayMan")
     private BenhSuCacDotBenhTruoc benhSuCacDotBenhTruoc;
 
-    public Long getMaHoSo() {
-        return maHoSo;
-    }
-
-    public void setMaHoSo(Long maHoSo) {
-        this.maHoSo = maHoSo;
-    }
-
-    public String getLoaiBenhAn() {
-        return loaiBenhAn;
-    }
-
-    public void setLoaiBenhAn(String loaiBenhAn) {
-        this.loaiBenhAn = loaiBenhAn;
-    }
-
-    public ChanDoanChinhType getChanDoanChinh() {
-        return chanDoanChinh;
-    }
-
-    public void setChanDoanChinh(ChanDoanChinhType chanDoanChinh) {
-        this.chanDoanChinh = chanDoanChinh;
-    }
-
-    public PhanNhomCsuType getPhanNhomCsu() {
-        return phanNhomCsu;
-    }
-
-    public void setPhanNhomCsu(PhanNhomCsuType phanNhomCsu) {
-        this.phanNhomCsu = phanNhomCsu;
-    }
-
-    public Boolean getChungDaVeNoi() {
-        return chungDaVeNoi;
-    }
-
-    public void setChungDaVeNoi(Boolean chungDaVeNoi) {
-        this.chungDaVeNoi = chungDaVeNoi;
-    }
-
-    public Boolean getMayDayCholinergic() {
-        return mayDayCholinergic;
-    }
-
-    public void setMayDayCholinergic(Boolean mayDayCholinergic) {
-        this.mayDayCholinergic = mayDayCholinergic;
-    }
-
-    public Boolean getMayDayDoLanh() {
-        return mayDayDoLanh;
-    }
-
-    public void setMayDayDoLanh(Boolean mayDayDoLanh) {
-        this.mayDayDoLanh = mayDayDoLanh;
-    }
-
-    public Boolean getMayDayAdrenergic() {
-        return mayDayAdrenergic;
-    }
-
-    public void setMayDayAdrenergic(Boolean mayDayAdrenergic) {
-        this.mayDayAdrenergic = mayDayAdrenergic;
-    }
-
-    public Boolean getMayDayDoNuoc() {
-        return mayDayDoNuoc;
-    }
-
-    public void setMayDayDoNuoc(Boolean mayDayDoNuoc) {
-        this.mayDayDoNuoc = mayDayDoNuoc;
-    }
-
-    public Boolean getMayDayDoAnhSang() {
-        return mayDayDoAnhSang;
-    }
-
-    public void setMayDayDoAnhSang(Boolean mayDayDoAnhSang) {
-        this.mayDayDoAnhSang = mayDayDoAnhSang;
-    }
-
-    public Boolean getMayDayCamUngKhac() {
-        return mayDayCamUngKhac;
-    }
-
-    public void setMayDayCamUngKhac(Boolean mayDayCamUngKhac) {
-        this.mayDayCamUngKhac = mayDayCamUngKhac;
-    }
-
-    public String getMayDayCamUngKhacGhiRo() {
-        return mayDayCamUngKhacGhiRo;
-    }
-
-    public void setMayDayCamUngKhacGhiRo(String mayDayCamUngKhacGhiRo) {
-        this.mayDayCamUngKhacGhiRo = mayDayCamUngKhacGhiRo;
-    }
-
-    public BieuHienQuaTrinhBenhType getBieuHienQuaTrinhBenh() {
-        return bieuHienQuaTrinhBenh;
-    }
-
-    public void setBieuHienQuaTrinhBenh(BieuHienQuaTrinhBenhType bieuHienQuaTrinhBenh) {
-        this.bieuHienQuaTrinhBenh = bieuHienQuaTrinhBenh;
-    }
 
 }

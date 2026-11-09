@@ -1,0 +1,39 @@
+package mayday.controllers;
+
+import lombok.RequiredArgsConstructor;
+import mayday.dto.requests.CreatePatientRequestDto;
+import mayday.dto.responses.CreatePatientResponseDto;
+import mayday.dto.responses.PatientSearchResponseDto;
+import mayday.entities.nguoi.Gender;
+import mayday.services.BenhNhanService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/doctor/patients")
+@RequiredArgsConstructor
+public class BenhNhanController {
+
+    private final BenhNhanService benhnhanService;
+
+    @GetMapping({"", "/"})
+    public ResponseEntity<PatientSearchResponseDto> searchPatients(
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "gender", required = false) Gender gender,
+            @RequestParam(name = "min_year", required = false) Integer minYear,
+            @RequestParam(name = "max_year", required = false) Integer maxYear,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "limit", defaultValue = "20") int limit
+    ) {
+        PatientSearchResponseDto response = benhnhanService.searchPatients(
+                keyword, gender, minYear, maxYear, page, limit
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping({"", "/"})
+    public ResponseEntity<CreatePatientResponseDto> createPatient(@RequestBody CreatePatientRequestDto req) {
+        CreatePatientResponseDto response = benhnhanService.createPatient(req);
+        return ResponseEntity.ok(response);
+    }
+}

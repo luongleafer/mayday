@@ -1,0 +1,172 @@
+package mayday.services;
+
+import lombok.RequiredArgsConstructor;
+import mayday.dto.requests.CreatePatientRequestDto;
+import mayday.dto.responses.CreatePatientResponseDto;
+import mayday.dto.PatientItemDto;
+import mayday.dto.responses.PatientSearchResponseDto;
+import mayday.entities.nguoi.*;
+import mayday.repositories.BenhNhanRepository;
+import mayday.repositories.NguoiRepository;
+import mayday.repositories.TaiKhoanRepository;
+import mayday.repositories.VaiTroRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class BenhNhanService {
+    private final NguoiRepository nguoiRepository;
+    private final BenhNhanRepository benhNhanRepository;
+    private final TaiKhoanRepository taiKhoanRepository;
+    private final VaiTroRepository vaiTroRepository;
+
+    @Transactional(readOnly = true)
+    public PatientSearchResponseDto searchPatients(
+            String keyword,
+            Gender gender,
+            Integer minYear,
+            Integer maxYear,
+            int page,
+            int limit
+    ) {
+        if (minYear != null && maxYear == null) {
+            maxYear = minYear;
+        } else if (maxYear != null && minYear == null) {
+            minYear = maxYear;
+        }
+        String searchKeyword = (keyword != null && !keyword.trim().isEmpty()) ? keyword.trim() : null;
+        int pageIndex = Math.max(0, page - 1);
+        int pageSize = limit > 0 ? limit : 20;
+        Pageable pageable = PageRequest.of(pageIndex, pageSize);
+
+        Page<BenhNhan> benhNhanPage = benhNhanRepository.timKiemBenhNhan(
+                searchKeyword,
+                gender,
+                minYear,
+                maxYear,
+                pageable
+        );
+
+        List<PatientItemDto> danhSachDto = new ArrayList<>();
+        List<BenhNhan> danhSachEntity = benhNhanPage.getContent();
+
+        for (BenhNhan bn : danhSachEntity) {
+            Nguoi ng = bn.getNguoi();
+
+            Integer namSinh = null;
+            if (ng.getNgaySinh() != null) {
+                namSinh = ng.getNgaySinh().getYear();
+            }
+
+            PatientItemDto dto = new PatientItemDto();
+            dto.setUserId(bn.getMaBenhNhan());
+            dto.setFullName(ng.getHoTen());
+            dto.setPhone(ng.getSoDienThoai());
+            dto.setGender(ng.getGioiTinh());
+            dto.setYearOfBirth(namSinh);
+
+            danhSachDto.add(dto);
+        }
+
+        PatientSearchResponseDto response = new PatientSearchResponseDto();
+        response.setCode("1000");
+        response.setMessage("Thành công");
+        response.setData(danhSachDto);
+        response.setTotalRecords(String.valueOf(benhNhanPage.getTotalElements()));
+
+        return response;
+    }
+
+    @Transactional
+    public CreatePatientResponseDto createPatient(CreatePatientRequestDto req) {
+        // 1. Kiểm tra số điện thoại đã tồn tại
+        if (taiKhoanRepository.existsByTenDangNhap(req.getPhone())) {
+            return CreatePatientResponseDto.builder()
+                    .code("3006")
+                    .message("User phone already exists.")
+                    .data(null)
+                    .build();
+        }
+
+        // 2. Lưu thông tin bảng 'nguoi'
+        Nguoi nguoi = new Nguoi();
+        nguoi.setHoTen(req.getFullName());
+        nguoi.setNgaySinh(req.getDateOfBirth());
+        nguoi.setGioiTinh(req.getGender());
+        nguoi.setSoDienThoai(req.getPhone());
+        nguoi.setDiaChiTinhTp(req.getProvince());
+        nguoi.setDiaChiXaPhuong(req.getWard());
+        nguoi.setDiaChiSoNhaThonPho(req.getAddressDetail());
+
+        Nguoi nguoiDaLuu = nguoiRepository.save(nguoi);
+
+        // 3. Lưu thông tin bảng 'benhnhan'
+        BenhNhan benhnhan = new BenhNhan();
+        benhnhan.setNguoi(nguoiDaLuu); // @MapsId tự gán ma_benh_nhan = ma_nguoi
+        benhnhan.setMaHis(req.getHisCode());
+        benhnhan.setNgheNghiep(req.getOccupation());
+        benhnhan.setDanToc(req.getEthnic());
+        benhnhan.setBhytSoThe(req.getInsuranceCardNumber());
+        benhnhan.setBhytGiaTriDen(req.getInsuranceExpireDate());
+        benhnhan.setNguoiNhaHoTenDiaChi(req.getGuardianInfo());
+        benhnhan.setNguoiNhaSoDienThoai(req.getGuardianPhone());
+
+        BenhNhan benhnhanDaLuu = benhNhanRepository.save(benhnhan);
+
+        // 4. Lấy vai trò Bệnh nhân (đưa ra ngoài để lấy roleId cho response)
+        VaiTro vaiTroBenhNhan = vaiTroRepository.findByTenVaiTro("BENH_NHAN")
+                .orElseGet(() -> {
+                    VaiTro role = new VaiTro();
+                    role.setTenVaiTro("BENH_NHAN");
+                    role.setTenHienThi("Bệnh nhân");
+                    return vaiTroRepository.save(role);
+                });
+
+        // 5. Lưu tài khoản nếu có mật khẩu khởi tạo[cite: 2]
+        TaiKhoan taikhoanDaLuu = null;
+        if (req.getPassword() != null && !req.getPassword().isBlank()) {
+            TaiKhoan taikhoan = new TaiKhoan();
+            taikhoan.setNguoi(nguoiDaLuu);
+            taikhoan.setVaiTro(vaiTroBenhNhan);
+            taikhoan.setTenDangNhap(req.getPhone());
+            taikhoan.setMatKhauMaHoa(req.getPassword());
+            taikhoan.setTrangThaiHoatDong(true);
+
+            taikhoanDaLuu = taiKhoanRepository.save(taikhoan);
+        }
+
+        // 6. Đóng gói dữ liệu trả về
+        CreatePatientResponseDto.PatientData data = CreatePatientResponseDto.PatientData.builder()
+                .userId(benhnhanDaLuu.getMaBenhNhan())
+                .roleId(vaiTroBenhNhan != null ? vaiTroBenhNhan.getMaVaiTro() : null)
+                .fullName(nguoiDaLuu.getHoTen())
+                .dateOfBirth(nguoiDaLuu.getNgaySinh())
+                .gender(nguoiDaLuu.getGioiTinh())
+                .phone(nguoiDaLuu.getSoDienThoai())
+                .province(nguoiDaLuu.getDiaChiTinhTp())
+                .ward(nguoiDaLuu.getDiaChiXaPhuong())
+                .addressDetail(nguoiDaLuu.getDiaChiSoNhaThonPho())
+                .hisCode(benhnhanDaLuu.getMaHis())
+                .occupation(benhnhanDaLuu.getNgheNghiep())
+                .ethnic(benhnhanDaLuu.getDanToc())
+                .insuranceCardNumber(benhnhanDaLuu.getBhytSoThe())
+                .insuranceExpireDate(benhnhanDaLuu.getBhytGiaTriDen())
+                .guardianInfo(benhnhanDaLuu.getNguoiNhaHoTenDiaChi())
+                .guardianPhone(benhnhanDaLuu.getNguoiNhaSoDienThoai())
+                .createdAt(taikhoanDaLuu != null ? taikhoanDaLuu.getThoiDiemTao() : null)
+                .build();
+
+        return CreatePatientResponseDto.builder()
+                .code("1001")
+                .message("Tạo bệnh nhân thành công")
+                .data(data)
+                .build();
+    }
+}
