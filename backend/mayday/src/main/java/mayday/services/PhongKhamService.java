@@ -37,21 +37,26 @@ public class PhongKhamService {
     public RoomResponse setRoom(SetRoomRequest request) {
         KhoaPhong department = getDepartment(request.departmentId());
         String name = TextUtils.requireNonBlank(request.name(), "name");
-        if (repository.existsByDepartmentIdAndNameIgnoreCase(department.getId(), name)) {
+        String description = TextUtils.normalizeWhitespace(request.description());
+        if (repository.existsByKhoaPhong_MaKhoaPhongAndTenPhongKhamIgnoreCase(department.getMaKhoaPhong(), name)) {
             throw ConflictException.duplicate("Room name already exists in this department");
         }
-        return mapper.toResponse(save(new PhongKham(name, department)));
+        if (department.getChiNhanh() != null && department.getChiNhanh().getMaChiNhanh() != null
+                && repository.existsByKhoaPhong_ChiNhanh_MaChiNhanhAndTenPhongKhamIgnoreCase(department.getChiNhanh().getMaChiNhanh(), name)) {
+            throw ConflictException.duplicate("Room name already exists in this branch");
+        }
+        return mapper.toCreatedOrListResponse(save(new PhongKham(name, description, department)));
     }
 
-    public List<RoomResponse> getListRoom(Long departmentId) {
+    public List<RoomResponse> getListRooms(Long departmentId) {
         List<PhongKham> rooms;
         if (departmentId == null) {
-            rooms = repository.findAllByOrderByIdAsc();
+            rooms = repository.findAllByOrderByMaPhongKhamAsc();
         } else {
             getDepartment(departmentId);
-            rooms = repository.findAllByDepartmentIdOrderByIdAsc(departmentId);
+            rooms = repository.findAllByKhoaPhong_MaKhoaPhongOrderByMaPhongKhamAsc(departmentId);
         }
-        return rooms.stream().map(mapper::toResponse).toList();
+        return rooms.stream().map(mapper::toCreatedOrListResponse).toList();
     }
 
     public RoomResponse getRoomDetail(Long id) {
@@ -62,15 +67,25 @@ public class PhongKhamService {
     @Transactional
     public RoomResponse editRoom(Long id, EditRoomRequest request) {
         PhongKham room = get(id);
-        KhoaPhong department = request.departmentId() == null ? room.getDepartment()
+        KhoaPhong department = request.departmentId() == null ? room.getKhoaPhong()
                 : getDepartment(request.departmentId());
-        String name = request.name() == null ? room.getName()
+        String name = request.name() == null ? room.getTenPhongKham()
                 : TextUtils.requireNonBlank(request.name(), "name");
+        String description = request.description() == null ? room.getMoTa()
+                : TextUtils.normalizeWhitespace(request.description());
         // Loai ban ghi dang sua khoi phep kiem tra trung ten.
-        if (repository.existsByDepartmentIdAndNameIgnoreCaseAndIdNot(department.getId(), name, id)) {
+        boolean duplicate = department != null
+                ? repository.existsByKhoaPhong_MaKhoaPhongAndTenPhongKhamIgnoreCaseAndMaPhongKhamNot(department.getMaKhoaPhong(), name, id)
+                : repository.existsByKhoaPhongIsNullAndTenPhongKhamIgnoreCaseAndMaPhongKhamNot(name, id);
+        if (duplicate) {
             throw ConflictException.duplicate("Room name already exists in this department");
         }
-        room.updateDetails(name, department);
+        if (department != null && department.getChiNhanh() != null && department.getChiNhanh().getMaChiNhanh() != null
+                && repository.existsByKhoaPhong_ChiNhanh_MaChiNhanhAndTenPhongKhamIgnoreCaseAndMaPhongKhamNot(
+                        department.getChiNhanh().getMaChiNhanh(), name, id)) {
+            throw ConflictException.duplicate("Room name already exists in this branch");
+        }
+        room.updateDetails(name, description, department);
         return mapper.toResponse(save(room));
     }
 
@@ -87,10 +102,12 @@ public class PhongKhamService {
     }
 
     private PhongKham get(Long id) {
+        TextUtils.requirePositiveId(id, "id");
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Room", id));
     }
 
     private KhoaPhong getDepartment(Long id) {
+        TextUtils.requirePositiveId(id, "department_id");
         return departmentRepository.findById(id).orElseThrow(() -> new NotFoundException("Department", id));
     }
 

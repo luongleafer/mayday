@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Cung cap API quan ly khoa; branch_id la bo loc tuy chon khi lay danh sach. */
 @RestController
-@RequestMapping("/api/v1/departments")
+@RequestMapping({"/api/v1/departments", "/api/departments"})
 public class KhoaPhongController {
     private final KhoaPhongService service;
 
@@ -37,9 +37,9 @@ public class KhoaPhongController {
     }
 
     @GetMapping
-    public ApiResponse<List<DepartmentResponse>> getListDepartment(
+    public ApiResponse<List<DepartmentResponse>> getListDepartments(
             @RequestParam(name = "branch_id", required = false) Long branchId) {
-        return ApiResponse.ok(service.getListDepartment(branchId));
+        return ApiResponse.ok(service.getListDepartments(branchId));
     }
 
     @GetMapping("/{id}")

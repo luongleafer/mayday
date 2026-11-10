@@ -19,9 +19,10 @@ public class PhienKham {
     }
 
     @Id
+    @Column(name = "ma_phien_kham")
     private Long maPhienKham;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ma_ho_so", insertable = false, updatable = false)
     private Long maHoSo;
 
     @JsonIgnore
@@ -30,7 +31,7 @@ public class PhienKham {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
+    @JoinColumn(name = "ma_ho_so", referencedColumnName = "ma_ho_so")
     private HoSoBenhAn hoSoBenhAn;
 
     public Long getMaBacSi() {
@@ -43,11 +44,11 @@ public class PhienKham {
     @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
     PhienKhamMan phienKhamMan;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ma_bac_si", insertable = false, updatable = false)
     private Long maBacSi;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maBacSi", referencedColumnName = "maNhanVien")
+    @JoinColumn(name = "ma_bac_si", referencedColumnName = "ma_nhan_vien")
     private NhanVien bacSi;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKham")

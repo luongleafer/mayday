@@ -8,56 +8,88 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.OffsetDateTime;
 
-/** Anh xa bang khoaphong; moi khoa bat buoc thuoc mot chi nhanh. */
+/** Anh xa bang khoaphong theo NAMING_CONVENTION.md; moi khoa bat buoc thuoc mot chi nhanh. */
 @Entity
 @Table(name = "khoaphong", uniqueConstraints =
         @UniqueConstraint(name = "uq_khoa_phong_chi_nhanh_ten", columnNames = {"ma_chi_nhanh", "ten_khoa_phong"}))
 public class KhoaPhong {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ma_khoa_phong")
-    private Long id;
+    private Long maKhoaPhong;
 
-    @Column(name = "ten_khoa_phong", nullable = false, length = 150)
-    private String name;
+    @Column(nullable = false, length = 150)
+    private String tenKhoaPhong;
 
-    @Column(name = "loai_khoa", nullable = false, length = 50)
-    private String type;
+    @Column(nullable = false, length = 50)
+    private String loaiKhoa = "CHUYEN_KHOA";
 
-    @Column(name = "mo_ta", columnDefinition = "text")
-    private String description;
+    @Column(columnDefinition = "text")
+    private String moTa;
 
     // Chi tai entity cha khi can; khong cascade xoa cha khi xoa entity nay.
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ma_chi_nhanh", nullable = false)
-    private ChiNhanh branch;
+    private ChiNhanh chiNhanh;
+
+    @Column(nullable = false)
+    private OffsetDateTime thoiDiemTao;
+
+    @Column(nullable = false)
+    private OffsetDateTime thoiDiemCapNhat;
 
     protected KhoaPhong() {
     }
 
-    public KhoaPhong(String name, String type, String description, ChiNhanh branch) {
-        this.name = name;
-        this.type = type;
-        this.description = description;
-        this.branch = branch;
+    public KhoaPhong(String tenKhoaPhong, String loaiKhoa, String moTa, ChiNhanh chiNhanh) {
+        this.tenKhoaPhong = tenKhoaPhong;
+        this.loaiKhoa = loaiKhoa != null ? loaiKhoa : "CHUYEN_KHOA";
+        this.moTa = moTa;
+        this.chiNhanh = chiNhanh;
     }
 
-    public Long getId() { return id; }
-    public void updateDetails(String name, String type, String description, ChiNhanh branch) {
-        this.name = name;
-        this.type = type;
-        this.description = description;
-        this.branch = java.util.Objects.requireNonNull(branch, "branch");
+    @PrePersist
+    void onCreate() {
+        OffsetDateTime now = OffsetDateTime.now();
+        if (this.thoiDiemTao == null) {
+            this.thoiDiemTao = now;
+        }
+        if (this.thoiDiemCapNhat == null || this.thoiDiemCapNhat.isBefore(this.thoiDiemTao)) {
+            this.thoiDiemCapNhat = this.thoiDiemTao;
+        }
+        if (this.loaiKhoa == null || this.loaiKhoa.isBlank()) {
+            this.loaiKhoa = "CHUYEN_KHOA";
+        }
     }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public ChiNhanh getBranch() { return branch; }
-    public void setBranch(ChiNhanh branch) { this.branch = branch; }
+
+    @PreUpdate
+    void onUpdate() {
+        this.thoiDiemCapNhat = OffsetDateTime.now();
+    }
+
+    public Long getMaKhoaPhong() { return maKhoaPhong; }
+    public void updateDetails(String tenKhoaPhong, String loaiKhoa, String moTa, ChiNhanh chiNhanh) {
+        this.tenKhoaPhong = tenKhoaPhong;
+        this.loaiKhoa = loaiKhoa != null ? loaiKhoa : "CHUYEN_KHOA";
+        this.moTa = moTa;
+        this.chiNhanh = java.util.Objects.requireNonNull(chiNhanh, "chiNhanh");
+        this.thoiDiemCapNhat = OffsetDateTime.now();
+    }
+    public String getTenKhoaPhong() { return tenKhoaPhong; }
+    public void setTenKhoaPhong(String tenKhoaPhong) { this.tenKhoaPhong = tenKhoaPhong; }
+    public String getLoaiKhoa() { return loaiKhoa; }
+    public void setLoaiKhoa(String loaiKhoa) { this.loaiKhoa = loaiKhoa; }
+    public String getMoTa() { return moTa; }
+    public void setMoTa(String moTa) { this.moTa = moTa; }
+    public ChiNhanh getChiNhanh() { return chiNhanh; }
+    public void setChiNhanh(ChiNhanh chiNhanh) { this.chiNhanh = chiNhanh; }
+    public OffsetDateTime getThoiDiemTao() { return thoiDiemTao; }
+    public void setThoiDiemTao(OffsetDateTime thoiDiemTao) { this.thoiDiemTao = thoiDiemTao; }
+    public OffsetDateTime getThoiDiemCapNhat() { return thoiDiemCapNhat; }
+    public void setThoiDiemCapNhat(OffsetDateTime thoiDiemCapNhat) { this.thoiDiemCapNhat = thoiDiemCapNhat; }
 }

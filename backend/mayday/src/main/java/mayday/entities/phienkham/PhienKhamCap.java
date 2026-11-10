@@ -11,10 +11,11 @@ import java.util.List;
 public class PhienKhamCap {
 
     @Id
+    @Column(name = "ma_phien_kham", insertable = false, updatable = false)
     private Long maPhienKham;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JoinColumn(name = "ma_phien_kham", referencedColumnName = "ma_phien_kham")
     PhienKham phienKham;
 
     @Column(insertable = false, updatable = false)

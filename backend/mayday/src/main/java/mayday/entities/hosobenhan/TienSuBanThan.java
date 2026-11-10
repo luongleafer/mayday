@@ -8,11 +8,11 @@ public class TienSuBanThan {
     @Id
     private Long maTienSuBanThan;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ma_ho_so", insertable = false, updatable = false)
     private Long maHoSo;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
+    @JoinColumn(name = "ma_ho_so", referencedColumnName = "ma_ho_so")
     private BenhAnMayDayMan benhAnMayDayMan;
 
     private Boolean tienSuCoDia;

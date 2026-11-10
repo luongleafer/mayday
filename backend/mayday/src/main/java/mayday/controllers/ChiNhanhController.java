@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 /** Nhan request quan ly chi nhanh; giao xu ly nghiep vu cho service va dong goi response. */
 @RestController
-@RequestMapping("/api/v1/branches")
+@RequestMapping({"/api/v1/branches", "/api/branches"})
 public class ChiNhanhController {
     private final ChiNhanhService service;
 

@@ -13,11 +13,11 @@ public class DauHieuSinhTon {
     @Id
     private Long maDauHieuSinhTon;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ma_phien_kham", insertable = false, updatable = false)
     private Long maPhienKham;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JoinColumn(name = "ma_phien_kham", referencedColumnName = "ma_phien_kham")
     private PhienKham phienKham;
 
     private Long maBacSi;

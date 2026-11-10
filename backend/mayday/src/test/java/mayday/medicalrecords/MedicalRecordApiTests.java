@@ -49,17 +49,20 @@ class MedicalRecordApiTests {
                 CREATE TABLE hosobenhan (
                     ma_ho_so BIGINT PRIMARY KEY,
                     ma_benh_nhan BIGINT NOT NULL REFERENCES benhnhan(ma_benh_nhan),
-                    trang_thai VARCHAR(30) DEFAULT 'draft'
+                    trang_thai VARCHAR(30) DEFAULT 'draft',
+                    thoi_diem_kham_lan_dau TIMESTAMP WITH TIME ZONE,
+                    ma_bac_si BIGINT,
+                    ma_nguoi_tao BIGINT
                 )
                 """);
         jdbc.update("INSERT INTO nguoi VALUES (1, 'Patient A'), (2, 'Patient B')");
         jdbc.update("INSERT INTO benhnhan VALUES (1), (2)");
         jdbc.update("""
                 INSERT INTO hosobenhan VALUES
-                (10, 1, 'pending'),
-                (11, 1, 'completed'),
-                (12, 2, 'in_progress'),
-                (13, 2, 'pending')
+                (10, 1, 'pending', CURRENT_TIMESTAMP, NULL, 5),
+                (11, 1, 'completed', CURRENT_TIMESTAMP, 3, 5),
+                (12, 2, 'in_progress', CURRENT_TIMESTAMP, 3, 5),
+                (13, 2, 'pending', CURRENT_TIMESTAMP, NULL, 5)
                 """);
     }
 

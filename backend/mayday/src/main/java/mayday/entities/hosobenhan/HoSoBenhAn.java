@@ -2,6 +2,7 @@ package mayday.entities.hosobenhan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 import mayday.entities.BenhNhan;
 import mayday.entities.phienkham.PhienKham;
 
@@ -12,43 +13,52 @@ import java.util.List;
 
 @Entity
 @Table(name = "hosobenhan")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class HoSoBenhAn {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ma_ho_so")
     private Long maHoSo;
 
-    @Column(name = "maBenhNhan", insertable = false, updatable = false)
+    @Column(name = "ma_benh_nhan", insertable = false, updatable = false)
     private Long maBenhNhan;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maBenhNhan", referencedColumnName = "maBenhNhan")
+    @JoinColumn(name = "ma_benh_nhan", referencedColumnName = "ma_benh_nhan", nullable = false)
     private BenhNhan benhNhan;
 
     @JsonIgnore
-    public List<PhienKham> getDanhSachPhienKham() {
-        return danhSachPhienKham;
-    }
-
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "hoSoBenhAn")
     private List<PhienKham> danhSachPhienKham;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "hoSoBenhAn")
-    private HoanCanhKhoiphatDiUng hoanCanhKhoiphatDiUng;
+    private HoanCanhKhoiPhatDiUng hoanCanhKhoiPhatDiUng;
 
-    private String loaiBenhAn;
+    @Column(nullable = false)
+    private String loaiBenhAn; // 'CAP' hoặc 'MAN'
 
-
+    // Cột GENERATED ALWAYS STORED trong Postgres -> Cấm JPA insert/update
     @Column(insertable = false, updatable = false)
     private Long maSubtypeCap;
 
-    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
-    private BenhAnMayDayCap benhAnMayDayCap;
-
-    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
-    private BenhAnMayDayMan benhAnMayDayMan;
-
     @Column(insertable = false, updatable = false)
     private Long maSubtypeMan;
+
+    // Quan hệ 1-1 Subtype để Cascade tự động lưu mà không dính lỗi FK PostgreSQL
+    @JsonIgnore
+    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private BenhAnMayDayCap benhAnMayDayCap;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private BenhAnMayDayMan benhAnMayDayMan;
 
     private OffsetDateTime thoiDiemKhamLanDau;
 
@@ -56,86 +66,31 @@ public class HoSoBenhAn {
 
     private LocalDate ngayKetThucDieuTriNgoaiTru;
 
+    @Column(columnDefinition = "text")
     private String chanDoanTuyenTruoc;
 
+    @Column(columnDefinition = "text")
     private String chanDoanBanDauPhongKham;
 
+    @Column(columnDefinition = "text")
     private String ketQuaDieuTriBaoHiem;
 
+    @Column(precision = 12, scale = 2)
     private BigDecimal thoiGianKhoiPhatTuan;
 
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
-    }
+    @Builder.Default
+    @Column(nullable = false)
+    private String trangThai = "draft"; // draft, pending, in_progress, completed, cancelled
 
-    public String getTrangThai() {
-        return trangThai;
-    }
+    @Column(columnDefinition = "text")
+    private String tienSuGiaDinh; // 'Co', 'Khong', 'Khong ro'
 
-    private String trangThai;
-
-    private String tienSuGiaDinh;
-
+    @Column(columnDefinition = "text")
     private String tienSuGiaDinhGhiRo;
 
     private Boolean daDieuTriTruocKham;
 
-
-    public Long getMaHoSo() {
-        return maHoSo;
-    }
-
     public Long getMaBenhNhan() {
-        return maBenhNhan;
+        return maBenhNhan != null ? maBenhNhan : (benhNhan != null ? benhNhan.getMaBenhNhan() : null);
     }
-
-
-    public String getLoaiBenhAn() {
-        return loaiBenhAn;
-    }
-
-    public Long getMaSubtypeCap() {
-        return maSubtypeCap;
-    }
-
-    public OffsetDateTime getThoiDiemKhamLanDau() {
-        return thoiDiemKhamLanDau;
-    }
-
-    public LocalDate getNgayBatDauDieuTriNgoaiTru() {
-        return ngayBatDauDieuTriNgoaiTru;
-    }
-
-    public LocalDate getNgayKetThucDieuTriNgoaiTru() {
-        return ngayKetThucDieuTriNgoaiTru;
-    }
-
-    public String getChanDoanTuyenTruoc() {
-        return chanDoanTuyenTruoc;
-    }
-
-    public String getChanDoanBanDauPhongKham() {
-        return chanDoanBanDauPhongKham;
-    }
-
-    public String getKetQuaDieuTriBaoHiem() {
-        return ketQuaDieuTriBaoHiem;
-    }
-
-    public BigDecimal getThoiGianKhoiPhatTuan() {
-        return thoiGianKhoiPhatTuan;
-    }
-
-    public String getTienSuGiaDinh() {
-        return tienSuGiaDinh;
-    }
-
-    public String getTienSuGiaDinhGhiRo() {
-        return tienSuGiaDinhGhiRo;
-    }
-
-    public Boolean getDaDieuTriTruocKham() {
-        return daDieuTriTruocKham;
-    }
-
 }

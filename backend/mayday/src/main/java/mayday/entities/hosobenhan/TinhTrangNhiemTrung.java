@@ -10,11 +10,11 @@ public class TinhTrangNhiemTrung {
     @Id
     private Long maTinhTrangNhiemTrung;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ma_ho_so", insertable = false, updatable = false)
     private Long maHoSo;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
+    @JoinColumn(name = "ma_ho_so", referencedColumnName = "ma_ho_so")
     private BenhAnMayDayCap benhAnMayDayCap;
 
     private Boolean hoHapHo;

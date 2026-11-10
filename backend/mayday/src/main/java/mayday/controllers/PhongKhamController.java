@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /** Cung cap API quan ly phong kham; department_id la bo loc tuy chon. */
 @RestController
-@RequestMapping("/api/v1/rooms")
+@RequestMapping({"/api/v1/rooms", "/api/rooms"})
 public class PhongKhamController {
     private final PhongKhamService service;
 
@@ -36,9 +36,9 @@ public class PhongKhamController {
     }
 
     @GetMapping
-    public ApiResponse<List<RoomResponse>> getListRoom(
+    public ApiResponse<List<RoomResponse>> getListRooms(
             @RequestParam(name = "department_id", required = false) Long departmentId) {
-        return ApiResponse.ok(service.getListRoom(departmentId));
+        return ApiResponse.ok(service.getListRooms(departmentId));
     }
 
     @GetMapping("/{id}")

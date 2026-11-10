@@ -8,6 +8,7 @@ import lombok.Setter;
 import mayday.entities.Gender;
 
 import java.time.LocalDate;
+import jakarta.validation.constraints.*;
 
 @Getter
 @Setter
@@ -17,15 +18,19 @@ public class CreatePatientRequestDto {
 
     // Ánh xạ bảng 'nguoi'
     @JsonProperty("full_name")
+    @NotBlank @Size(max = 150)
     private String fullName;
 
     @JsonProperty("date_of_birth")
+    @PastOrPresent
     private LocalDate dateOfBirth;
 
     @JsonProperty("gender")
+    @NotNull
     private Gender gender;
 
     @JsonProperty("phone")
+    @NotBlank @Pattern(regexp = "\\d{10}")
     private String phone;
 
     @JsonProperty("province")
@@ -61,5 +66,6 @@ public class CreatePatientRequestDto {
 
     // Ánh xạ bảng 'taikhoan'
     @JsonProperty("password")
+    @Size(min = 8, max = 72)
     private String password;
 }

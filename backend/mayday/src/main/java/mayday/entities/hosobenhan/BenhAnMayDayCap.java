@@ -1,306 +1,132 @@
 package mayday.entities.hosobenhan;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "benhanmaydaycap")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BenhAnMayDayCap {
+
     @Id
+    @Column(name = "ma_ho_so")
     private Long maHoSo;
 
-    @ColumnDefault("'CAP'")
-    private String loaiBenhAn;
-
-    @OneToOne(optional = false)
-    @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @MapsId
+    @JoinColumn(name = "ma_ho_so", referencedColumnName = "ma_ho_so")
     private HoSoBenhAn hoSoBenhAn;
 
+    // 1. loai_benh_an: GENERATED ALWAYS AS ('CAP'::text) STORED
+    @Column(insertable = false, updatable = false)
+    private String loaiBenhAn;
+
+    // 2. nhap_vien boolean
     private Boolean nhapVien;
 
+    // 3. cd_soc_phan_ve boolean
     private Boolean cdSocPhanVe;
 
+    // 4. cd_phan_ve boolean
     private Boolean cdPhanVe;
 
+    // 5. cd_may_day_cap_nang boolean
     private Boolean cdMayDayCapNang;
 
+    // 6. cd_may_day_cap_thong_thuong boolean
     private Boolean cdMayDayCapThongThuong;
 
+    // 7. tien_su_benh_nen_da text
+    @Column(columnDefinition = "text")
     private String tienSuBenhNenDa;
 
+    // 8. tien_su_benh_nen_ho_hap text
+    @Column(columnDefinition = "text")
     private String tienSuBenhNenHoHap;
 
+    // 9. tien_su_benh_nen_tuan_hoan text
+    @Column(columnDefinition = "text")
     private String tienSuBenhNenTuanHoan;
 
+    // 10. tien_su_benh_tim_mach_ghi_ro text
+    @Column(columnDefinition = "text")
     private String tienSuBenhTimMachGhiRo;
 
+    // 11. tien_su_benh_tieu_hoa_man_tinh_ghi_ro text
+    @Column(columnDefinition = "text")
     private String tienSuBenhTieuHoaManTinhGhiRo;
 
+    // 12. tien_su_benh_nen_tieu_hoa text
+    @Column(columnDefinition = "text")
     private String tienSuBenhNenTieuHoa;
 
+    // 13. nhom_yeu_to_nghi_ngo text
+    @Column(columnDefinition = "text")
     private String nhomYeuToNghiNgo;
 
+    // 14. co_nghi_ngo_dot_nay boolean
     private Boolean coNghiNgoDotNay;
 
+    // 15. ten_yeu_to_nghi_ngo text
+    @Column(columnDefinition = "text")
     private String tenYeuToNghiNgo;
 
+    // 16. loai_tien_su text
+    @Column(columnDefinition = "text")
     private String loaiTienSu;
 
+    // 17. da_tung_phan_ung_truoc_day boolean
     private Boolean daTungPhanUngTruocDay;
 
+    // 18. thoi_gian_tiep_xuc_den_khoi_phat interval
     @Column(columnDefinition = "interval")
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     private Duration thoiGianTiepXucDenKhoiPhat;
 
+    // 19. thoi_gian_keo_dai_tb interval
     @Column(columnDefinition = "interval")
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     private Duration thoiGianKeoDaiTb;
 
+    // 20. dot_gan_nhat_cach interval
     @Column(columnDefinition = "interval")
+    @JdbcTypeCode(SqlTypes.INTERVAL_SECOND)
     private Duration dotGanNhatCach;
 
+    // 21. tien_su_phan_ve_ghi_ro text
+    @Column(columnDefinition = "text")
     private String tienSuPhanVeGhiRo;
 
+    // 22. tien_su_di_ung_ghi_ro text
+    @Column(columnDefinition = "text")
     private String tienSuDiUngGhiRo;
 
+    // 23. da_dieu_tri_benh_dot_nay boolean
     private Boolean daDieuTriBenhDotNay;
 
+    // 24. tuoi_lan_dau_bi_benh integer
     private Integer tuoiLanDauBiBenh;
 
+    // 25. so_lan_may_day_cap_truoc integer
     private Integer soLanMayDayCapTruoc;
 
-    @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(nullable = false)
+    // 26. thoi_diem_cap_nhat timestamp with time zone (quản lý bởi DB trigger fn_cap_nhat_thoi_gian)
+    @Column(nullable = false, insertable = false, updatable = false)
     private OffsetDateTime thoiDiemCapNhat;
 
+    // 27. benh_phu text
+    @Column(columnDefinition = "text")
     private String benhPhu;
 
     @OneToOne(mappedBy = "benhAnMayDayCap")
     private TinhTrangNhiemTrung tinhTrangNhiemTrung;
-
-    public Long getMaHoSo() {
-        return maHoSo;
-    }
-
-    public void setMaHoSo(Long maHoSo) {
-        this.maHoSo = maHoSo;
-    }
-
-    public String getLoaiBenhAn() {
-        return loaiBenhAn;
-    }
-
-    public void setLoaiBenhAn(String loaiBenhAn) {
-        this.loaiBenhAn = loaiBenhAn;
-    }
-
-    public Boolean getNhapVien() {
-        return nhapVien;
-    }
-
-    public void setNhapVien(Boolean nhapVien) {
-        this.nhapVien = nhapVien;
-    }
-
-    public Boolean getCdSocPhanVe() {
-        return cdSocPhanVe;
-    }
-
-    public void setCdSocPhanVe(Boolean cdSocPhanVe) {
-        this.cdSocPhanVe = cdSocPhanVe;
-    }
-
-    public Boolean getCdPhanVe() {
-        return cdPhanVe;
-    }
-
-    public void setCdPhanVe(Boolean cdPhanVe) {
-        this.cdPhanVe = cdPhanVe;
-    }
-
-    public Boolean getCdMayDayCapNang() {
-        return cdMayDayCapNang;
-    }
-
-    public void setCdMayDayCapNang(Boolean cdMayDayCapNang) {
-        this.cdMayDayCapNang = cdMayDayCapNang;
-    }
-
-    public Boolean getCdMayDayCapThongThuong() {
-        return cdMayDayCapThongThuong;
-    }
-
-    public void setCdMayDayCapThongThuong(Boolean cdMayDayCapThongThuong) {
-        this.cdMayDayCapThongThuong = cdMayDayCapThongThuong;
-    }
-
-    public String getTienSuBenhNenDa() {
-        return tienSuBenhNenDa;
-    }
-
-    public void setTienSuBenhNenDa(String tienSuBenhNenDa) {
-        this.tienSuBenhNenDa = tienSuBenhNenDa;
-    }
-
-    public String getTienSuBenhNenHoHap() {
-        return tienSuBenhNenHoHap;
-    }
-
-    public void setTienSuBenhNenHoHap(String tienSuBenhNenHoHap) {
-        this.tienSuBenhNenHoHap = tienSuBenhNenHoHap;
-    }
-
-    public String getTienSuBenhNenTuanHoan() {
-        return tienSuBenhNenTuanHoan;
-    }
-
-    public void setTienSuBenhNenTuanHoan(String tienSuBenhNenTuanHoan) {
-        this.tienSuBenhNenTuanHoan = tienSuBenhNenTuanHoan;
-    }
-
-    public String getTienSuBenhTimMachGhiRo() {
-        return tienSuBenhTimMachGhiRo;
-    }
-
-    public void setTienSuBenhTimMachGhiRo(String tienSuBenhTimMachGhiRo) {
-        this.tienSuBenhTimMachGhiRo = tienSuBenhTimMachGhiRo;
-    }
-
-    public String getTienSuBenhTieuHoaManTinhGhiRo() {
-        return tienSuBenhTieuHoaManTinhGhiRo;
-    }
-
-    public void setTienSuBenhTieuHoaManTinhGhiRo(String tienSuBenhTieuHoaManTinhGhiRo) {
-        this.tienSuBenhTieuHoaManTinhGhiRo = tienSuBenhTieuHoaManTinhGhiRo;
-    }
-
-    public String getTienSuBenhNenTieuHoa() {
-        return tienSuBenhNenTieuHoa;
-    }
-
-    public void setTienSuBenhNenTieuHoa(String tienSuBenhNenTieuHoa) {
-        this.tienSuBenhNenTieuHoa = tienSuBenhNenTieuHoa;
-    }
-
-    public String getNhomYeuToNghiNgo() {
-        return nhomYeuToNghiNgo;
-    }
-
-    public void setNhomYeuToNghiNgo(String nhomYeuToNghiNgo) {
-        this.nhomYeuToNghiNgo = nhomYeuToNghiNgo;
-    }
-
-    public Boolean getCoNghiNgoDotNay() {
-        return coNghiNgoDotNay;
-    }
-
-    public void setCoNghiNgoDotNay(Boolean coNghiNgoDotNay) {
-        this.coNghiNgoDotNay = coNghiNgoDotNay;
-    }
-
-    public String getTenYeuToNghiNgo() {
-        return tenYeuToNghiNgo;
-    }
-
-    public void setTenYeuToNghiNgo(String tenYeuToNghiNgo) {
-        this.tenYeuToNghiNgo = tenYeuToNghiNgo;
-    }
-
-    public String getLoaiTienSu() {
-        return loaiTienSu;
-    }
-
-    public void setLoaiTienSu(String loaiTienSu) {
-        this.loaiTienSu = loaiTienSu;
-    }
-
-    public Boolean getDaTungPhanUngTruocDay() {
-        return daTungPhanUngTruocDay;
-    }
-
-    public void setDaTungPhanUngTruocDay(Boolean daTungPhanUngTruocDay) {
-        this.daTungPhanUngTruocDay = daTungPhanUngTruocDay;
-    }
-
-    public Duration getThoiGianTiepXucDenKhoiPhat() {
-        return thoiGianTiepXucDenKhoiPhat;
-    }
-
-    public void setThoiGianTiepXucDenKhoiPhat(Duration thoiGianTiepXucDenKhoiPhat) {
-        this.thoiGianTiepXucDenKhoiPhat = thoiGianTiepXucDenKhoiPhat;
-    }
-
-    public Duration getThoiGianKeoDaiTb() {
-        return thoiGianKeoDaiTb;
-    }
-
-    public void setThoiGianKeoDaiTb(Duration thoiGianKeoDaiTb) {
-        this.thoiGianKeoDaiTb = thoiGianKeoDaiTb;
-    }
-
-    public Duration getDotGanNhatCach() {
-        return dotGanNhatCach;
-    }
-
-    public void setDotGanNhatCach(Duration dotGanNhatCach) {
-        this.dotGanNhatCach = dotGanNhatCach;
-    }
-
-    public String getTienSuPhanVeGhiRo() {
-        return tienSuPhanVeGhiRo;
-    }
-
-    public void setTienSuPhanVeGhiRo(String tienSuPhanVeGhiRo) {
-        this.tienSuPhanVeGhiRo = tienSuPhanVeGhiRo;
-    }
-
-    public String getTienSuDiUngGhiRo() {
-        return tienSuDiUngGhiRo;
-    }
-
-    public void setTienSuDiUngGhiRo(String tienSuDiUngGhiRo) {
-        this.tienSuDiUngGhiRo = tienSuDiUngGhiRo;
-    }
-
-    public Boolean getDaDieuTriBenhDotNay() {
-        return daDieuTriBenhDotNay;
-    }
-
-    public void setDaDieuTriBenhDotNay(Boolean daDieuTriBenhDotNay) {
-        this.daDieuTriBenhDotNay = daDieuTriBenhDotNay;
-    }
-
-    public Integer getTuoiLanDauBiBenh() {
-        return tuoiLanDauBiBenh;
-    }
-
-    public void setTuoiLanDauBiBenh(Integer tuoiLanDauBiBenh) {
-        this.tuoiLanDauBiBenh = tuoiLanDauBiBenh;
-    }
-
-    public Integer getSoLanMayDayCapTruoc() {
-        return soLanMayDayCapTruoc;
-    }
-
-    public void setSoLanMayDayCapTruoc(Integer soLanMayDayCapTruoc) {
-        this.soLanMayDayCapTruoc = soLanMayDayCapTruoc;
-    }
-
-    public OffsetDateTime getThoiDiemCapNhat() {
-        return thoiDiemCapNhat;
-    }
-
-    public void setThoiDiemCapNhat(OffsetDateTime thoiDiemCapNhat) {
-        this.thoiDiemCapNhat = thoiDiemCapNhat;
-    }
-
-    public String getBenhPhu() {
-        return benhPhu;
-    }
-
-    public void setBenhPhu(String benhPhu) {
-        this.benhPhu = benhPhu;
-    }
-
 }

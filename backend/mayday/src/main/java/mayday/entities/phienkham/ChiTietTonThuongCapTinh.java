@@ -11,11 +11,11 @@ public class ChiTietTonThuongCapTinh {
     @Id
     private Long maChiTietTonThuongCapTinh;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "ma_phien_kham", insertable = false, updatable = false)
     private Long maPhienKham;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JoinColumn(name = "ma_phien_kham", referencedColumnName = "ma_phien_kham")
     private PhienKhamCap phienKhamCap;
 
     @Embedded
