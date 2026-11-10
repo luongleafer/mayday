@@ -56,6 +56,7 @@ public class TaiKhoanManager implements UserDetailsManager {
     @Nonnull
     public UserDetails loadUserByUsername(@Nonnull String username) throws UsernameNotFoundException {
         TaiKhoan taiKhoan = repository.findByTenDangNhap(username).orElseThrow(() -> new UsernameNotFoundException("khong tim thay tai khoan"));
-        return User.builder().username(taiKhoan.getTenDangNhap()).password(taiKhoan.getMatKhauMaHoa()).build();
+//        return User.builder().username(taiKhoan.getTenDangNhap()).password(taiKhoan.getMatKhauMaHoa()).build();
+        return new AccountDetails(taiKhoan);
     }
 }
