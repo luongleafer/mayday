@@ -1,4 +1,4 @@
-package mayday.entities;
+package mayday.entities.cosovatchat;
 
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;

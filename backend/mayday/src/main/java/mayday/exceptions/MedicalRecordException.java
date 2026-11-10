@@ -1,4 +1,4 @@
-package mayday.medicalrecords;
+package mayday.exceptions;
 
 import org.springframework.http.HttpStatus;
 

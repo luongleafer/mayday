@@ -1,6 +1,9 @@
-package mayday.entities;
+package mayday.entities.nguoi;
 
 import jakarta.persistence.*;
+import mayday.entities.cosovatchat.ChiNhanh;
+import mayday.entities.cosovatchat.KhoaPhong;
+import mayday.entities.cosovatchat.PhongKham;
 
 @Entity
 @Table(name = "nhanvien")

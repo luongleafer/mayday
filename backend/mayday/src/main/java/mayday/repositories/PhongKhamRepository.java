@@ -1,7 +1,7 @@
 package mayday.repositories;
 
 import java.util.List;
-import mayday.entities.PhongKham;
+import mayday.entities.cosovatchat.PhongKham;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

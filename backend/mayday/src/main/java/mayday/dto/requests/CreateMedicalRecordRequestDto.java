@@ -1,4 +1,5 @@
-package mayday.dto;
+package mayday.dto.requests;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,5 +39,4 @@ public class CreateMedicalRecordRequestDto {
         @JsonProperty("answer_value")
         private Object answerValue;
     }
-
 }

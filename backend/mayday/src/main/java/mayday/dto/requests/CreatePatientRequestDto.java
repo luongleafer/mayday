@@ -1,14 +1,14 @@
-package mayday.dto;
+package mayday.dto.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mayday.entities.Gender;
+import mayday.entities.nguoi.Gender;
 
 import java.time.LocalDate;
-import jakarta.validation.constraints.*;
 
 @Getter
 @Setter

@@ -1,4 +1,6 @@
-package mayday.medicalrecords;
+package mayday.dto;
+
+import mayday.exceptions.MedicalRecordException;
 
 import java.util.Set;
 

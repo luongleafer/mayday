@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import mayday.entities.ChiNhanh;
-import mayday.entities.KhoaPhong;
-import mayday.entities.PhongKham;
+import mayday.entities.cosovatchat.ChiNhanh;
+import mayday.entities.cosovatchat.KhoaPhong;
+import mayday.entities.cosovatchat.PhongKham;
 import mayday.repositories.ChiNhanhRepository;
 import mayday.repositories.KhoaPhongRepository;
 import mayday.repositories.PhongKhamRepository;

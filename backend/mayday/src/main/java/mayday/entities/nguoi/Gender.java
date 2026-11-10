@@ -1,4 +1,4 @@
-package mayday.entities;
+package mayday.entities.nguoi;
 
 public enum Gender {
     Nam,

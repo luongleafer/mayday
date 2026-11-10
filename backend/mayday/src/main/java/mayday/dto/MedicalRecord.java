@@ -1,4 +1,4 @@
-package mayday.medicalrecords;
+package mayday.dto;
 
 public record MedicalRecord(
         Long medical_record_id,

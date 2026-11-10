@@ -1,4 +1,4 @@
-package mayday.dto;
+package mayday.dto.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

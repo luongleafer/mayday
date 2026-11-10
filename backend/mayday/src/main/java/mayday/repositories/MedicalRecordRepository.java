@@ -1,28 +1,52 @@
-package mayday.medicalrecords;
+package mayday.repositories;
 
 import java.util.List;
 import java.util.Optional;
 
+import mayday.dto.MedicalRecord;
+import mayday.dto.MedicalRecordQuery;
+import mayday.dto.MedicalRecordSummary;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class MedicalRecordRepository {
-    private static final String COLUMNS = """
+    private static final String COLUMNS_EXTENDED = """
             h.ma_ho_so AS medical_record_id,
             h.ma_benh_nhan AS patient_id,
             h.trang_thai AS status,
             h.ma_bac_si AS assigned_doctor_id,
             h.ma_nguoi_tao AS created_by
             """;
+
+    private static final String COLUMNS_BASE = """
+            h.ma_ho_so AS medical_record_id,
+            h.ma_benh_nhan AS patient_id,
+            h.trang_thai AS status,
+            CAST(NULL AS BIGINT) AS assigned_doctor_id,
+            CAST(NULL AS BIGINT) AS created_by
+            """;
+
     private final JdbcClient jdbc;
 
     public MedicalRecordRepository(JdbcClient jdbc) {
         this.jdbc = jdbc;
     }
 
+    private String selectColumns() {
+        Long count = jdbc.sql("""
+                SELECT COUNT(*)
+                FROM information_schema.columns
+                WHERE LOWER(table_name) = 'hosobenhan'
+                  AND LOWER(column_name) = 'ma_bac_si'
+                """)
+                .query(Long.class)
+                .single();
+        return (count != null && count > 0) ? COLUMNS_EXTENDED : COLUMNS_BASE;
+    }
+
     public List<MedicalRecord> findAll(MedicalRecordQuery query) {
-        StringBuilder sql = new StringBuilder("SELECT " + COLUMNS + " FROM hosobenhan h WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT " + selectColumns() + " FROM hosobenhan h WHERE 1=1");
         if (query.status() != null) {
             sql.append(" AND h.trang_thai = :status");
         }
@@ -41,7 +65,7 @@ public class MedicalRecordRepository {
     }
 
     public Optional<MedicalRecord> findById(long id) {
-        return jdbc.sql("SELECT " + COLUMNS + " FROM hosobenhan h WHERE h.ma_ho_so = :id")
+        return jdbc.sql("SELECT " + selectColumns() + " FROM hosobenhan h WHERE h.ma_ho_so = :id")
                 .param("id", id).query(MedicalRecord.class).optional();
     }
 

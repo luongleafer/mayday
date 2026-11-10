@@ -4,7 +4,7 @@ import java.util.List;
 import mayday.dto.requests.SetBranchRequest;
 import mayday.dto.requests.EditBranchRequest;
 import mayday.dto.responses.BranchResponse;
-import mayday.entities.ChiNhanh;
+import mayday.entities.cosovatchat.ChiNhanh;
 import mayday.exceptions.ConflictException;
 import mayday.exceptions.InvalidRequestException;
 import mayday.exceptions.NotFoundException;

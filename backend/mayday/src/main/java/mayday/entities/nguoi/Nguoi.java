@@ -1,4 +1,4 @@
-package mayday.entities;
+package mayday.entities.nguoi;
 
 import jakarta.persistence.*;
 import lombok.Getter;

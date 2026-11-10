@@ -3,9 +3,9 @@ package mayday.mappers;
 import mayday.dto.responses.BranchResponse;
 import mayday.dto.responses.DepartmentResponse;
 import mayday.dto.responses.RoomResponse;
-import mayday.entities.ChiNhanh;
-import mayday.entities.KhoaPhong;
-import mayday.entities.PhongKham;
+import mayday.entities.cosovatchat.ChiNhanh;
+import mayday.entities.cosovatchat.KhoaPhong;
+import mayday.entities.cosovatchat.PhongKham;
 import org.springframework.stereotype.Component;
 
 /** Chuyen entity sang DTO trong transaction, khi cac quan he LAZY van con truy cap duoc. */

@@ -1,4 +1,4 @@
-package mayday.medicalrecords;
+package mayday.exceptions;
 
 import mayday.controllers.HoSoBenhAnController;
 import mayday.dto.responses.ApiResponse;

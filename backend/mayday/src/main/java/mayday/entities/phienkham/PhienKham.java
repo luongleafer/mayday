@@ -3,7 +3,7 @@ package mayday.entities.phienkham;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import mayday.entities.hosobenhan.HoSoBenhAn;
-import mayday.entities.NhanVien;
+import mayday.entities.nguoi.NhanVien;
 import mayday.entities.hosobenhan.LoaiBenhAn;
 
 import java.math.BigDecimal;
