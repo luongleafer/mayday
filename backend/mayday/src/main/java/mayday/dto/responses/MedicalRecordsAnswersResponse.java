@@ -14,26 +14,26 @@ class ClinicSessionInformation {
     PhienKham session;
     AcuteSessionInformation accuteRecordInformation;
     ChronicSessionInformation chronicRecordInformation;
-    List<VitalSignsInformation> dauHieuSinhTon;
-    List<AcuteLesionsInformation> tonThuongCapTinh;
-    List<WhealsInformation> tonThuongSanPhu;
+    List<VitalSignsInformation> vitalSigns;
+    List<AcuteLesionsInformation> acuteLesions;
+    List<WhealsInformation> wheals;
 
     public ClinicSessionInformation(PhienKham session) {
         this.session = session;
-        this.dauHieuSinhTon = session.getBangDauHieuSinhTon()
+        this.vitalSigns = session.getBangDauHieuSinhTon()
                 .stream().map(DauHieuSinhTon::getDauHieuSinhTon).toList();
         if (session.getLoaiPhienKham() == BenhAnType.CAP) {
             PhienKhamCap phienKhamCap = session.getPhienKhamCap();
             accuteRecordInformation = phienKhamCap.getThongTinKhamCap();
             chronicRecordInformation = null;
-            tonThuongCapTinh = phienKhamCap.getTonThuongCapTinh()
+            acuteLesions = phienKhamCap.getTonThuongCapTinh()
                     .stream().map(ChiTietTonThuongCapTinh::getThongTinTonThuongCapTinh).toList();
 
         } else {
             PhienKhamMan phienKhamMan = session.getPhienKhamMan();
             chronicRecordInformation = phienKhamMan.getThongTinKhamMan();
             accuteRecordInformation = null;
-            tonThuongSanPhu = phienKhamMan.getTonThuongSanPhu()
+            wheals = phienKhamMan.getTonThuongSanPhu()
                     .stream().map(ChiTietTonThuongSanPhu::getThongTinTonThuongSanPhu).toList();
         }
 
@@ -56,16 +56,16 @@ class ClinicSessionInformation {
         return chronicRecordInformation;
     }
 
-    public List<VitalSignsInformation> getDauHieuSinhTon() {
-        return dauHieuSinhTon;
+    public List<VitalSignsInformation> getVitalSigns() {
+        return vitalSigns;
     }
 
-    public List<AcuteLesionsInformation> getTonThuongCapTinh() {
-        return tonThuongCapTinh;
+    public List<AcuteLesionsInformation> getAcuteLesions() {
+        return acuteLesions;
     }
 
-    public List<WhealsInformation> getTonThuongSanPhu() {
-        return tonThuongSanPhu;
+    public List<WhealsInformation> getWheals() {
+        return wheals;
     }
 }
 
