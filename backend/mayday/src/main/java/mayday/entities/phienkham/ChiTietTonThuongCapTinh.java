@@ -3,8 +3,6 @@ package mayday.entities.phienkham;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
 
-import java.math.BigDecimal;
-
 @Entity
 @Table(name = "chitiettonthuongcaptinh")
 public class ChiTietTonThuongCapTinh {
@@ -20,7 +18,7 @@ public class ChiTietTonThuongCapTinh {
 
     @Embedded
     @EmbeddedColumnNaming("%s")
-    private ThongTinTonThuongCapTinh thongTinTonThuongCapTinh;
+    private AcuteLesionsInformation thongTinTonThuongCapTinh;
 
     public Long getMaChiTietTonThuongCapTinh() {
         return maChiTietTonThuongCapTinh;
@@ -31,7 +29,7 @@ public class ChiTietTonThuongCapTinh {
     }
 
 
-    public ThongTinTonThuongCapTinh getThongTinTonThuongCapTinh() {
+    public AcuteLesionsInformation getThongTinTonThuongCapTinh() {
         return thongTinTonThuongCapTinh;
     }
 

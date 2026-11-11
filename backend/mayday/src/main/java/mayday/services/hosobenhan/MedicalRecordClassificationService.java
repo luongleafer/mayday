@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class TaoPhanLoaiBenhAnService {
+public class MedicalRecordClassificationService {
 
     private final BenhNhanRepository benhNhanRepository;
     private final HoSoBenhAnRepository hoSoBenhAnRepository;

@@ -22,7 +22,8 @@ public class BenhNhan {
     @JoinColumn(
             name = "maBenhNhan",
             nullable = false,
-            foreignKey = @ForeignKey(name = "fk_benh_nhan_nguoi")
+//            foreignKey = @ForeignKey(name = "fk_benh_nhan_nguoi")
+            referencedColumnName = "maNguoi"
     )
     private Nguoi nguoi;
 

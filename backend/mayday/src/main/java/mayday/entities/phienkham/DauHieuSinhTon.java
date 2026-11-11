@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.EmbeddedColumnNaming;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -22,13 +21,13 @@ public class DauHieuSinhTon {
 
     private Long maBacSi;
 
-    public ThongTinDauHieuSinhTon getDauHieuSinhTon() {
+    public VitalSignsInformation getDauHieuSinhTon() {
         return dauHieuSinhTon;
     }
 
     @Embedded
     @EmbeddedColumnNaming("%s")
-    private ThongTinDauHieuSinhTon dauHieuSinhTon;
+    private VitalSignsInformation dauHieuSinhTon;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     private OffsetDateTime thoiDiemTao;
