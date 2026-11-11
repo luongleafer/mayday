@@ -2,7 +2,7 @@ package mayday.dto.requests;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record ChotCaKhamRequestBody(
+public record CreditMedicalRecordsRequestBody(
         @JsonProperty("status")
         String trangThai,
 

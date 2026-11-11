@@ -2,6 +2,7 @@ package mayday.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import lombok.Getter;
 import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.hosobenhan.BenhAnType;
 import mayday.entities.phienkham.*;
@@ -14,8 +15,11 @@ class ClinicSessionInformation {
     PhienKham session;
     AcuteSessionInformation accuteRecordInformation;
     ChronicSessionInformation chronicRecordInformation;
+    @Getter
     List<VitalSignsInformation> vitalSigns;
+    @Getter
     List<AcuteLesionsInformation> acuteLesions;
+    @Getter
     List<WhealsInformation> wheals;
 
     public ClinicSessionInformation(PhienKham session) {
@@ -56,17 +60,6 @@ class ClinicSessionInformation {
         return chronicRecordInformation;
     }
 
-    public List<VitalSignsInformation> getVitalSigns() {
-        return vitalSigns;
-    }
-
-    public List<AcuteLesionsInformation> getAcuteLesions() {
-        return acuteLesions;
-    }
-
-    public List<WhealsInformation> getWheals() {
-        return wheals;
-    }
 }
 
 public record MedicalRecordsAnswersResponse(

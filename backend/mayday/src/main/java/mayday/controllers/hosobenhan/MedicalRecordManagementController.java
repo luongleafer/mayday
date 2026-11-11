@@ -1,7 +1,7 @@
 package mayday.controllers.hosobenhan;
 
 import mayday.dto.responses.ApiResponse;
-import mayday.dto.requests.ChotCaKhamRequestBody;
+import mayday.dto.requests.CreditMedicalRecordsRequestBody;
 import mayday.dto.responses.MedicalRecordsAnswersResponse;
 import mayday.dto.responses.CreditMedicalRecordsResponse;
 import mayday.dto.responses.SetAcceptMedicalRecordsResponse;
@@ -27,7 +27,7 @@ public class MedicalRecordManagementController {
 
     //medrec11
     @PutMapping("/{id}")
-    ApiResponse<CreditMedicalRecordsResponse> creditMedicalRecords(@PathVariable Long id, @RequestBody ChotCaKhamRequestBody body) {
+    ApiResponse<CreditMedicalRecordsResponse> creditMedicalRecords(@PathVariable Long id, @RequestBody CreditMedicalRecordsRequestBody body) {
         return medicalRecordManagementService.creditMedicalRecords(id, body.trangThai(), body.danDo());
     }
 
