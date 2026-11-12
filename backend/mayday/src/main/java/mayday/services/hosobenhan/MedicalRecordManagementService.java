@@ -6,8 +6,6 @@ import mayday.dto.responses.CreditMedicalRecordsResponse;
 import mayday.dto.responses.SetAcceptMedicalRecordsResponse;
 import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.phienkham.PhienKham;
-import mayday.entities.qa.QuestionBuilder;
-import mayday.entities.qa.SimpleQuestionBuilder;
 import mayday.repositories.HoSoBenhAnRepository;
 import mayday.repositories.PhienKhamRepository;
 import org.springframework.stereotype.Service;
