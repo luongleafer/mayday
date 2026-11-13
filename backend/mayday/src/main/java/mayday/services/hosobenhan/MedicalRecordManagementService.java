@@ -65,8 +65,9 @@ public class MedicalRecordManagementService {
 
     @Transactional
     public ApiResponse<MedicalRecordsAnswersResponse> getMedicalRecordsAnswers(Long recordId) {
-        HoSoBenhAn medicalRecord = medicalRecordRepository.findById(recordId).orElse(null);
-        if (medicalRecord == null) return new ApiResponse<>("4001", "Medical record not found", null);
-        return ApiResponse.ok(new MedicalRecordsAnswersResponse(medicalRecord));
+//        HoSoBenhAn medicalRecord = medicalRecordRepository.findById(recordId).orElse(null);
+        PhienKham session = clinicSessionRepository.findById(recordId).orElse(null);
+        if (session == null) return new ApiResponse<>("4001", "Medical record not found", null);
+        return ApiResponse.ok(new MedicalRecordsAnswersResponse(session));
     }
 }

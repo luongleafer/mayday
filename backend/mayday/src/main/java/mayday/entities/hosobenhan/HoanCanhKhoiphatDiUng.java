@@ -1,5 +1,6 @@
 package mayday.entities.hosobenhan;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
 
@@ -14,23 +15,24 @@ public class HoanCanhKhoiphatDiUng {
 
     @OneToOne
     @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
+    @JsonIgnore
     private HoSoBenhAn hoSoBenhAn;
 
     @Embedded
     @EmbeddedColumnNaming("thuc_an_%s")
-    private ThongTinHoanCanhKhoiPhat thucAn;
+    private AllergyTrigger thucAn;
 
     @Embedded
     @EmbeddedColumnNaming("thuoc_%s")
-    private ThongTinHoanCanhKhoiPhat thuoc;
+    private AllergyTrigger thuoc;
 
     @Embedded
     @EmbeddedColumnNaming("con_trung_%s")
-    private ThongTinHoanCanhKhoiPhat conTrung;
+    private AllergyTrigger conTrung;
 
     @Embedded
     @EmbeddedColumnNaming("khac_%s")
-    private ThongTinHoanCanhKhoiPhat khac;
+    private AllergyTrigger khac;
 
     public Long getMaHoanCanhKhoiPhat() {
         return maHoanCanhKhoiPhat;

@@ -1,8 +1,10 @@
 package mayday.entities.hosobenhan;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.EmbeddedColumnNaming;
 
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -18,6 +20,11 @@ public class BenhAnMayDayCap {
     @Id
     private Long maHoSo;
 
+    @Embedded
+    @EmbeddedColumnNaming("%s")
+    @JsonUnwrapped
+    private AcuteRecordInformation acuteRecordInformation;
+
     @ColumnDefault("'CAP'")
     private String loaiBenhAn;
 
@@ -25,64 +32,18 @@ public class BenhAnMayDayCap {
     @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
     private HoSoBenhAn hoSoBenhAn;
 
-    private Boolean nhapVien;
-
-    private Boolean cdSocPhanVe;
-
-    private Boolean cdPhanVe;
-
-    private Boolean cdMayDayCapNang;
-
-    private Boolean cdMayDayCapThongThuong;
-
-    private String tienSuBenhNenDa;
-
-    private String tienSuBenhNenHoHap;
-
-    private String tienSuBenhNenTuanHoan;
-
-    private String tienSuBenhTimMachGhiRo;
-
-    private String tienSuBenhTieuHoaManTinhGhiRo;
-
-    private String tienSuBenhNenTieuHoa;
-
-    private String nhomYeuToNghiNgo;
-
-    private Boolean coNghiNgoDotNay;
-
-    private String tenYeuToNghiNgo;
-
-    private String loaiTienSu;
-
-    private Boolean daTungPhanUngTruocDay;
-
-    @Column(columnDefinition = "interval")
-    private Duration thoiGianTiepXucDenKhoiPhat;
-
-    @Column(columnDefinition = "interval")
-    private Duration thoiGianKeoDaiTb;
-
-    @Column(columnDefinition = "interval")
-    private Duration dotGanNhatCach;
-
-    private String tienSuPhanVeGhiRo;
-
-    private String tienSuDiUngGhiRo;
-
-    private Boolean daDieuTriBenhDotNay;
-
-    private Integer tuoiLanDauBiBenh;
-
-    private Integer soLanMayDayCapTruoc;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(nullable = false)
     private OffsetDateTime thoiDiemCapNhat;
 
-    private String benhPhu;
 
     @OneToOne(mappedBy = "benhAnMayDayCap")
     private TinhTrangNhiemTrung tinhTrangNhiemTrung;
+
+    public InfectionStatus getInfectionStatus() {
+        return tinhTrangNhiemTrung != null ? tinhTrangNhiemTrung.getInfectionStatus() : null;
+    }
+
 
 }

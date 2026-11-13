@@ -1,5 +1,6 @@
 package mayday.entities.phienkham;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
 
@@ -14,6 +15,7 @@ public class ChiTietTonThuongSanPhu {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JsonIgnore
     private PhienKhamMan phienKhamMan;
 
     public WhealsInformation getThongTinTonThuongSanPhu() {

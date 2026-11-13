@@ -1,5 +1,7 @@
 package mayday.entities.qa;
 
+import mayday.entities.hosobenhan.KetQuaDieuTriBaoHiemType;
+
 public class QuestionBuilder {
     Question result;
 
@@ -31,6 +33,28 @@ public class QuestionBuilder {
         result.addOption(option);
         return this;
     }
+
+    public QuestionBuilder reset() {
+        result = new Question();
+        return this;
+    }
+
+    public QuestionBuilder textQuestion() {
+        return type("text");
+    }
+
+    public QuestionBuilder numberQuestion() {
+        return type("number");
+    }
+
+    public QuestionBuilder radioQuestion() {
+        return type("radio");
+    }
+
+    public QuestionBuilder checkboxQuestion() {
+        return type("checkbox");
+    }
+
 
     public Question build() {
         return result;

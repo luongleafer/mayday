@@ -270,8 +270,8 @@ public class MedicalRecordClassificationService {
                 .benhNhan(benhNhan)
                 .loaiBenhAn(loaiBenhAn)
                 .trangThai("pending")
-                .thoiDiemKhamLanDau(OffsetDateTime.now())
                 .build();
+        hoSo.getGenericRecordInformation().setThoiDiemKhamLanDau(OffsetDateTime.now());
 
         // Bóc tách mảng answers để lưu vào các cột tương ứng trong CSDL
         if (req.getAnswers() != null) {
@@ -283,18 +283,18 @@ public class MedicalRecordClassificationService {
                 if (qId != null && val != null) {
                     if (qId.contains(Q_DURATION_WEEKS)) {
                         try {
-                            hoSo.setThoiGianKhoiPhatTuan(new java.math.BigDecimal(val.trim()));
+                            hoSo.getGenericRecordInformation().setThoiGianKhoiPhatTuan(new java.math.BigDecimal(val.trim()));
                         } catch (Exception ignored) {
                         }
                     } else if (qId.contains(Q_TREATED_BEFORE)) {
-                        hoSo.setDaDieuTriTruocKham(Boolean.parseBoolean(val.trim()) || "Có".equalsIgnoreCase(val.trim()));
+                        hoSo.getGenericRecordInformation().setDaDieuTriTruocKham(Boolean.parseBoolean(val.trim()) || "Có".equalsIgnoreCase(val.trim()));
                     } else if (qId.contains(Q_FAMILY_HISTORY)) {
                         if (val.contains("Co") || val.contains("Có")) {
-                            hoSo.setTienSuGiaDinh("Co");
+                            hoSo.getGenericRecordInformation().setTienSuGiaDinh("Co");
                         } else if (val.contains("Khong") || val.contains("Không")) {
-                            hoSo.setTienSuGiaDinh("Khong");
+                            hoSo.getGenericRecordInformation().setTienSuGiaDinh("Khong");
                         } else {
-                            hoSo.setTienSuGiaDinh("Khong ro");
+                            hoSo.getGenericRecordInformation().setTienSuGiaDinh("Khong ro");
                         }
                     }
                 }
@@ -318,7 +318,7 @@ public class MedicalRecordClassificationService {
                               .patientId(benhNhan.getMaBenhNhan())
                               .templateId(templateId)
                               .status(savedHoSo.getTrangThai())
-                              .createdAt(savedHoSo.getThoiDiemKhamLanDau().toString())
+                              .createdAt(savedHoSo.getGenericRecordInformation().getThoiDiemKhamLanDau().toString())
                               .build())
                 .build();
     }

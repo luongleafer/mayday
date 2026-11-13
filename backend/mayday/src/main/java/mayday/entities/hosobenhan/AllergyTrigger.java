@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
 
 @Embeddable
-public record ThongTinHoanCanhKhoiPhat(
+public record AllergyTrigger(
         String nghiNgo,
         BigDecimal thoiGian,
         Boolean tungBi,
