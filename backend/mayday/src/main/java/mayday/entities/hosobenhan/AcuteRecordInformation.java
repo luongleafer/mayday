@@ -2,62 +2,67 @@ package mayday.entities.hosobenhan;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Duration;
 
 @Embeddable
-public record AcuteRecordInformation(
-        Boolean nhapVien,
+@Getter
+@Setter
+@NoArgsConstructor
+public class AcuteRecordInformation {
+    Boolean nhapVien;
 
-        Boolean cdSocPhanVe,
+    Boolean cdSocPhanVe;
 
-        Boolean cdPhanVe,
+    Boolean cdPhanVe;
 
-        Boolean cdMayDayCapNang,
+    Boolean cdMayDayCapNang;
 
-        Boolean cdMayDayCapThongThuong,
+    Boolean cdMayDayCapThongThuong;
 
-        String tienSuBenhNenDa,
+    String tienSuBenhNenDa;
 
-        String tienSuBenhNenHoHap,
+    String tienSuBenhNenHoHap;
 
-        String tienSuBenhNenTuanHoan,
+    String tienSuBenhNenTuanHoan;
 
-        String tienSuBenhTimMachGhiRo,
+    String tienSuBenhTimMachGhiRo;
 
-        String tienSuBenhTieuHoaManTinhGhiRo,
+    String tienSuBenhTieuHoaManTinhGhiRo;
 
-        String tienSuBenhNenTieuHoa,
+    String tienSuBenhNenTieuHoa;
 
-        String nhomYeuToNghiNgo,
+    String nhomYeuToNghiNgo;
 
-        Boolean coNghiNgoDotNay,
+    Boolean coNghiNgoDotNay;
 
-        String tenYeuToNghiNgo,
+    String tenYeuToNghiNgo;
 
-        String loaiTienSu,
+    String loaiTienSu;
 
-        Boolean daTungPhanUngTruocDay,
+    Boolean daTungPhanUngTruocDay;
 
-        @Column(columnDefinition = "interval")
-        Duration thoiGianTiepXucDenKhoiPhat,
+    @Column(columnDefinition = "interval")
+    Duration thoiGianTiepXucDenKhoiPhat;
 
-        @Column(columnDefinition = "interval")
-        Duration thoiGianKeoDaiTb,
+    @Column(columnDefinition = "interval")
+    Duration thoiGianKeoDaiTb;
 
-        @Column(columnDefinition = "interval")
-        Duration dotGanNhatCach,
+    @Column(columnDefinition = "interval")
+    Duration dotGanNhatCach;
 
-        String tienSuPhanVeGhiRo,
+    String tienSuPhanVeGhiRo;
 
-        String tienSuDiUngGhiRo,
+    String tienSuDiUngGhiRo;
 
-        Boolean daDieuTriBenhDotNay,
+    Boolean daDieuTriBenhDotNay;
 
-        Integer tuoiLanDauBiBenh,
+    Integer tuoiLanDauBiBenh;
 
-        Integer soLanMayDayCapTruoc,
+    Integer soLanMayDayCapTruoc;
 
-        String benhPhu
-) {
+    String benhPhu;
 }
