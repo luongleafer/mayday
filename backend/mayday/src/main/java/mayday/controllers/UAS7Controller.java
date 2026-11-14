@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mayday.dto.UAS7EligibilityResponseDto;
 import mayday.dto.requests.UAS7CreateRequestDto;
 import mayday.dto.responses.UAS7CreateResponseDto;
+import mayday.dto.responses.UAS7GetResponseDto;
 import mayday.services.UAS7Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -38,5 +39,14 @@ public class UAS7Controller {
         Long maBenhNhan = Long.parseLong(authentication.getName());
         UAS7CreateResponseDto response = uas7Service.uas7DailyCreate(maBenhNhan, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+
+    @GetMapping("/patient/{patient_id}")
+    public ResponseEntity<UAS7GetResponseDto> getUas7ScoresPatient(
+            @PathVariable("patient_id") String patientId) {
+
+        UAS7GetResponseDto response = uas7Service.getUas7HistoryByPatient(patientId);
+        return ResponseEntity.ok(response);
     }
 }

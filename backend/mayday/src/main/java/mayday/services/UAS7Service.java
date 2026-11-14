@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mayday.dto.UAS7EligibilityResponseDto;
 import mayday.dto.requests.UAS7CreateRequestDto;
 import mayday.dto.responses.UAS7CreateResponseDto;
+import mayday.dto.responses.UAS7GetResponseDto;
 import mayday.entities.NhatKyUASHangNgay;
 import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.nguoi.BenhNhan;
@@ -24,6 +25,7 @@ import java.util.Optional;
 public class UAS7Service {
     private final HoSoBenhAnRepository hoSoBenhAnRepository;
     private final NhatKyUASHangNgayRepository nhatKyUASHangNgayRepository;
+    private final BenhNhanRepository benhNhanRepository;
 
     //UAS701
     @Transactional(readOnly = true)
@@ -135,6 +137,61 @@ public class UAS7Service {
                 .message(message)
                 .data(null)
                 .build();
+    }
+
+    //UAS704
+    @Transactional()
+    public UAS7GetResponseDto getUas7HistoryByPatient(String maBenhNhanStr){
+        Long maBenhNhan;
+        try {
+            maBenhNhan = Long.parseLong(maBenhNhanStr);
+        } catch (NumberFormatException e) {
+            return UAS7GetResponseDto.builder()
+                    .code("3007")
+                    .message("User not found")
+                    .data(null)
+                    .build();
+        }
+
+        if (!benhNhanRepository.existsById(maBenhNhan)) {
+            return UAS7GetResponseDto.builder()
+                    .code("3007")
+                    .message("User not found")
+                    .data(null)
+                    .build();
+        }
+
+        List<NhatKyUASHangNgay> records = nhatKyUASHangNgayRepository
+                .findByMaBenhNhanOrderByNgayChamDiemDesc(maBenhNhan);
+
+        List<UAS7GetResponseDto.UAS7HistoryItemDto> data = records.stream()
+                .map(r -> UAS7GetResponseDto.UAS7HistoryItemDto.builder()
+                        .patientId(String.valueOf(r.getMaBenhNhan()))
+                        .medicalRecordId(r.getMaHoSoMan() != null ? String.valueOf(r.getMaHoSoMan()) : null)
+                        .scoreDate(r.getNgayChamDiem().toString())
+                        .iss7(String.valueOf(r.getDiemNguaIss()))
+                        .hss7(String.valueOf(r.getDiemSanPhuHss()))
+                        .dailyScore(String.valueOf(r.getDiemUasNgay() != null
+                                ? r.getDiemUasNgay()
+                                : r.getDiemNguaIss() + r.getDiemSanPhuHss()))
+                        .note(null)
+                        .build())
+                .toList();
+
+
+        return UAS7GetResponseDto.builder()
+                .code("1000")
+                .message("OK")
+                .data(data)
+                .build();
+
+
+
+
+
+
+
+
     }
 
 
