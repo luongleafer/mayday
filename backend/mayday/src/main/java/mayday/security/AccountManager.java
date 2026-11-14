@@ -3,48 +3,46 @@ package mayday.security;
 import jakarta.annotation.Nonnull;
 import mayday.entities.nguoi.TaiKhoan;
 import mayday.repositories.TaiKhoanRepository;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
-public class TaiKhoanManager implements UserDetailsManager {
+public class AccountManager implements UserDetailsManager {
 
     private final TaiKhoanRepository repository;
 
-    public TaiKhoanManager(TaiKhoanRepository repository) {
+    public AccountManager(TaiKhoanRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public void createUser(UserDetails user) {
-        TaiKhoan taiKhoanMoi = new TaiKhoan();
-        taiKhoanMoi.setTenDangNhap(user.getUsername());
-        taiKhoanMoi.setMatKhauMaHoa(user.getPassword());
-        repository.save(taiKhoanMoi);
+        TaiKhoan newAccount = new TaiKhoan();
+        newAccount.setTenDangNhap(user.getUsername());
+        newAccount.setMatKhauMaHoa(user.getPassword());
+        repository.save(newAccount);
     }
 
     @Override
     public void updateUser(UserDetails user) {
-        TaiKhoan taiKhoan = repository.findByTenDangNhap(user.getUsername()).orElse(null);
-        if (taiKhoan == null) return;
-        taiKhoan.setMatKhauMaHoa(user.getPassword());
-        taiKhoan.setTrangThaiHoatDong(user.isEnabled());
+        TaiKhoan account = repository.findByTenDangNhap(user.getUsername()).orElse(null);
+        if (account == null) return;
+        account.setMatKhauMaHoa(user.getPassword());
+        account.setTrangThaiHoatDong(user.isEnabled());
+        repository.save(account);
     }
 
     @Override
-    public void deleteUser(String username) {
+    public void deleteUser(@NonNull String username) {
         repository.deleteTaiKhoanByTenDangNhap(username);
-
     }
 
     @Override
     public void changePassword(@Nullable String oldPassword, @Nullable String newPassword) {
-
     }
 
     @Override
