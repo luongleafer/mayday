@@ -25,6 +25,7 @@ public class BenhAnMayDayCap {
     @JsonUnwrapped
     private AcuteRecordInformation acuteRecordInformation;
 
+    @Column(updatable = false, insertable = false)
     @ColumnDefault("'CAP'")
     private String loaiBenhAn;
 

@@ -21,6 +21,7 @@ public class BenhAnMayDayMan {
     @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
     private HoSoBenhAn hoSoBenhAn;
 
+    @Column(updatable = false, insertable = false)
     @ColumnDefault("'MAN'")
     private String loaiBenhAn;
 

@@ -1,5 +1,7 @@
 package mayday.entities.phienkham;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.EmbeddedColumnNaming;
@@ -13,14 +15,17 @@ public class DauHieuSinhTon {
     private Long maDauHieuSinhTon;
 
     @Column(insertable = false, updatable = false)
+    @JsonIgnore
     private Long maPhienKham;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JsonIgnore
     private PhienKham phienKham;
 
     private Long maBacSi;
 
+    @JsonUnwrapped
     public VitalSignsInformation getDauHieuSinhTon() {
         return dauHieuSinhTon;
     }

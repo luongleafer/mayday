@@ -41,7 +41,7 @@ public class HoSoBenhAn {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "hoSoBenhAn")
     private List<PhienKham> danhSachPhienKham;
 
-    @OneToOne(mappedBy = "hoSoBenhAn")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "hoSoBenhAn")
     private HoanCanhKhoiphatDiUng hoanCanhKhoiphatDiUng;
 
     private String loaiBenhAn;
