@@ -5,8 +5,11 @@ import mayday.dto.requests.CreditMedicalRecordsRequestBody;
 import mayday.dto.responses.MedicalRecordsAnswersResponse;
 import mayday.dto.responses.CreditMedicalRecordsResponse;
 import mayday.dto.responses.SetAcceptMedicalRecordsResponse;
+import mayday.entities.qa.Answer;
 import mayday.services.hosobenhan.MedicalRecordManagementService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -41,5 +44,10 @@ public class MedicalRecordManagementController {
     @GetMapping("/{id}/answers")
     ApiResponse<MedicalRecordsAnswersResponse> getMedicalRecordsAnswers(@PathVariable Long id) {
         return medicalRecordManagementService.getMedicalRecordsAnswers(id);
+    }
+
+    @PutMapping("/{id}/answers")
+    ApiResponse<Integer> updateMedicalRecordsAnswers(@PathVariable Long id, @RequestBody List<Answer> answers) {
+        return medicalRecordManagementService.updateMedicalRecordsAnswers(id, answers);
     }
 }

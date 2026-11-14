@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import mayday.exceptions.InvalidOptionException;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,4 +19,14 @@ public class Answer {
 
     @JsonProperty("answer_value")
     private Object answerValue;
+
+    public void update(Answer newAnswer) {
+        if (!newAnswer.questionId.equals(questionId)) return;
+        if (newAnswer.answerValue == null) return;
+        answerValue = newAnswer.answerValue;
+    }
+
+    public void updateFromList(List<Answer> answers) {
+        answers.forEach(this::update);
+    }
 }
