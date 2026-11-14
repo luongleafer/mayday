@@ -12,6 +12,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /** Chuyen loi nghiep vu, validation va rang buoc database thanh response JSON thong nhat. */
 @RestControllerAdvice
@@ -25,17 +26,44 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ApiResponse<Object>> handleValidation(MethodArgumentNotValidException exception) {
         Map<String, String> errors = new LinkedHashMap<>();
-        exception.getBindingResult().getFieldErrors().forEach(
-                error -> errors.putIfAbsent(error.getField(), error.getDefaultMessage()));
+        boolean missingRequired = false;
+        for (var error : exception.getBindingResult().getFieldErrors()) {
+            errors.putIfAbsent(error.getField(), error.getDefaultMessage());
+            String code = error.getCode();
+            if ("NotBlank".equals(code) || "NotNull".equals(code) || "NotEmpty".equals(code)) {
+                missingRequired = true;
+            }
+        }
+        if (missingRequired) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>("2001", "Missing required parameter", errors));
+        }
         return ResponseEntity.badRequest()
                 .body(new ApiResponse<>("2003", "Invalid parameter value", errors));
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class,
-            MethodArgumentTypeMismatchException.class})
-    ResponseEntity<ApiResponse<Object>> handleMalformedRequest(Exception exception) {
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    ResponseEntity<ApiResponse<Object>> handleMissingParameter(MissingServletRequestParameterException exception) {
         return ResponseEntity.badRequest()
-                .body(new ApiResponse<>("2003", "Invalid parameter value", Map.of()));
+                .body(new ApiResponse<>("2001", "Missing required parameter", Map.of()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ResponseEntity<ApiResponse<Object>> handleTypeMismatch(MethodArgumentTypeMismatchException exception) {
+        return ResponseEntity.badRequest()
+                .body(new ApiResponse<>("2002", "Invalid parameter type", Map.of()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    ResponseEntity<ApiResponse<Object>> handleMalformedJson(HttpMessageNotReadableException exception) {
+        return ResponseEntity.badRequest()
+                .body(new ApiResponse<>("2007", "Request body invalid", Map.of()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<ApiResponse<Object>> handleIllegalArgument(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest()
+                .body(new ApiResponse<>("2003", exception.getMessage(), Map.of()));
     }
 
     // Bat loi rang buoc con lai, ke ca khi du lieu bi thay doi boi request dong thoi.
@@ -43,7 +71,7 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiResponse<Object>> handleDataIntegrity(DataIntegrityViolationException exception) {
         if (PersistenceUtils.isUniqueConstraintViolation(exception)) {
             return ResponseEntity.status(409)
-                    .body(new ApiResponse<>("2004", "Data already exists", Map.of()));
+                    .body(new ApiResponse<>("2003", "Data already exists", Map.of()));
         }
         return ResponseEntity.badRequest()
                 .body(new ApiResponse<>("2003", "Data violates a database constraint", Map.of()));
