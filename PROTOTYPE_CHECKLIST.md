@@ -83,6 +83,3 @@ Dùng bộ dữ liệu giả thống nhất giữa các frame. Nếu công cụ 
 
 Kết luận chỉ khi đã kiểm tra thực tế: tổng số đạt/lỗi/chưa kiểm tra, luồng bị chặn, frame thừa hoặc trùng, hành động cần bổ sung, các điểm chờ xác nhận và thiết bị/công cụ đã dùng. Prototype minh họa tương tác; việc kiểm tra prototype không chứng minh API, dữ liệu hay ứng dụng thật hoạt động.
 
-## 9. Prompt kiểm tra cho Stitch hoặc người review
-
-> Đối chiếu các frame hiện có với `PROTOTYPE_CHECKLIST.md` và `design.md`, ưu tiên font Poppins. Kiểm kê frame và liên kết hiện có, sau đó chạy hoặc kiểm tra từng luồng nếu công cụ cho phép. Báo cáo Đạt/Lỗi/Chưa kiểm tra/Cần xác nhận kèm tên frame nguồn, đích và bằng chứng. Phân biệt điều đã quan sát với điều chỉ suy luận. Chỉ liệt kê màn hình thiếu hoặc trùng và đề xuất tái sử dụng component; chưa tạo, xóa hoặc thay đổi frame. Không tự chốt Loại khoa hay quy tắc sửa phòng chưa gán khoa.
