@@ -41,6 +41,7 @@ public class JwtService {
                 .issuedAt(now)
                 .expiresAt(expiry)
                 .subject(taiKhoan.getMaTaiKhoan().toString())
+                .claim("scope", taiKhoan.getVaiTro().getTenVaiTro())
                 .build();
         return encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
