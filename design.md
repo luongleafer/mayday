@@ -191,9 +191,3 @@ Không thêm dashboard KPI, biểu đồ, quản lý bệnh nhân, hồ sơ bệ
 - [ ] Có tạo, sửa, chi tiết, xác nhận xóa, loading, empty và phản hồi thao tác.
 - [ ] Bảng và form đọc tốt trên desktop; mobile giữ đủ thông tin và hành động.
 - [ ] Các khác biệt backend ở mục 11 vẫn được ghi nhận, chưa bị coi là đã giải quyết.
-
-## 13. Cách dùng trong Stitch
-
-Dán nội dung brief này vào Google Stitch, kèm yêu cầu: “Hãy tạo bộ UI theo đặc tả này. Bắt đầu bằng shell chung và ba trang danh sách desktop, sau đó tạo chi tiết, form và các trạng thái bắt buộc. Giữ nguyên hệ thống thị giác giữa các lần tạo. Dùng tiếng Việt trên toàn bộ giao diện. Các điểm chưa xác nhận ở mục 11 chỉ là ghi chú review, không tự giải quyết bằng cách thêm tính năng.”
-
-Nếu chia thành nhiều lượt, luôn nhắc giữ cùng shell, palette, typography và component; tạo lần lượt Chi nhánh → Khoa → Phòng → trạng thái chung → responsive. Review bằng checklist ở mục 12.
