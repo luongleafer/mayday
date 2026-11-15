@@ -1,6 +1,7 @@
 package mayday.security;
 
 import jakarta.annotation.Nonnull;
+import lombok.Getter;
 import mayday.entities.nguoi.TaiKhoan;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class AccountDetails implements UserDetails {
 
+    @Getter
     private final TaiKhoan taiKhoan;
 
     public AccountDetails(TaiKhoan taiKhoan) {
@@ -35,7 +37,4 @@ public class AccountDetails implements UserDetails {
         return taiKhoan.getTenDangNhap();
     }
 
-    public String getCustomThing() {
-        return "custom user details";
-    }
 }

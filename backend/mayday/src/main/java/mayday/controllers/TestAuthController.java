@@ -16,7 +16,7 @@ public class TestAuthController {
     public String test(Authentication authentication) {
         AccountDetails accountDetails = (AccountDetails) authentication.getPrincipal();
         if (accountDetails == null) return "null";
-        return accountDetails.getCustomThing();
+        return "abc";
     }
 
 }
