@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
@@ -57,11 +58,11 @@ public class TaiKhoan {
     @Column(name = "trang_thai_hoat_dong", nullable = false)
     private Boolean trangThaiHoatDong = true;
 
-    @CreationTimestamp
+    @CurrentTimestamp
     @Column(name = "thoi_diem_tao", nullable = false, updatable = false)
     private OffsetDateTime thoiDiemTao;
 
-    @UpdateTimestamp
+    @CurrentTimestamp
     @Column(name = "thoi_diem_cap_nhat", nullable = false)
     private OffsetDateTime thoiDiemCapNhat;
 }

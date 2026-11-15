@@ -14,6 +14,7 @@ import mayday.security.LoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -52,16 +53,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-        http.httpBasic(Customizer.withDefaults())
-                .authorizeHttpRequests(
-                        request -> request
-                                .requestMatchers("/api/v1/auth/login").permitAll()
-                                .anyRequest().authenticated()
-                ).csrf(AbstractHttpConfigurer::disable)
+        http.httpBasic(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new CustomAuthenticationFilter(authenticationManager(), loginSuccessHandler()), UsernamePasswordAuthenticationFilter.class)
                 .oauth2ResourceServer(
                         oauth2 -> oauth2.jwt(
                                 Customizer.withDefaults()))
+                .authorizeHttpRequests(
+                        request -> request
+                                .requestMatchers("/api/v1/auth/login").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/signup").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(
                         exceptions -> exceptions.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
