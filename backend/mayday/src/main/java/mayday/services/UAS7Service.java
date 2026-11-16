@@ -1,17 +1,15 @@
 package mayday.services;
 
 import lombok.RequiredArgsConstructor;
-import mayday.dto.UAS7EligibilityResponseDto;
 import mayday.dto.requests.UAS7CreateRequestDto;
-import mayday.dto.responses.UAS7CreateResponseDto;
-import mayday.dto.responses.UAS7GetResponseDto;
+import mayday.dto.responses.ApiResponse;
+import mayday.dto.UAS7EligibilityData;
+import mayday.dto.UAS7ScoreItemDto;
 import mayday.entities.NhatKyUASHangNgay;
 import mayday.entities.hosobenhan.HoSoBenhAn;
-import mayday.entities.nguoi.BenhNhan;
 import mayday.repositories.BenhNhanRepository;
 import mayday.repositories.HoSoBenhAnRepository;
 import mayday.repositories.NhatKyUASHangNgayRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,88 +21,99 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UAS7Service {
+
     private final HoSoBenhAnRepository hoSoBenhAnRepository;
     private final NhatKyUASHangNgayRepository nhatKyUASHangNgayRepository;
     private final BenhNhanRepository benhNhanRepository;
 
-    //UAS701
+    // UAS701: Kiểm tra điều kiện chấm điểm
     @Transactional(readOnly = true)
-    public UAS7EligibilityResponseDto checkUas7Eligibility(Long maBenhNhan) {
+    public ApiResponse<UAS7EligibilityData> checkUas7Eligibility(Long maBenhNhan) {
         Optional<HoSoBenhAn> hoSoActive = hoSoBenhAnRepository.findActiveByMaBenhNhan(maBenhNhan);
 
         if (hoSoActive.isPresent()) {
-            return UAS7EligibilityResponseDto.builder()
-                    .code("1000")
-                    .message("OK")
-                    .data(UAS7EligibilityResponseDto.EligibilityData.builder()
-                            .eligible("true")
-                            .medicalRecordId(String.valueOf(hoSoActive.get().getMaHoSo()))
-                            .build())
+            UAS7EligibilityData data = UAS7EligibilityData.builder()
+                    .eligible("true")
+                    .medicalRecordId(String.valueOf(hoSoActive.get().getMaHoSo()))
                     .build();
+            return ApiResponse.ok(data);
         }
 
-        return UAS7EligibilityResponseDto.builder()
-                .code("1000")
-                .message("OK")
-                .data(UAS7EligibilityResponseDto.EligibilityData.builder()
-                        .eligible("false")
-                        .medicalRecordId(null)
-                        .build())
+        UAS7EligibilityData data = UAS7EligibilityData.builder()
+                .eligible("false")
+                .medicalRecordId(null)
                 .build();
+        return ApiResponse.ok(data);
     }
-    //UAS702
-    @Transactional()
-    public UAS7CreateResponseDto uas7DailyCreate (Long maBenhNhan, UAS7CreateRequestDto request){
+
+    // UAS702: Khởi tạo điểm UAS7 hằng ngày
+    @Transactional
+    public ApiResponse<List<UAS7ScoreItemDto>> uas7DailyCreate(Long maBenhNhan, UAS7CreateRequestDto request) {
+        // 1.
         LocalDate scoreDate;
         try {
+            if (request.getScoreDate() == null) {
+                return new ApiResponse<>("2006", "Invalid score_date format (expected YYYY-MM-DD)", null);
+            }
             scoreDate = LocalDate.parse(request.getScoreDate());
         } catch (Exception e) {
-            return buildError("2006", "Invalid score_date format (expected YYYY-MM-DD)");
+            return new ApiResponse<>("2006", "Invalid score_date format (expected YYYY-MM-DD)", null);
         }
+
+        // 2. Kiểm tra trùng ngày chấm điểm
         if (nhatKyUASHangNgayRepository.existsByMaBenhNhanAndNgayChamDiem(maBenhNhan, scoreDate)) {
-            return buildError("5002", "Score for date already submitted");
+            return new ApiResponse<>("5002", "Score for date already submitted", null);
         }
+
+        // 3.
         short iss7;
         try {
+            if (request.getIss7() == null) {
+                return new ApiResponse<>("5003", "Invalid ISS7 value", null);
+            }
             iss7 = Short.parseShort(request.getIss7());
             if (iss7 < 0 || iss7 > 3) {
-                return buildError("5003", "Invalid ISS7 value");
+                return new ApiResponse<>("5003", "Invalid ISS7 value", null);
             }
         } catch (NumberFormatException e) {
-            return buildError("5003", "Invalid ISS7 value");
+            return new ApiResponse<>("5003", "Invalid ISS7 value", null);
         }
 
-
+        // 4.
         short hss7;
         try {
+            if (request.getHss7() == null) {
+                return new ApiResponse<>("5004", "Invalid HSS7 value", null);
+            }
             hss7 = Short.parseShort(request.getHss7());
             if (hss7 < 0 || hss7 > 3) {
-                return buildError("5004", "Invalid HSS7 value");
+                return new ApiResponse<>("5004", "Invalid HSS7 value", null);
             }
         } catch (NumberFormatException e) {
-            return buildError("5004", "Invalid HSS7 value");
+            return new ApiResponse<>("5004", "Invalid HSS7 value", null);
         }
+
+        // 5. Parse medical_record_id
         Long maHoSoMan = null;
         if (request.getMedicalRecordId() != null && !request.getMedicalRecordId().isBlank()) {
             try {
                 maHoSoMan = Long.parseLong(request.getMedicalRecordId());
             } catch (NumberFormatException e) {
-                return buildError("4001", "Invalid medical_record_id");
+                return new ApiResponse<>("4001", "Invalid medical_record_id", null);
             }
         }
 
-        // 6. Lưu vào bảng nhatkyuashangngay
+
         NhatKyUASHangNgay entity = NhatKyUASHangNgay.builder()
                 .maBenhNhan(maBenhNhan)
                 .maHoSoMan(maHoSoMan)
                 .ngayChamDiem(scoreDate)
                 .diemNguaIss(iss7)
                 .diemSanPhuHss(hss7)
-                .trangThaiNgay("HOP_LE") // Cột NOT NULL với check constraint ('HOP_LE', 'KHONG_HOP_LE')
+                .trangThaiNgay("HOP_LE")
                 .build();
 
         NhatKyUASHangNgay saved = nhatKyUASHangNgayRepository.save(entity);
-
 
         int dailyScore = iss7 + hss7;
         String nowStr = OffsetDateTime.now().toString();
@@ -112,7 +121,7 @@ public class UAS7Service {
                 ? saved.getThoiDiemCapNhat().toString()
                 : nowStr;
 
-        UAS7CreateResponseDto.UAS7ScoreItemDto item = UAS7CreateResponseDto.UAS7ScoreItemDto.builder()
+        UAS7ScoreItemDto item = UAS7ScoreItemDto.builder()
                 .patientId(String.valueOf(maBenhNhan))
                 .medicalRecordId(maHoSoMan != null ? String.valueOf(maHoSoMan) : null)
                 .scoreDate(scoreDate.toString())
@@ -124,48 +133,28 @@ public class UAS7Service {
                 .updatedAt(updatedAtStr)
                 .build();
 
-        return UAS7CreateResponseDto.builder()
-                .code("1001")
-                .message("Created successfully")
-                .data(List.of(item))
-                .build();
+        return ApiResponse.created(List.of(item));
     }
 
-    private UAS7CreateResponseDto buildError(String code, String message) {
-        return UAS7CreateResponseDto.builder()
-                .code(code)
-                .message(message)
-                .data(null)
-                .build();
-    }
-
-    //UAS704
-    @Transactional()
-    public UAS7GetResponseDto getUas7HistoryByPatient(String maBenhNhanStr){
+    // UAS704: Truy xuất toàn bộ lịch sử điểm
+    @Transactional(readOnly = true)
+    public ApiResponse<List<UAS7ScoreItemDto>> getUas7HistoryByPatient(String maBenhNhanStr) {
         Long maBenhNhan;
         try {
             maBenhNhan = Long.parseLong(maBenhNhanStr);
         } catch (NumberFormatException e) {
-            return UAS7GetResponseDto.builder()
-                    .code("3007")
-                    .message("User not found")
-                    .data(null)
-                    .build();
+            return new ApiResponse<>("3007", "User not found", null);
         }
 
         if (!benhNhanRepository.existsById(maBenhNhan)) {
-            return UAS7GetResponseDto.builder()
-                    .code("3007")
-                    .message("User not found")
-                    .data(null)
-                    .build();
+            return new ApiResponse<>("3007", "User not found", null);
         }
 
         List<NhatKyUASHangNgay> records = nhatKyUASHangNgayRepository
                 .findByMaBenhNhanOrderByNgayChamDiemDesc(maBenhNhan);
 
-        List<UAS7GetResponseDto.UAS7HistoryItemDto> data = records.stream()
-                .map(r -> UAS7GetResponseDto.UAS7HistoryItemDto.builder()
+        List<UAS7ScoreItemDto> data = records.stream()
+                .map(r -> UAS7ScoreItemDto.builder()
                         .patientId(String.valueOf(r.getMaBenhNhan()))
                         .medicalRecordId(r.getMaHoSoMan() != null ? String.valueOf(r.getMaHoSoMan()) : null)
                         .scoreDate(r.getNgayChamDiem().toString())
@@ -178,24 +167,6 @@ public class UAS7Service {
                         .build())
                 .toList();
 
-
-        return UAS7GetResponseDto.builder()
-                .code("1000")
-                .message("OK")
-                .data(data)
-                .build();
-
-
-
-
-
-
-
-
+        return ApiResponse.ok(data);
     }
-
-
-
-
-
 }
