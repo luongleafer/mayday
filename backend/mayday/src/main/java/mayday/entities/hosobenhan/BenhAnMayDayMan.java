@@ -1,8 +1,10 @@
 package mayday.entities.hosobenhan;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.EmbeddedColumnNaming;
 
 @Entity
 @Table(name = "benhanmaydayman")
@@ -19,39 +21,28 @@ public class BenhAnMayDayMan {
     @JoinColumn(name = "maHoSo", referencedColumnName = "maHoSo")
     private HoSoBenhAn hoSoBenhAn;
 
+    @Column(updatable = false, insertable = false)
     @ColumnDefault("'MAN'")
     private String loaiBenhAn;
 
-    @Enumerated(EnumType.STRING)
-    private ChanDoanChinhType chanDoanChinh;
-
-    @Enumerated(EnumType.STRING)
-    private PhanNhomCsuType phanNhomCsu;
-
-    private Boolean chungDaVeNoi;
-
-    private Boolean mayDayCholinergic;
-
-    private Boolean mayDayDoLanh;
-
-    private Boolean mayDayAdrenergic;
-
-    private Boolean mayDayDoNuoc;
-
-    private Boolean mayDayDoAnhSang;
-
-    private Boolean mayDayCamUngKhac;
-
-    private String mayDayCamUngKhacGhiRo;
-
-    @Enumerated(EnumType.STRING)
-    private BieuHienQuaTrinhBenhType bieuHienQuaTrinhBenh;
+    @Embedded
+    @EmbeddedColumnNaming("%s")
+    @JsonUnwrapped
+    private ChronicRecordInformation chronicRecordInformation;
 
     @OneToOne(mappedBy = "benhAnMayDayMan")
     private TienSuBanThan tienSuBanThan;
 
     @OneToOne(mappedBy = "benhAnMayDayMan")
     private BenhSuCacDotBenhTruoc benhSuCacDotBenhTruoc;
+
+    public PersonalMedicalHistory getPersonalMedicalHistory() {
+        return tienSuBanThan != null ? tienSuBanThan.personalMedicalHistory : null;
+    }
+
+    public ClinicHistoryDetail getClinicHistoryDetail() {
+        return benhSuCacDotBenhTruoc != null ? benhSuCacDotBenhTruoc.clinicHistoryDetail : null;
+    }
 
 
 }

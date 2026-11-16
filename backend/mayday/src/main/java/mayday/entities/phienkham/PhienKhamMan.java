@@ -33,6 +33,6 @@ public class PhienKhamMan {
         return tonThuongSanPhu;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamMan")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "phienKhamMan")
     private List<ChiTietTonThuongSanPhu> tonThuongSanPhu;
 }

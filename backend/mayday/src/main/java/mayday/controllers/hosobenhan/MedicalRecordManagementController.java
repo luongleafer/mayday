@@ -1,12 +1,15 @@
 package mayday.controllers.hosobenhan;
 
 import mayday.dto.responses.ApiResponse;
-import mayday.dto.requests.ChotCaKhamRequestBody;
+import mayday.dto.requests.CreditMedicalRecordsRequestBody;
 import mayday.dto.responses.MedicalRecordsAnswersResponse;
 import mayday.dto.responses.CreditMedicalRecordsResponse;
 import mayday.dto.responses.SetAcceptMedicalRecordsResponse;
+import mayday.entities.qa.Answer;
 import mayday.services.hosobenhan.MedicalRecordManagementService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -27,7 +30,7 @@ public class MedicalRecordManagementController {
 
     //medrec11
     @PutMapping("/{id}")
-    ApiResponse<CreditMedicalRecordsResponse> creditMedicalRecords(@PathVariable Long id, @RequestBody ChotCaKhamRequestBody body) {
+    ApiResponse<CreditMedicalRecordsResponse> creditMedicalRecords(@PathVariable Long id, @RequestBody CreditMedicalRecordsRequestBody body) {
         return medicalRecordManagementService.creditMedicalRecords(id, body.trangThai(), body.danDo());
     }
 
@@ -41,5 +44,10 @@ public class MedicalRecordManagementController {
     @GetMapping("/{id}/answers")
     ApiResponse<MedicalRecordsAnswersResponse> getMedicalRecordsAnswers(@PathVariable Long id) {
         return medicalRecordManagementService.getMedicalRecordsAnswers(id);
+    }
+
+    @PutMapping("/{id}/answers")
+    ApiResponse<Integer> updateMedicalRecordsAnswers(@PathVariable Long id, @RequestBody List<Answer> answers) {
+        return medicalRecordManagementService.updateMedicalRecordsAnswers(id, answers);
     }
 }

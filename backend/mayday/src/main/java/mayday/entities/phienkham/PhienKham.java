@@ -52,7 +52,7 @@ public class PhienKham {
     @JoinColumn(name = "maBacSi", referencedColumnName = "maNhanVien")
     private NhanVien bacSi;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKham")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "phienKham")
     private List<DauHieuSinhTon> bangDauHieuSinhTon;
 
     private Long maPhongKham;
@@ -113,45 +113,5 @@ public class PhienKham {
     @JsonIgnore
     public List<DauHieuSinhTon> getBangDauHieuSinhTon() {
         return bangDauHieuSinhTon;
-    }
-
-    public Long getMaPhongKham() {
-        return maPhongKham;
-    }
-
-    public LocalDate getNgayKham() {
-        return ngayKham;
-    }
-
-    public Integer getLanKhamThu() {
-        return lanKhamThu;
-    }
-
-    public Boolean getLuuHuyetThanh() {
-        return luuHuyetThanh;
-    }
-
-    public Boolean getSot() {
-        return sot;
-    }
-
-    public BigDecimal getSotNhietDoC() {
-        return sotNhietDoC;
-    }
-
-    public LocalDate getNgayHenTaiKham() {
-        return ngayHenTaiKham;
-    }
-
-    public String getTomTatBuoiKham() {
-        return tomTatBuoiKham;
-    }
-
-    public String getHuongXuTriLanSau() {
-        return huongXuTriLanSau;
-    }
-
-    public String getDanDo() {
-        return danDo;
     }
 }
