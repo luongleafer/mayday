@@ -25,7 +25,7 @@ public class ChuKyTheoDoiUAS7 {
     private Long maBenhNhan;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ma_benh_nhan", referencedColumnName = "ma_benh_nhan", insertable = false, updatable = false)
+    @JoinColumn(name = "ma_benh_nhan", referencedColumnName = "maBenhNhan", insertable = false, updatable = false)
     private BenhNhan benhNhan;
 
     @Column(name = "ngay_bat_dau", nullable = false)

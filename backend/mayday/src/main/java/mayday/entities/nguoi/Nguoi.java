@@ -13,6 +13,7 @@ import java.time.OffsetDateTime;
 @Setter
 public class Nguoi {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long maNguoi;
 
     private String hoTen;
