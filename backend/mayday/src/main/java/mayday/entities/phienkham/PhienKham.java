@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.nguoi.NhanVien;
-import mayday.entities.hosobenhan.LoaiBenhAn;
+import mayday.entities.hosobenhan.BenhAnType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,9 +38,11 @@ public class PhienKham {
     }
 
     @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
+    @JsonIgnore
     PhienKhamCap phienKhamCap;
 
     @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
+    @JsonIgnore
     PhienKhamMan phienKhamMan;
 
     @Column(insertable = false, updatable = false)
@@ -67,12 +69,12 @@ public class PhienKham {
 
     private Integer lanKhamThu;
 
-    public LoaiBenhAn getLoaiPhienKham() {
+    public BenhAnType getLoaiPhienKham() {
         return loaiPhienKham;
     }
 
     @Enumerated(EnumType.STRING)
-    private LoaiBenhAn loaiPhienKham;
+    private BenhAnType loaiPhienKham;
 
     private Boolean luuHuyetThanh;
 

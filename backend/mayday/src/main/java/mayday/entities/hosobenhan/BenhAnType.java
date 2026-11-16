@@ -1,6 +1,6 @@
 package mayday.entities.hosobenhan;
 
-public enum LoaiBenhAn {
+public enum BenhAnType {
     CAP,
     MAN
 }

@@ -3,7 +3,7 @@ package mayday.entities.phienkham;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public record ThongTinKhamCap(
+public record AcuteSessionInformation(
         String trieuChungDa,
         String trieuChungHoHap,
         String soVoiThuongNgayHoHap,

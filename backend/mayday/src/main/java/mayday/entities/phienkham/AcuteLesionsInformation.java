@@ -4,8 +4,11 @@ import jakarta.persistence.Embeddable;
 
 import java.math.BigDecimal;
 
+/**
+ * Gộp các cột liên quan đến tổn thương cấp tính trong bảng `chitiettonthuongcaptinh`
+ */
 @Embeddable
-public record ThongTinTonThuongCapTinh(
+public record AcuteLesionsInformation(
         String dangTonThuong,
         String dangTonThuongKhac,
         BigDecimal kichThuocMaxMm,

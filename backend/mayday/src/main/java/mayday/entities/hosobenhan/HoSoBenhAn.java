@@ -28,6 +28,7 @@ public class HoSoBenhAn {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maBenhNhan", referencedColumnName = "maBenhNhan")
+    @JsonIgnore
     private BenhNhan benhNhan;
 
     @JsonIgnore
@@ -48,9 +49,11 @@ public class HoSoBenhAn {
     private Long maSubtypeCap;
 
     @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
+    @JsonIgnore
     private BenhAnMayDayCap benhAnMayDayCap;
 
     @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
+    @JsonIgnore
     private BenhAnMayDayMan benhAnMayDayMan;
 
     @Column(insertable = false, updatable = false)

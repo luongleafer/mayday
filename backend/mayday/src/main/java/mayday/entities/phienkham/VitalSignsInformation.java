@@ -5,8 +5,12 @@ import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+/**
+ * Gộp các thành phần liên quan đến dấu hiệu sinh tồn (vital signs) trong bảng `dauhieusinhton`
+ */
+
 @Embeddable
-public record ThongTinDauHieuSinhTon(
+public record VitalSignsInformation(
         OffsetDateTime thoiDiem,
         String triGiac,
         BigDecimal nhietDo,

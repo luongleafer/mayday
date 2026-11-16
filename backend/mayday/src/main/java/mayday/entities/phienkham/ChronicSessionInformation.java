@@ -6,7 +6,7 @@ import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
 
 @Embeddable
-public record ThongTinKhamMan(
+public record ChronicSessionInformation(
         Boolean hienTaiCoSanPhu,
         Boolean uuTheNgauNhien,
         String viTriSanPhu,

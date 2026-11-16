@@ -6,27 +6,27 @@ import mayday.dto.requests.CreateMedicalRecordRequestDto;
 import mayday.dto.responses.ClassifyQuestionsResponseDto;
 import mayday.dto.responses.ClassifyRecordResponseDto;
 import mayday.dto.responses.CreateMedicalRecordResponseDto;
-import mayday.services.hosobenhan.TaoPhanLoaiBenhAnService;
+import mayday.services.hosobenhan.MedicalRecordClassificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/medical_records")
 @RequiredArgsConstructor
-public class TaoPhanLoaiBenhAnController {
+public class MedicalRecordClassificationController {
 
-    private final TaoPhanLoaiBenhAnService taoPhanLoaiBenhAnService;
+    private final MedicalRecordClassificationService medicalRecordClassificationService;
 
     @GetMapping("/classify-questions")
     public ResponseEntity<ClassifyQuestionsResponseDto> getClassifyQuestions() {
-        return ResponseEntity.ok(taoPhanLoaiBenhAnService.getClassifyQuestions());
+        return ResponseEntity.ok(medicalRecordClassificationService.getClassifyQuestions());
     }
 
     @PostMapping("/classify")
     public ResponseEntity<ClassifyRecordResponseDto> classify(
             @RequestBody ClassifyRecordRequestDto request
     ) {
-        return ResponseEntity.ok(taoPhanLoaiBenhAnService.classifyRecord(request));
+        return ResponseEntity.ok(medicalRecordClassificationService.classifyRecord(request));
 
     }
 
@@ -34,7 +34,7 @@ public class TaoPhanLoaiBenhAnController {
     public ResponseEntity<CreateMedicalRecordResponseDto> set_medicalrecords_create(
             @RequestBody CreateMedicalRecordRequestDto request
     ) {
-        return ResponseEntity.ok(taoPhanLoaiBenhAnService.createMedicalRecord(request));
+        return ResponseEntity.ok(medicalRecordClassificationService.createMedicalRecord(request));
 
     }
 

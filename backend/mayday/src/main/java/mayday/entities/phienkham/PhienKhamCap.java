@@ -24,12 +24,12 @@ public class PhienKhamCap {
     @Embedded
     @EmbeddedColumnNaming("%s")
     @JsonUnwrapped
-    private ThongTinKhamCap thongTinKhamCap;
+    private AcuteSessionInformation thongTinKhamCap;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamCap")
     private List<ChiTietTonThuongCapTinh> tonThuongCapTinh;
 
-    public ThongTinKhamCap getThongTinKhamCap() {
+    public AcuteSessionInformation getThongTinKhamCap() {
         return thongTinKhamCap;
     }
 
