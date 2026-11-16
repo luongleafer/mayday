@@ -35,4 +35,7 @@ public interface HoSoBenhAnRepository extends CrudRepository<HoSoBenhAn, Long> {
             "select h.maHoSo, h.trangThai, n.hoTen as tenBenhNhan from HoSoBenhAn h join Nguoi n on h.maBenhNhan = n.maNguoi where h.maHoSo = :id"
     )
     Optional<MedicalRecordSummary> findSummary(Long id);
+
+    @Query("SELECT h FROM HoSoBenhAn h WHERE h.maBenhNhan = :maBenhNhan AND h.trangThai NOT IN ('completed', 'cancelled')")
+    Optional<HoSoBenhAn> findActiveByMaBenhNhan(@Param("maBenhNhan") Long maBenhNhan);
 }
