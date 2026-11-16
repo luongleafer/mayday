@@ -1,10 +1,8 @@
 package mayday.controllers.cosovatchat;
 
 import jakarta.validation.Valid;
-
 import java.util.List;
 import java.util.Map;
-
 import mayday.dto.responses.ApiResponse;
 import mayday.dto.requests.SetDepartmentRequest;
 import mayday.dto.requests.EditDepartmentRequest;
@@ -22,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Cung cap API quan ly khoa; branch_id la bo loc tuy chon khi lay danh sach.
- */
+/** Cung cap API quan ly khoa; branch_id la bo loc tuy chon khi lay danh sach. */
 @RestController
-@RequestMapping("/api/v1/departments")
+@RequestMapping({"/api/v1/departments", "/api/departments"})
 public class KhoaPhongController {
     private final KhoaPhongService service;
 
@@ -41,9 +37,9 @@ public class KhoaPhongController {
     }
 
     @GetMapping
-    public ApiResponse<List<DepartmentResponse>> getListDepartment(
+    public ApiResponse<List<DepartmentResponse>> getListDepartments(
             @RequestParam(name = "branch_id", required = false) Long branchId) {
-        return ApiResponse.ok(service.getListDepartment(branchId));
+        return ApiResponse.ok(service.getListDepartments(branchId));
     }
 
     @GetMapping("/{id}")
@@ -53,7 +49,7 @@ public class KhoaPhongController {
 
     @PutMapping("/{id}")
     public ApiResponse<DepartmentResponse> editDepartment(@PathVariable Long id,
-                                                          @Valid @RequestBody EditDepartmentRequest request) {
+                                                    @Valid @RequestBody EditDepartmentRequest request) {
         return ApiResponse.ok(service.editDepartment(id, request));
     }
 

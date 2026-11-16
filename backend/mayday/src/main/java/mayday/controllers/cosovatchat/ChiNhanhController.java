@@ -1,10 +1,8 @@
 package mayday.controllers.cosovatchat;
 
 import jakarta.validation.Valid;
-
 import java.util.List;
 import java.util.Map;
-
 import mayday.dto.requests.SetBranchRequest;
 import mayday.dto.requests.EditBranchRequest;
 import mayday.dto.responses.BranchResponse;
@@ -12,11 +10,9 @@ import mayday.dto.responses.ApiResponse;
 import mayday.services.cosovatchat.ChiNhanhService;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Nhan request quan ly chi nhanh; giao xu ly nghiep vu cho service va dong goi response.
- */
+/** Nhan request quan ly chi nhanh; giao xu ly nghiep vu cho service va dong goi response. */
 @RestController
-@RequestMapping("/api/v1/branches")
+@RequestMapping({"/api/v1/branches", "/api/branches"})
 public class ChiNhanhController {
     private final ChiNhanhService service;
 
@@ -41,7 +37,7 @@ public class ChiNhanhController {
 
     @PutMapping("/{id}")
     public ApiResponse<BranchResponse> editBranch(@PathVariable Long id,
-                                                  @Valid @RequestBody EditBranchRequest request) {
+            @Valid @RequestBody EditBranchRequest request) {
         return ApiResponse.ok(service.editBranch(id, request));
     }
 
