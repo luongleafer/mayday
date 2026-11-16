@@ -59,7 +59,9 @@ public class AccountService {
     }
 
     @Transactional
-    public void changePassword(TaiKhoan account, String oldPassword, String newPassword) {
+    public void changePassword(Long accountId, String oldPassword, String newPassword) {
+        TaiKhoan account = taiKhoanRepository.findById(accountId).orElse(null);
+        if (account == null) return;
         String oldPasswordHash = account.getMatKhauMaHoa();
         if (!passwordEncoder.matches(oldPassword, oldPasswordHash))
             throw new PasswordMismatchException("");

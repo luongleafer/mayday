@@ -33,12 +33,13 @@ public class AccountController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<ApiResponse<Void>> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal AccountDetails accountDetails) {
+    public ResponseEntity<ApiResponse<Void>> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest, Authentication authentication) {
         if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
             return ResponseEntity.badRequest().body(new ApiResponse<>("2003", "Invalid parameter value", null));
         } else {
-            TaiKhoan account = accountDetails.getTaiKhoan();
-            accountService.changePassword(account, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+//            TaiKhoan account = accountDetails.getTaiKhoan();
+            Long accountId = Long.parseLong(authentication.getName());
+            accountService.changePassword(accountId, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
             return ResponseEntity.ok(ApiResponse.ok(null));
         }
     }
