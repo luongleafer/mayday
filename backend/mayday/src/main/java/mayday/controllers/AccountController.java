@@ -35,7 +35,7 @@ public class AccountController {
     @PutMapping("/change-password")
     public ResponseEntity<ApiResponse<Void>> changePassword(@RequestBody @Valid ChangePasswordRequest changePasswordRequest, Authentication authentication) {
         if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
-            return ResponseEntity.badRequest().body(new ApiResponse<>("2003", "Invalid parameter value", null));
+            return ResponseEntity.badRequest().body(new ApiResponse<>("1004", "Parameter value is invalid", null));
         } else {
 //            TaiKhoan account = accountDetails.getTaiKhoan();
             Long accountId = Long.parseLong(authentication.getName());
@@ -47,14 +47,14 @@ public class AccountController {
 
     @ExceptionHandler(exception = ValidationException.class)
     public ResponseEntity<ApiResponse<Void>> invalidArguments() {
-        return ResponseEntity.badRequest().body(new ApiResponse<>("2001", "Missing required parameter", null));
+        return ResponseEntity.badRequest().body(new ApiResponse<>("1002", "Parameter is not enough", null));
     }
 
     @ExceptionHandler(exception = UserExistsException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ApiResponse<Void> userExists() {
-        return new ApiResponse<>("3006", "User already exists", null);
+        return new ApiResponse<>("9996", "User existed", null);
     }
 
     @ExceptionHandler(exception = PasswordMismatchException.class)

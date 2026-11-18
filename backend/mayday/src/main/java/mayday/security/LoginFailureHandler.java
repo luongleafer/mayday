@@ -23,13 +23,13 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         var writer = response.getWriter();
         if (exception instanceof UsernameNotFoundException) {
             response.setStatus(404);
-            objectMapper.writeValue(writer, new ApiResponse<Void>("3007", "Username not found", null));
+            objectMapper.writeValue(writer, new ApiResponse<Void>("9992", "Username not found", null));
         } else if (exception instanceof BadCredentialsException) {
             response.setStatus(403);
-            objectMapper.writeValue(writer, new ApiResponse<Void>("3008", "Password incorrect", null));
+            objectMapper.writeValue(writer, new ApiResponse<Void>("9995", "User is not validated", null));
         } else {
             response.setStatus(403);
-            objectMapper.writeValue(writer, new ApiResponse<String>("3000", "Invalid authentication", exception.getMessage()));
+            objectMapper.writeValue(writer, new ApiResponse<String>("9999", "Invalid authentication", exception.getMessage()));
         }
 
     }
