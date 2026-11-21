@@ -1,11 +1,13 @@
 package mayday.dto.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
 import mayday.entities.nguoi.Nguoi;
 import mayday.entities.nguoi.TaiKhoan;
 
 import java.time.OffsetDateTime;
 
+@Getter
 public class SignUpResponseData {
 
     @JsonProperty("user_id")

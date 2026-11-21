@@ -4,17 +4,17 @@ import jakarta.validation.Valid;
 import jakarta.validation.ValidationException;
 import mayday.dto.requests.ChangePasswordRequest;
 import mayday.dto.requests.SignUpRequest;
+import mayday.dto.requests.StaffCreationRequest;
 import mayday.dto.responses.ApiResponse;
 import mayday.dto.responses.SignUpResponseData;
+import mayday.dto.responses.StaffCreationResponse;
 import mayday.entities.nguoi.TaiKhoan;
 import mayday.exceptions.PasswordMismatchException;
 import mayday.exceptions.UserExistsException;
-import mayday.security.AccountDetails;
 import mayday.services.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +29,8 @@ public class AccountController {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignUpResponseData>> signUp(@RequestBody @Valid SignUpRequest signUpRequest) throws Exception {
-        return ResponseEntity.ok(ApiResponse.ok(accountService.signUp(signUpRequest)));
+        TaiKhoan newAccount = accountService.signUp(signUpRequest, null);
+        return ResponseEntity.ok(ApiResponse.ok(new SignUpResponseData(newAccount.getNguoi(), newAccount)));
     }
 
     @PutMapping("/change-password")
@@ -44,9 +45,15 @@ public class AccountController {
         }
     }
 
+    @PostMapping("/admin/create-staff")
+    public ResponseEntity<ApiResponse<StaffCreationResponse>> createStaff(@Valid @RequestBody StaffCreationRequest staffCreationRequest) throws Exception {
+        TaiKhoan newAccount = accountService.createStaff(staffCreationRequest);
+        return ResponseEntity.ok(ApiResponse.ok(new StaffCreationResponse(newAccount.getMaTaiKhoan(), staffCreationRequest)));
+    }
+
 
     @ExceptionHandler(exception = ValidationException.class)
-    public ResponseEntity<ApiResponse<Void>> invalidArguments() {
+    public ResponseEntity<ApiResponse<Void>> insufficientArguments() {
         return ResponseEntity.badRequest().body(new ApiResponse<>("1002", "Parameter is not enough", null));
     }
 
@@ -61,7 +68,7 @@ public class AccountController {
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
     @ResponseBody
     public ApiResponse<Void> passwordMismatch() {
-        return new ApiResponse<>("3009", "Old password incorrect", null);
+        return new ApiResponse<>("9995", "User is not validated", null);
     }
 
 

@@ -27,6 +27,15 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 public class TaiKhoan {
 
+
+    public TaiKhoan(Nguoi owner, String username, String passwordDigest, Boolean isActive, VaiTro role) {
+        tenDangNhap = username;
+        matKhauMaHoa = passwordDigest;
+        trangThaiHoatDong = isActive;
+        nguoi = owner;
+        vaiTro = role;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ma_tai_khoan", nullable = false)

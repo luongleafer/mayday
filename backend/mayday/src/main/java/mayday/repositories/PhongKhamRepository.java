@@ -16,4 +16,6 @@ public interface PhongKhamRepository extends JpaRepository<PhongKham, Long> {
     boolean existsByDepartmentIdAndNameIgnoreCase(Long departmentId, String name);
 
     boolean existsByDepartmentIdAndNameIgnoreCaseAndIdNot(Long departmentId, String name, Long id);
+
+    boolean existsPhongKhamByIdAndDepartment_Id(Long id, Long departmentId);
 }

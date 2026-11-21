@@ -16,4 +16,6 @@ public interface KhoaPhongRepository extends JpaRepository<KhoaPhong, Long> {
     boolean existsByBranchIdAndNameIgnoreCase(Long branchId, String name);
 
     boolean existsByBranchIdAndNameIgnoreCaseAndIdNot(Long branchId, String name, Long id);
+
+    boolean existsKhoaPhongByIdAndBranch_Id(Long id, Long branchId);
 }
