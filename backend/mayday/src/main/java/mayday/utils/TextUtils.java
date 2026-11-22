@@ -2,7 +2,9 @@ package mayday.utils;
 
 import mayday.exceptions.InvalidRequestException;
 
-/** Chuan hoa chuoi dau vao dung chung de cac service khong phu thuoc cheo nhau. */
+/**
+ * Chuan hoa chuoi dau vao dung chung de cac service khong phu thuoc cheo nhau.
+ */
 public final class TextUtils {
     private TextUtils() {
     }
@@ -22,5 +24,17 @@ public final class TextUtils {
         }
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    public static boolean validString(String value) {
+        return value != null && !value.isBlank();
+    }
+
+    public static boolean validInsuranceNumber(String value) {
+        return value.matches("^\\d{10}$");
+    }
+
+    public static boolean validPhoneNumber(String value) {
+        return value.matches("((0)|(\\+84))[1345789]\\d{8}");
     }
 }
