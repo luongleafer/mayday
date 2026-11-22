@@ -1,5 +1,6 @@
 package mayday.entities.nguoi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,5 +57,9 @@ public class Nguoi {
 
     @CurrentTimestamp(source = SourceType.DB)
     private OffsetDateTime thoiDiemCapNhat;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "nguoi")
+    private TaiKhoan taiKhoan;
 
 }

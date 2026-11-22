@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 import mayday.dto.requests.CreatePatientRequestDto;
 import mayday.dto.responses.CreatePatientResponseDto;
 import mayday.dto.PatientItemDto;
+import mayday.dto.responses.PatientProfileResponse;
 import mayday.dto.responses.PatientSearchResponseDto;
 import mayday.entities.nguoi.*;
-import mayday.repositories.BenhNhanRepository;
-import mayday.repositories.NguoiRepository;
-import mayday.repositories.TaiKhoanRepository;
-import mayday.repositories.VaiTroRepository;
+import mayday.exceptions.NotFoundException;
+import mayday.repositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,7 @@ public class BenhNhanService {
     private final BenhNhanRepository benhNhanRepository;
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
+    private final HoSoBenhAnRepository hoSoBenhAnRepository;
 
     @Transactional(readOnly = true)
     public PatientSearchResponseDto searchPatients(
@@ -168,5 +169,15 @@ public class BenhNhanService {
                 .message("Tạo bệnh nhân thành công")
                 .data(data)
                 .build();
+    }
+
+    @Transactional
+    public PatientProfileResponse getPatienProfile(Long patientId) {
+        BenhNhan patient = benhNhanRepository.findById(patientId).orElseThrow(
+                () -> new NotFoundException("patient", patientId)
+        );
+        PatientProfileResponse profile = new PatientProfileResponse(patient);
+        profile.setFirstVisit(String.valueOf(hoSoBenhAnRepository.firstRecordById(patientId).orElse(null)));
+        return profile;
     }
 }
