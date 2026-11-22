@@ -28,7 +28,7 @@ public class AccountController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<SignUpResponseData>> signUp(@RequestBody @Valid SignUpRequest signUpRequest) throws Exception {
+    public ResponseEntity<ApiResponse<SignUpResponseData>> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
         TaiKhoan newAccount = accountService.signUp(signUpRequest, null);
         return ResponseEntity.ok(ApiResponse.ok(new SignUpResponseData(newAccount.getNguoi(), newAccount)));
     }
@@ -46,7 +46,7 @@ public class AccountController {
     }
 
     @PostMapping("/admin/create-staff")
-    public ResponseEntity<ApiResponse<StaffCreationResponse>> createStaff(@Valid @RequestBody StaffCreationRequest staffCreationRequest) throws Exception {
+    public ResponseEntity<ApiResponse<StaffCreationResponse>> createStaff(@Valid @RequestBody StaffCreationRequest staffCreationRequest) {
         TaiKhoan newAccount = accountService.createStaff(staffCreationRequest);
         return ResponseEntity.ok(ApiResponse.ok(new StaffCreationResponse(newAccount.getMaTaiKhoan(), staffCreationRequest)));
     }

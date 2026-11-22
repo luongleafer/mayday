@@ -1,7 +1,13 @@
 package mayday.exceptions;
 
-public class UserExistsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UserExistsException extends ApiException {
     public UserExistsException(String message) {
-        super(message);
+        super("9996", HttpStatus.BAD_REQUEST, message);
+    }
+
+    public UserExistsException() {
+        this("User existed");
     }
 }
