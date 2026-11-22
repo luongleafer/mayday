@@ -9,6 +9,7 @@ import mayday.dto.responses.ApiResponse;
 import mayday.dto.responses.SignUpResponseData;
 import mayday.dto.responses.StaffCreationResponse;
 import mayday.entities.nguoi.TaiKhoan;
+import mayday.entities.nguoi.VaiTro;
 import mayday.exceptions.PasswordMismatchException;
 import mayday.exceptions.UserExistsException;
 import mayday.services.AccountService;
@@ -29,7 +30,7 @@ public class AccountController {
 
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse<SignUpResponseData>> signUp(@RequestBody @Valid SignUpRequest signUpRequest) {
-        TaiKhoan newAccount = accountService.signUp(signUpRequest, null);
+        TaiKhoan newAccount = accountService.signUp(signUpRequest, (VaiTro) null);
         return ResponseEntity.ok(ApiResponse.ok(new SignUpResponseData(newAccount.getNguoi(), newAccount)));
     }
 

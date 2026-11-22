@@ -50,16 +50,20 @@ public class AccountService {
         this.nhanVienRepository = nhanVienRepository;
     }
 
-    private VaiTro getDefaultRole() throws Exception {
+    private VaiTro getDefaultRole() {
         VaiTro benhNhan;
         benhNhan = vaiTroRepository.findByTenVaiTro("benh_nhan").orElse(null);
         if (benhNhan != null) return benhNhan;
-        else throw new Exception("Default role not found");
+        else throw new RuntimeException("Default role not found");
     }
 
+    @Transactional
+    public TaiKhoan signUp(SignUpRequest signUpRequest, Long roleId) {
+        return signUp(signUpRequest, vaiTroRepository.findById(roleId).orElseThrow(() -> new NotFoundException("role", roleId)));
+    }
 
     @Transactional
-    public TaiKhoan signUp(SignUpRequest signUpRequest, VaiTro vaiTro) throws Exception {
+    public TaiKhoan signUp(SignUpRequest signUpRequest, VaiTro vaiTro) {
         if (taiKhoanRepository.existsByTenDangNhap(signUpRequest.getPhone()))
             throw new UserExistsException("User with username '" + signUpRequest.getPhone() + "' already exists.");
         if (vaiTro == null) vaiTro = getDefaultRole();
@@ -85,7 +89,7 @@ public class AccountService {
     }
 
     @Transactional
-    public TaiKhoan createStaff(StaffCreationRequest request) throws Exception {
+    public TaiKhoan createStaff(StaffCreationRequest request) {
         ChiNhanh chiNhanh = chiNhanhRepository
                 .findById(request.getBranchId())
                 .orElseThrow(
