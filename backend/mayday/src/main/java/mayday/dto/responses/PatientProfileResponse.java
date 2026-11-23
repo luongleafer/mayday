@@ -17,7 +17,7 @@ public class PatientProfileResponse {
     String phone;
     Long roleId;
     String gender;
-    int yearOfBirth;
+    Integer yearOfBirth;
     String career;
     String ethnic;
     String hamletAddress;
@@ -39,7 +39,7 @@ public class PatientProfileResponse {
         phone = person.getSoDienThoai();
         roleId = account.getVaiTro().getMaVaiTro();
         gender = person.getGioiTinh().toString();
-        yearOfBirth = person.getNgaySinh().getYear();
+        yearOfBirth = person.getNgaySinh() == null ? null : person.getNgaySinh().getYear();
         career = patient.getNgheNghiep();
         ethnic = patient.getDanToc();
         hamletAddress = person.getDiaChiSoNhaThonPho();
