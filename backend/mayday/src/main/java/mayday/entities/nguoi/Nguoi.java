@@ -62,4 +62,8 @@ public class Nguoi {
     @OneToOne(mappedBy = "nguoi")
     private TaiKhoan taiKhoan;
 
+    @JsonIgnore
+    @OneToOne(mappedBy = "nguoi")
+    private NhanVien nhanVien;
+
 }

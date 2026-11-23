@@ -2,6 +2,8 @@ package mayday.services;
 
 import mayday.dto.requests.SignUpRequest;
 import mayday.dto.requests.StaffCreationRequest;
+import mayday.dto.requests.UserAssignmentRequest;
+import mayday.dto.responses.UserAssignmentResponse;
 import mayday.entities.cosovatchat.ChiNhanh;
 import mayday.entities.cosovatchat.KhoaPhong;
 import mayday.entities.cosovatchat.PhongKham;
@@ -9,10 +11,7 @@ import mayday.entities.nguoi.Nguoi;
 import mayday.entities.nguoi.NhanVien;
 import mayday.entities.nguoi.TaiKhoan;
 import mayday.entities.nguoi.VaiTro;
-import mayday.exceptions.NotFoundException;
-import mayday.exceptions.PasswordMismatchException;
-import mayday.exceptions.TopologyMismatchException;
-import mayday.exceptions.UserExistsException;
+import mayday.exceptions.*;
 import mayday.repositories.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -132,6 +131,39 @@ public class AccountService {
         nhanVien.setPhongKham(phongKham);
         nhanVienRepository.save(nhanVien);
         return newAccount;
+    }
+
+    @Transactional
+    public UserAssignmentResponse assignStaff(Long staffUserId, UserAssignmentRequest request) {
+        TaiKhoan account = taiKhoanRepository.findById(staffUserId)
+                .orElseThrow(
+                        () -> new NotFoundException("user", staffUserId)
+                );
+        NhanVien staff = account.getNguoi().getNhanVien();
+        if (staff == null) throw new NotFoundException("staff", account.getNguoi().getMaNguoi());
+        ChiNhanh branch = chiNhanhRepository.findById(request.getBranchId())
+                .orElseThrow(() ->
+                                     new NotFoundException("branch", request.getBranchId())
+                );
+        KhoaPhong department = khoaPhongRepository.findById(request.getDepartmentId())
+                .orElseThrow(
+                        () -> new NotFoundException("department", request.getDepartmentId())
+                );
+        if (!department.getBranch().equals(branch)) throw new InvalidRequestException("Invalid department in branch");
+        staff.setChiNhanh(branch);
+        staff.setKhoaPhong(department);
+        if (request.getRoomId() != null) {
+            PhongKham room = phongKhamRepository.findById(request.getRoomId()).orElseThrow(
+                    () -> new NotFoundException(
+                            "room",
+                            request.getRoomId())
+            );
+            if (!room.getDepartment().equals(department))
+                throw new InvalidRequestException("Invalid room in department");
+            staff.setPhongKham(room);
+        }
+        nhanVienRepository.save(staff);
+        return new UserAssignmentResponse(staffUserId, request);
     }
 
 }

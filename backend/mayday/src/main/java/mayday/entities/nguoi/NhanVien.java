@@ -20,7 +20,7 @@ public class NhanVien {
 
     @OneToOne(optional = false)
     @MapsId
-    @JoinColumn(name = "maNhanVien", referencedColumnName = "maNguoi")
+    @JoinColumn(name = "maNhanVien", referencedColumnName = "maNguoi", nullable = false)
     private Nguoi nguoi;
 
 

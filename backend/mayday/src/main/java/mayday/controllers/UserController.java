@@ -1,11 +1,14 @@
 package mayday.controllers;
 
 import jakarta.validation.Valid;
+import mayday.dto.requests.UserAssignmentRequest;
 import mayday.dto.requests.UserCreationRequest;
 import mayday.dto.requests.UserEditRequest;
 import mayday.dto.responses.ApiResponse;
 import mayday.dto.responses.ListUsersResponse;
+import mayday.dto.responses.UserAssignmentResponse;
 import mayday.dto.responses.UserDetailResponse;
+import mayday.services.AccountService;
 import mayday.services.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,9 +17,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final AccountService accountService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AccountService accountService) {
         this.userService = userService;
+        this.accountService = accountService;
     }
 
 
@@ -50,6 +55,15 @@ public class UserController {
     public ApiResponse<Void> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
         return ApiResponse.ok(null);
+    }
+
+    @PutMapping("/{id}/assign")
+    @ResponseBody
+    public ApiResponse<UserAssignmentResponse> assignUser(
+            @PathVariable("id") Long userId,
+            @RequestBody UserAssignmentRequest userAssignmentRequest
+    ) {
+        return ApiResponse.ok(accountService.assignStaff(userId, userAssignmentRequest));
     }
 
 

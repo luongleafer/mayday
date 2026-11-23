@@ -1,9 +1,11 @@
 package mayday.services;
 
+import mayday.dto.requests.UserAssignmentRequest;
 import mayday.dto.requests.UserCreationRequest;
 import mayday.dto.requests.UserEditRequest;
 import mayday.dto.responses.UserDetailResponse;
 import mayday.entities.nguoi.Nguoi;
+import mayday.entities.nguoi.NhanVien;
 import mayday.entities.nguoi.TaiKhoan;
 import mayday.exceptions.NotFoundException;
 import mayday.repositories.NguoiRepository;
@@ -69,13 +71,10 @@ public class UserService {
     }
 
     public void deleteUser(Long userId) {
-        accountsRepository.deleteById(userId);
-//        TaiKhoan account = accountsRepository.findById(userId).orElseThrow(
-//                () -> new NotFoundException("user", userId)
-//        );
-//        Nguoi nguoi = account.getNguoi();
-//        nguoi.setTaiKhoan(null);
-//        accountsRepository.delete(account);
+        TaiKhoan account = accountsRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("user", userId)
+        );
+        accountsRepository.delete(account);
     }
 
 
