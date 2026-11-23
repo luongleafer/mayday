@@ -12,6 +12,7 @@ import mayday.exceptions.InvalidRequestException;
 import mayday.exceptions.NotFoundException;
 import mayday.repositories.*;
 import mayday.utils.TextUtils;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -177,8 +178,12 @@ public class BenhNhanService {
 
     @Transactional
     public PatientProfileResponse getPatientProfile(Long patientId) {
-        BenhNhan patient = benhNhanRepository.findById(patientId).orElseThrow(
-                () -> new NotFoundException("patient", patientId)
+        TaiKhoan account = taiKhoanRepository.findById(patientId)
+                .orElseThrow(() ->
+                                     new NotFoundException("account", patientId)
+                );
+        BenhNhan patient = benhNhanRepository.findById(account.getNguoi().getMaNguoi()).orElseThrow(
+                () -> new NotFoundException("patient", account.getNguoi().getMaNguoi())
         );
         PatientProfileResponse profile = new PatientProfileResponse(patient);
         profile.setFirstVisit(String.valueOf(hoSoBenhAnRepository.firstRecordById(patientId).orElse(null)));

@@ -7,10 +7,7 @@ import mayday.dto.responses.UserAssignmentResponse;
 import mayday.entities.cosovatchat.ChiNhanh;
 import mayday.entities.cosovatchat.KhoaPhong;
 import mayday.entities.cosovatchat.PhongKham;
-import mayday.entities.nguoi.Nguoi;
-import mayday.entities.nguoi.NhanVien;
-import mayday.entities.nguoi.TaiKhoan;
-import mayday.entities.nguoi.VaiTro;
+import mayday.entities.nguoi.*;
 import mayday.exceptions.*;
 import mayday.repositories.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +25,7 @@ public class AccountService {
     private final KhoaPhongRepository khoaPhongRepository;
     private final PhongKhamRepository phongKhamRepository;
     private final NhanVienRepository nhanVienRepository;
+    private final BenhNhanRepository benhNhanRepository;
 
     public AccountService(
             PasswordEncoder passwordEncoder,
@@ -37,7 +35,8 @@ public class AccountService {
             ChiNhanhRepository chiNhanhRepository,
             KhoaPhongRepository khoaPhongRepository,
             PhongKhamRepository phongKhamRepository,
-            NhanVienRepository nhanVienRepository
+            NhanVienRepository nhanVienRepository,
+            BenhNhanRepository benhNhanRepository
     ) {
         this.passwordEncoder = passwordEncoder;
         this.taiKhoanRepository = taiKhoanRepository;
@@ -47,6 +46,7 @@ public class AccountService {
         this.khoaPhongRepository = khoaPhongRepository;
         this.phongKhamRepository = phongKhamRepository;
         this.nhanVienRepository = nhanVienRepository;
+        this.benhNhanRepository = benhNhanRepository;
     }
 
     private VaiTro getDefaultRole() {
@@ -73,6 +73,9 @@ public class AccountService {
                                         passwordEncoder.encode(signUpRequest.getPassword()),
                                         true,
                                         vaiTro);
+        BenhNhan patient = new BenhNhan();
+        patient.setNguoi(newPerson);
+        benhNhanRepository.save(patient);
         return taiKhoanRepository.save(account);
     }
 
