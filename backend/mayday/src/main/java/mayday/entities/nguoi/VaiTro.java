@@ -1,15 +1,12 @@
 package mayday.entities.nguoi;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
@@ -35,11 +32,20 @@ public class VaiTro {
     @Column(name = "mo_ta_vai_tro", columnDefinition = "text")
     private String moTaVaiTro;
 
-    @CreationTimestamp
+    @CurrentTimestamp
+    @Setter(AccessLevel.NONE)
     @Column(name = "thoi_diem_tao", nullable = false, updatable = false)
     private OffsetDateTime thoiDiemTao;
 
-    @UpdateTimestamp
+    @CurrentTimestamp
+    @Setter(AccessLevel.NONE)
     @Column(name = "thoi_diem_cap_nhat", nullable = false)
     private OffsetDateTime thoiDiemCapNhat;
+
+    @Column(updatable = false, insertable = false)
+    private Long maVaiTroCha;
+
+    @OneToOne
+    @JoinColumn(name = "maVaiTroCha", referencedColumnName = "ma_vai_tro")
+    private VaiTro parentRole;
 }
