@@ -1,6 +1,7 @@
 package mayday.entities.nguoi;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,6 +65,7 @@ public class Nguoi {
 
     @JsonIgnore
     @OneToOne(mappedBy = "nguoi")
+    @Nullable
     private NhanVien nhanVien;
 
 }

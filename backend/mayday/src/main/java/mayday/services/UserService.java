@@ -12,6 +12,7 @@ import mayday.repositories.NguoiRepository;
 import mayday.repositories.TaiKhoanRepository;
 import mayday.utils.TextUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class UserService {
         ).toList();
     }
 
+    @Transactional
     public UserDetailResponse getUserDetails(Long userId) {
         TaiKhoan account = accountsRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("user", userId)
@@ -41,6 +43,7 @@ public class UserService {
         return new UserDetailResponse(account);
     }
 
+    @Transactional
     public UserDetailResponse createUser(UserCreationRequest request) {
         TaiKhoan newAccount = accountService.signUp(request, request.getRoleId());
         if (request.getIsActive() != null && request.getIsActive() == 0) newAccount.setTrangThaiHoatDong(false);
@@ -48,6 +51,7 @@ public class UserService {
         return new UserDetailResponse(newAccount);
     }
 
+    @Transactional
     public UserDetailResponse editUser(Long userId, UserEditRequest request) {
         TaiKhoan account = accountsRepository.findById(userId).orElseThrow(
                 () -> new NotFoundException("user", userId)
@@ -71,10 +75,13 @@ public class UserService {
     }
 
     public void deleteUser(Long userId) {
-        TaiKhoan account = accountsRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException("user", userId)
-        );
-        accountsRepository.delete(account);
+//        if (!accountsRepository.existsById(userId))
+//            throw new NotFoundException("user", userId);
+        accountsRepository.deleteById(userId);
+//        TaiKhoan account = accountsRepository.findById(userId).orElseThrow(
+//                () -> new NotFoundException("user", userId)
+//        );
+//        accountsRepository.delete(account);
     }
 
 

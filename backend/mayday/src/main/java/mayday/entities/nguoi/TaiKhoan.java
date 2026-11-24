@@ -29,7 +29,7 @@ public class TaiKhoan {
     @Column(name = "ma_tai_khoan", nullable = false)
     private Long maTaiKhoan;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "ma_nguoi",
             nullable = false,
