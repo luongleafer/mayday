@@ -15,4 +15,7 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long> {
 
     @Query("select a from TaiKhoan a join fetch a.nguoi join fetch a.vaiTro where a.tenDangNhap = :username")
     Optional<TaiKhoan> loadAccountByUsername(String username);
+
+    @Query("select a.nguoi.maNguoi from TaiKhoan  a where a.maTaiKhoan = :accountId")
+    Optional<Long> loadPersonIdByAccountId(Long accountId);
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "quyenhan")
@@ -36,4 +37,7 @@ public class QuyenHan {
 
     @CurrentTimestamp
     private OffsetDateTime thoiDiemCapNhat;
+
+    @OneToMany(mappedBy = "permission", cascade = CascadeType.REMOVE)
+    private List<VaiTroQuyenHan> permissionRoles;
 }
