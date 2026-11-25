@@ -10,6 +10,7 @@ import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "vaitro")
@@ -48,4 +49,12 @@ public class VaiTro {
     @OneToOne
     @JoinColumn(name = "maVaiTroCha", referencedColumnName = "ma_vai_tro")
     private VaiTro parentRole;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "vaitroquyenhan",
+            joinColumns = {@JoinColumn(name = "ma_vai_tro")},
+            inverseJoinColumns = {@JoinColumn(name = "ma_quyen_han")}
+    )
+    List<QuyenHan> permissions;
 }

@@ -38,7 +38,7 @@ public class PatientProfileResponse {
         fullName = person.getHoTen();
         phone = person.getSoDienThoai();
         roleId = account.getVaiTro().getMaVaiTro();
-        gender = person.getGioiTinh().toString();
+        gender = person.getGioiTinh() == null ? null : person.getGioiTinh().toString();
         yearOfBirth = person.getNgaySinh() == null ? null : person.getNgaySinh().getYear();
         career = patient.getNgheNghiep();
         ethnic = patient.getDanToc();
@@ -47,7 +47,7 @@ public class PatientProfileResponse {
         cityAddress = person.getDiaChiTinhTp();
         workPlace = patient.getNgheNghiep();
         healthInsuranceNumber = patient.getBhytSoThe();
-        healthInsuranceValidate = String.valueOf(patient.getBhytGiaTriDen());
+        healthInsuranceValidate = patient.getBhytGiaTriDen() == null ? null : patient.getBhytGiaTriDen().toString();
         nextOfKinName = patient.getNguoiNhaHoTenDiaChi();
         nextOfKinPhone = patient.getNguoiNhaSoDienThoai();
     }

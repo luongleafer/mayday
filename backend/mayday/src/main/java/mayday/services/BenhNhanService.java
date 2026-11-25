@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -176,17 +177,17 @@ public class BenhNhanService {
                 .build();
     }
 
-    @Transactional
+    //    @Transactional
     public PatientProfileResponse getPatientProfile(Long patientId) {
         TaiKhoan account = taiKhoanRepository.findById(patientId)
                 .orElseThrow(() ->
                                      new NotFoundException("account", patientId)
                 );
-        BenhNhan patient = benhNhanRepository.findById(account.getNguoi().getMaNguoi()).orElseThrow(
+        BenhNhan patient = benhNhanRepository.loadPatient(account.getNguoi().getMaNguoi()).orElseThrow(
                 () -> new NotFoundException("patient", account.getNguoi().getMaNguoi())
         );
         PatientProfileResponse profile = new PatientProfileResponse(patient);
-        profile.setFirstVisit(String.valueOf(hoSoBenhAnRepository.firstRecordById(patientId).orElse(null)));
+        profile.setFirstVisit(hoSoBenhAnRepository.firstRecordById(patientId).map(OffsetDateTime::toString).orElse(null));
         return profile;
     }
 

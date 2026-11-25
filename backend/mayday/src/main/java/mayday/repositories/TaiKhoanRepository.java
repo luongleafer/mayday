@@ -13,6 +13,6 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long> {
 
     void deleteTaiKhoanByTenDangNhap(String username);
 
-    @Query("select a from TaiKhoan a join fetch a.nguoi where a.tenDangNhap = :username")
-    Optional<TaiKhoan> findWithPersonByTenDangNhap(String username);
+    @Query("select a from TaiKhoan a join fetch a.nguoi join fetch a.vaiTro where a.tenDangNhap = :username")
+    Optional<TaiKhoan> loadAccountByUsername(String username);
 }

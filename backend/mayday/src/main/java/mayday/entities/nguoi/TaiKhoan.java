@@ -38,7 +38,7 @@ public class TaiKhoan {
     )
     private Nguoi nguoi;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "maVaiTro",
             nullable = false,
