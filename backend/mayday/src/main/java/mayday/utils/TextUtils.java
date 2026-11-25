@@ -5,7 +5,9 @@ import mayday.exceptions.ApiException;
 import mayday.exceptions.InvalidRequestException;
 import org.springframework.http.HttpStatus;
 
-/** Chuan hoa chuoi dau vao dung chung de cac service khong phu thuoc cheo nhau. */
+/**
+ * Chuan hoa chuoi dau vao dung chung de cac service khong phu thuoc cheo nhau.
+ */
 public final class TextUtils {
     // So dien thoai chuan Viet Nam (dau so 03, 05, 07, 08, 09, gom 10 chu so) theo tab 3. response code (2004).
     private static final Pattern VN_PHONE_PATTERN = Pattern.compile("^0[35789][0-9]{8}$");
@@ -57,5 +59,17 @@ public final class TextUtils {
             throw new InvalidRequestException(field + " must be a positive number");
         }
         return id;
+    }
+
+    public static boolean validString(String value) {
+        return value != null && !value.isBlank();
+    }
+
+    public static boolean validInsuranceNumber(String value) {
+        return value.matches("^\\d{10}$");
+    }
+
+    public static boolean validPhoneNumber(String value) {
+        return value.matches("((0)|(\\+84))[1345789]\\d{8}");
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,4 +39,9 @@ public interface HoSoBenhAnRepository extends CrudRepository<HoSoBenhAn, Long> {
 
     @Query("SELECT h FROM HoSoBenhAn h WHERE h.maBenhNhan = :maBenhNhan AND h.trangThai NOT IN ('completed', 'cancelled')")
     Optional<HoSoBenhAn> findActiveByMaBenhNhan(@Param("maBenhNhan") Long maBenhNhan);
+
+    @Query(
+            "select h.genericRecordInformation.thoiDiemKhamLanDau from HoSoBenhAn h where h.maBenhNhan = :id order by h.genericRecordInformation.thoiDiemKhamLanDau asc limit 1"
+    )
+    Optional<OffsetDateTime> firstRecordById(Long id);
 }

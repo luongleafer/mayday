@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface BenhNhanRepository extends JpaRepository<BenhNhan, Long> {
     @Query("SELECT b FROM BenhNhan b JOIN b.nguoi n WHERE " +
@@ -23,4 +25,11 @@ public interface BenhNhanRepository extends JpaRepository<BenhNhan, Long> {
             @Param("namKetThuc") Integer namKetThuc,
             Pageable pageable
     );
+
+    @Query("select b from BenhNhan b " +
+            "join fetch b.nguoi " +
+            "join fetch b.nguoi.taiKhoan " +
+            "join fetch b.nguoi.taiKhoan.vaiTro " +
+            "where b.maBenhNhan = :id")
+    Optional<BenhNhan> loadPatient(Long id);
 }

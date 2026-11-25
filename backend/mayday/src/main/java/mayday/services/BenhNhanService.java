@@ -2,20 +2,26 @@ package mayday.services;
 
 import lombok.RequiredArgsConstructor;
 import mayday.dto.requests.CreatePatientRequestDto;
+import mayday.dto.requests.EditProfileRequest;
 import mayday.dto.responses.CreatePatientResponseDto;
 import mayday.dto.PatientItemDto;
+import mayday.dto.responses.PatientProfileResponse;
 import mayday.dto.responses.PatientSearchResponseDto;
 import mayday.entities.nguoi.*;
-import mayday.repositories.BenhNhanRepository;
-import mayday.repositories.NguoiRepository;
-import mayday.repositories.TaiKhoanRepository;
-import mayday.repositories.VaiTroRepository;
+import mayday.exceptions.InvalidRequestException;
+import mayday.exceptions.NotFoundException;
+import mayday.repositories.*;
+import mayday.utils.TextUtils;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +32,7 @@ public class BenhNhanService {
     private final BenhNhanRepository benhNhanRepository;
     private final TaiKhoanRepository taiKhoanRepository;
     private final VaiTroRepository vaiTroRepository;
+    private final HoSoBenhAnRepository hoSoBenhAnRepository;
 
     @Transactional(readOnly = true)
     public PatientSearchResponseDto searchPatients(
@@ -168,5 +175,84 @@ public class BenhNhanService {
                 .message("Tạo bệnh nhân thành công")
                 .data(data)
                 .build();
+    }
+
+    //    @Transactional
+    public PatientProfileResponse getPatientProfile(Long patientId) {
+        TaiKhoan account = taiKhoanRepository.findById(patientId)
+                .orElseThrow(() ->
+                                     new NotFoundException("account", patientId)
+                );
+        BenhNhan patient = benhNhanRepository.loadPatient(account.getNguoi().getMaNguoi()).orElseThrow(
+                () -> new NotFoundException("patient", account.getNguoi().getMaNguoi())
+        );
+        PatientProfileResponse profile = new PatientProfileResponse(patient);
+        profile.setFirstVisit(hoSoBenhAnRepository.firstRecordById(patientId).map(OffsetDateTime::toString).orElse(null));
+        return profile;
+    }
+
+    @Transactional
+    public PatientProfileResponse editPatientProfile(Long patientId, EditProfileRequest editProfileRequest) {
+        BenhNhan patient = benhNhanRepository.findById(patientId).orElseThrow(
+                () -> new NotFoundException("patient", patientId)
+        );
+        Nguoi person = patient.getNguoi();
+        if (TextUtils.validString(editProfileRequest.fullName())) {
+            person.setHoTen(editProfileRequest.fullName().strip());
+        }
+        if (editProfileRequest.gender() != null) {
+            try {
+                person.setGioiTinh(Gender.valueOf(editProfileRequest.gender()));
+            } catch (IllegalArgumentException _) {
+                throw new InvalidRequestException("Invalid gender");
+            }
+        }
+        if (editProfileRequest.yearOfBirth() != null) {
+            person.setNgaySinh(
+                    person.getNgaySinh().withYear(editProfileRequest.yearOfBirth())
+            );
+        }
+        if (TextUtils.validString(editProfileRequest.career())) {
+            patient.setNgheNghiep(editProfileRequest.career().strip());
+        }
+        if (TextUtils.validString(editProfileRequest.ethnic())) {
+            patient.setDanToc(editProfileRequest.ethnic().strip());
+        }
+        if (TextUtils.validString(editProfileRequest.hamletAddress())) {
+            person.setDiaChiSoNhaThonPho(editProfileRequest.hamletAddress().strip());
+        }
+        if (TextUtils.validString(editProfileRequest.communeAddress())) {
+            person.setDiaChiXaPhuong(editProfileRequest.communeAddress().strip());
+        }
+        if (TextUtils.validString(editProfileRequest.cityAddress())) {
+            person.setDiaChiTinhTp(editProfileRequest.cityAddress().strip());
+        }
+        if (TextUtils.validString(editProfileRequest.workPlace())) {
+            patient.setNgheNghiep(editProfileRequest.workPlace().strip());
+        }
+        if (TextUtils.validString(editProfileRequest.healthInsuranceNumber()) && TextUtils.validInsuranceNumber(editProfileRequest.healthInsuranceNumber().strip())) {
+            patient.setBhytSoThe(editProfileRequest.healthInsuranceNumber());
+        }
+        if (TextUtils.validString(editProfileRequest.healthInsuranceValidate())) {
+            try {
+                patient.setBhytGiaTriDen(LocalDate.parse(editProfileRequest.healthInsuranceValidate().strip()));
+            } catch (DateTimeParseException _) {
+                throw new InvalidRequestException("Invalid health insurance validate date");
+            }
+        }
+        if (TextUtils.validString(editProfileRequest.nextOfKinName())) {
+            patient.setNguoiNhaHoTenDiaChi(editProfileRequest.nextOfKinName().strip());
+        }
+        if (
+                TextUtils.validString(editProfileRequest.nextOfKinPhone())
+        ) {
+
+            if (!TextUtils.validPhoneNumber(editProfileRequest.nextOfKinPhone().strip()))
+                throw new InvalidRequestException("Invalid next kin phone number");
+            patient.setNguoiNhaSoDienThoai(editProfileRequest.nextOfKinPhone().strip());
+        }
+        nguoiRepository.save(person);
+        benhNhanRepository.save(patient);
+        return getPatientProfile(patientId);
     }
 }

@@ -1,8 +1,16 @@
 package mayday.entities.nguoi;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import mayday.dto.requests.SignUpRequest;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
+import org.hibernate.annotations.SourceType;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -11,7 +19,21 @@ import java.time.OffsetDateTime;
 @Table(name = "nguoi")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Nguoi {
+
+    public Nguoi(String fullName, Gender gender, String phoneNumber) {
+        hoTen = fullName;
+        gioiTinh = gender;
+        soDienThoai = phoneNumber;
+    }
+
+    public Nguoi(SignUpRequest request) {
+        hoTen = request.getFullName();
+        gioiTinh = request.getGender();
+        soDienThoai = request.getPhone();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long maNguoi;
@@ -31,8 +53,19 @@ public class Nguoi {
 
     private String diaChiSoNhaThonPho;
 
+    @CurrentTimestamp(source = SourceType.DB)
     private OffsetDateTime thoiDiemTao;
 
+    @CurrentTimestamp(source = SourceType.DB)
     private OffsetDateTime thoiDiemCapNhat;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "nguoi")
+    private TaiKhoan taiKhoan;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "nguoi")
+    @Nullable
+    private NhanVien nhanVien;
 
 }

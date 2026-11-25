@@ -43,3 +43,6 @@ docker-compose.yml
 ### docs ###
 BACKEND.md
 
+### keys ###
+/src/main/resources/mayday.key
+/src/main/resources/mayday.pub
