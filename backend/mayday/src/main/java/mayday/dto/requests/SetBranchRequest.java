@@ -3,12 +3,13 @@ package mayday.dto.requests;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/** Du lieu tao chi nhanh; ten va dia chi bat buoc, do dai duoc kiem tra truoc khi vao service. */
+/** Du lieu tao chi nhanh theo dac ta API (name, address, phone). */
 public class SetBranchRequest {
     @NotBlank
     @Size(max = 150)
     private String name;
     @NotBlank
+    @Size(max = 500)
     private String address;
     @Size(max = 20)
     private String phone;

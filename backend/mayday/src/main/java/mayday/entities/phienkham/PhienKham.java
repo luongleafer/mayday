@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import mayday.entities.hosobenhan.HoSoBenhAn;
 import mayday.entities.nguoi.NhanVien;
-import mayday.entities.hosobenhan.LoaiBenhAn;
+import mayday.entities.hosobenhan.BenhAnType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,9 +38,11 @@ public class PhienKham {
     }
 
     @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
+    @JsonIgnore
     PhienKhamCap phienKhamCap;
 
     @OneToOne(mappedBy = "phienKham", cascade = CascadeType.ALL)
+    @JsonIgnore
     PhienKhamMan phienKhamMan;
 
     @Column(insertable = false, updatable = false)
@@ -50,7 +52,7 @@ public class PhienKham {
     @JoinColumn(name = "maBacSi", referencedColumnName = "maNhanVien")
     private NhanVien bacSi;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKham")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "phienKham")
     private List<DauHieuSinhTon> bangDauHieuSinhTon;
 
     private Long maPhongKham;
@@ -67,12 +69,12 @@ public class PhienKham {
 
     private Integer lanKhamThu;
 
-    public LoaiBenhAn getLoaiPhienKham() {
+    public BenhAnType getLoaiPhienKham() {
         return loaiPhienKham;
     }
 
     @Enumerated(EnumType.STRING)
-    private LoaiBenhAn loaiPhienKham;
+    private BenhAnType loaiPhienKham;
 
     private Boolean luuHuyetThanh;
 
@@ -111,45 +113,5 @@ public class PhienKham {
     @JsonIgnore
     public List<DauHieuSinhTon> getBangDauHieuSinhTon() {
         return bangDauHieuSinhTon;
-    }
-
-    public Long getMaPhongKham() {
-        return maPhongKham;
-    }
-
-    public LocalDate getNgayKham() {
-        return ngayKham;
-    }
-
-    public Integer getLanKhamThu() {
-        return lanKhamThu;
-    }
-
-    public Boolean getLuuHuyetThanh() {
-        return luuHuyetThanh;
-    }
-
-    public Boolean getSot() {
-        return sot;
-    }
-
-    public BigDecimal getSotNhietDoC() {
-        return sotNhietDoC;
-    }
-
-    public LocalDate getNgayHenTaiKham() {
-        return ngayHenTaiKham;
-    }
-
-    public String getTomTatBuoiKham() {
-        return tomTatBuoiKham;
-    }
-
-    public String getHuongXuTriLanSau() {
-        return huongXuTriLanSau;
-    }
-
-    public String getDanDo() {
-        return danDo;
     }
 }

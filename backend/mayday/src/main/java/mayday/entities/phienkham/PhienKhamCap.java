@@ -1,5 +1,6 @@
 package mayday.entities.phienkham;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
@@ -24,15 +25,18 @@ public class PhienKhamCap {
     @Embedded
     @EmbeddedColumnNaming("%s")
     @JsonUnwrapped
-    private ThongTinKhamCap thongTinKhamCap;
+    private AcuteSessionInformation thongTinKhamCap;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamCap")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "phienKhamCap")
+    @JsonIgnore
     private List<ChiTietTonThuongCapTinh> tonThuongCapTinh;
 
-    public ThongTinKhamCap getThongTinKhamCap() {
+    @JsonIgnore
+    public AcuteSessionInformation getThongTinKhamCap() {
         return thongTinKhamCap;
     }
 
+    @JsonIgnore
     public List<ChiTietTonThuongCapTinh> getTonThuongCapTinh() {
         return tonThuongCapTinh;
     }

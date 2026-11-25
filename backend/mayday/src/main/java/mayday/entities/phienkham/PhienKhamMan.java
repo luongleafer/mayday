@@ -1,10 +1,8 @@
 package mayday.entities.phienkham;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
-import tools.jackson.databind.annotation.JsonAppend;
 
 import java.util.List;
 
@@ -25,9 +23,9 @@ public class PhienKhamMan {
     @Embedded
     @EmbeddedColumnNaming("%s")
     @JsonUnwrapped
-    private ThongTinKhamMan thongTinKhamMan;
+    private ChronicSessionInformation thongTinKhamMan;
 
-    public ThongTinKhamMan getThongTinKhamMan() {
+    public ChronicSessionInformation getThongTinKhamMan() {
         return thongTinKhamMan;
     }
 
@@ -35,6 +33,6 @@ public class PhienKhamMan {
         return tonThuongSanPhu;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "phienKhamMan")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "phienKhamMan")
     private List<ChiTietTonThuongSanPhu> tonThuongSanPhu;
 }

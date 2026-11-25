@@ -3,7 +3,7 @@ package mayday.controllers.hosobenhan;
 import mayday.dto.MedicalRecord;
 import mayday.dto.MedicalRecordQuery;
 import mayday.dto.MedicalRecordSummary;
-import mayday.services.hosobenhan.TruyXuatBenhAnService;
+import mayday.services.hosobenhan.MedicalRecordExtractionService;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,10 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/medical_records")
-public class TruyXuatBenhAnController {
-    private final TruyXuatBenhAnService service;
+public class MedicalRecordExtractionController {
+    private final MedicalRecordExtractionService service;
 
-    public TruyXuatBenhAnController(TruyXuatBenhAnService service) {
+    public MedicalRecordExtractionController(MedicalRecordExtractionService service) {
         this.service = service;
     }
 

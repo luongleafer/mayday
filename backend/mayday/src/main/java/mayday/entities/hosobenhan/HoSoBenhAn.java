@@ -1,10 +1,12 @@
 package mayday.entities.hosobenhan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import lombok.*;
 import mayday.entities.nguoi.BenhNhan;
 import mayday.entities.phienkham.PhienKham;
+import org.hibernate.annotations.EmbeddedColumnNaming;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +30,7 @@ public class HoSoBenhAn {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maBenhNhan", referencedColumnName = "maBenhNhan")
+    @JsonIgnore
     private BenhNhan benhNhan;
 
     @JsonIgnore
@@ -38,7 +41,7 @@ public class HoSoBenhAn {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "hoSoBenhAn")
     private List<PhienKham> danhSachPhienKham;
 
-    @OneToOne(mappedBy = "hoSoBenhAn")
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "hoSoBenhAn")
     private HoanCanhKhoiphatDiUng hoanCanhKhoiphatDiUng;
 
     private String loaiBenhAn;
@@ -48,35 +51,21 @@ public class HoSoBenhAn {
     private Long maSubtypeCap;
 
     @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
+    @JsonIgnore
     private BenhAnMayDayCap benhAnMayDayCap;
 
     @OneToOne(mappedBy = "hoSoBenhAn", cascade = CascadeType.ALL)
+    @JsonIgnore
     private BenhAnMayDayMan benhAnMayDayMan;
 
     @Column(insertable = false, updatable = false)
     private Long maSubtypeMan;
 
-    private OffsetDateTime thoiDiemKhamLanDau;
-
-    private LocalDate ngayBatDauDieuTriNgoaiTru;
-
-    private LocalDate ngayKetThucDieuTriNgoaiTru;
-
-    private String chanDoanTuyenTruoc;
-
-    private String chanDoanBanDauPhongKham;
-
-    private String ketQuaDieuTriBaoHiem;
-
-    private BigDecimal thoiGianKhoiPhatTuan;
-
     private String trangThai;
 
-    private String tienSuGiaDinh;
-
-    private String tienSuGiaDinhGhiRo;
-
-    private Boolean daDieuTriTruocKham;
-
+    @Embedded
+    @EmbeddedColumnNaming("%s")
+    @JsonUnwrapped
+    private GenericRecordInformation genericRecordInformation;
 
 }

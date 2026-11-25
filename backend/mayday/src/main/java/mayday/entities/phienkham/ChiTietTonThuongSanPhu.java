@@ -1,10 +1,8 @@
 package mayday.entities.phienkham;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
-
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "chitiettonthuongsanphu")
@@ -17,15 +15,16 @@ public class ChiTietTonThuongSanPhu {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JsonIgnore
     private PhienKhamMan phienKhamMan;
 
-    public ThongTinTonThuongSanPhu getThongTinTonThuongSanPhu() {
+    public WhealsInformation getThongTinTonThuongSanPhu() {
         return thongTinTonThuongSanPhu;
     }
 
     @Embedded
     @EmbeddedColumnNaming("%s")
-    private ThongTinTonThuongSanPhu thongTinTonThuongSanPhu;
+    private WhealsInformation thongTinTonThuongSanPhu;
 
     public Long getMaChiTietTonThuong() {
         return maChiTietTonThuong;

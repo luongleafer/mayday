@@ -7,6 +7,6 @@ public record ApiResponse<T>(String code, String message, T data) {
     }
 
     public static <T> ApiResponse<T> created(T data) {
-        return new ApiResponse<>("1001", "Created successfully", data);
+        return new ApiResponse<>("1000", "Created successfully", data);
     }
 }

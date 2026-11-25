@@ -1,9 +1,9 @@
 package mayday.entities.phienkham;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import org.hibernate.annotations.EmbeddedColumnNaming;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "chitiettonthuongcaptinh")
@@ -12,15 +12,18 @@ public class ChiTietTonThuongCapTinh {
     private Long maChiTietTonThuongCapTinh;
 
     @Column(insertable = false, updatable = false)
+    @JsonIgnore
     private Long maPhienKham;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "maPhienKham", referencedColumnName = "maPhienKham")
+    @JsonIgnore
     private PhienKhamCap phienKhamCap;
 
     @Embedded
     @EmbeddedColumnNaming("%s")
-    private ThongTinTonThuongCapTinh thongTinTonThuongCapTinh;
+    @JsonUnwrapped
+    private AcuteLesionsInformation thongTinTonThuongCapTinh;
 
     public Long getMaChiTietTonThuongCapTinh() {
         return maChiTietTonThuongCapTinh;
@@ -31,7 +34,7 @@ public class ChiTietTonThuongCapTinh {
     }
 
 
-    public ThongTinTonThuongCapTinh getThongTinTonThuongCapTinh() {
+    public AcuteLesionsInformation getThongTinTonThuongCapTinh() {
         return thongTinTonThuongCapTinh;
     }
 

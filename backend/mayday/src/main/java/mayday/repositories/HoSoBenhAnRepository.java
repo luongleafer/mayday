@@ -38,6 +38,9 @@ public interface HoSoBenhAnRepository extends CrudRepository<HoSoBenhAn, Long> {
     )
     Optional<MedicalRecordSummary> findSummary(Long id);
 
+    @Query("SELECT h FROM HoSoBenhAn h WHERE h.maBenhNhan = :maBenhNhan AND h.trangThai NOT IN ('completed', 'cancelled')")
+    Optional<HoSoBenhAn> findActiveByMaBenhNhan(@Param("maBenhNhan") Long maBenhNhan);
+
     @Query(
             "select h.thoiDiemKhamLanDau from HoSoBenhAn h where h.maBenhNhan = :id order by h.thoiDiemKhamLanDau asc limit 1"
     )

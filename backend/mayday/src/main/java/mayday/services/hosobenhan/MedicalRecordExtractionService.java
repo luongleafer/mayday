@@ -14,11 +14,11 @@ import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
-public class TruyXuatBenhAnService {
+public class MedicalRecordExtractionService {
     private static final Set<String> STAFF = Set.of("ROLE_ADMIN", "ROLE_DOCTOR", "ROLE_RECEPTIONIST");
     private final HoSoBenhAnRepository repository;
 
-    public TruyXuatBenhAnService(HoSoBenhAnRepository repository) {
+    public MedicalRecordExtractionService(HoSoBenhAnRepository repository) {
         this.repository = repository;
     }
 
