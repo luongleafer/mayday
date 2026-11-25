@@ -28,14 +28,14 @@ public class NhanVien {
     private Long maChiNhanh;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maChiNhanh", referencedColumnName = "ma_chi_nhanh")
+    @JoinColumn(name = "maChiNhanh", referencedColumnName = "maChiNhanh")
     private ChiNhanh chiNhanh;
 
     @Column(insertable = false, updatable = false)
     private Long maKhoaPhong;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maKhoaPhong", referencedColumnName = "ma_khoa_phong")
+    @JoinColumn(name = "maKhoaPhong", referencedColumnName = "maKhoaPhong")
     private KhoaPhong khoaPhong;
 
 
@@ -43,6 +43,6 @@ public class NhanVien {
     private Long maPhongKham;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maPhongKham", referencedColumnName = "ma_phong_kham")
+    @JoinColumn(name = "maPhongKham", referencedColumnName = "maPhongKham")
     private PhongKham phongKham;
 }

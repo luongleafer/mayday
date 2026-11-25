@@ -102,7 +102,7 @@ public class AccountService {
                 .orElseThrow(
                         () -> new NotFoundException("department", request.getDepartmentId())
                 );
-        if (!khoaPhong.getBranch().equals(chiNhanh))
+        if (!khoaPhong.getChiNhanh().equals(chiNhanh))
             throw new TopologyMismatchException("Department with id " +
                                                         request.getDepartmentId() +
                                                         " does not belong to branch with id " +
@@ -116,7 +116,7 @@ public class AccountService {
                     .orElseThrow(
                             () -> new NotFoundException("room", roomId)
                     );
-            if (!phongKham.getDepartment().equals(khoaPhong))
+            if (!phongKham.getKhoaPhong().equals(khoaPhong))
                 throw new TopologyMismatchException("Room with id " +
                                                             roomId +
                                                             " does not belong to department with id " +
@@ -152,7 +152,7 @@ public class AccountService {
                 .orElseThrow(
                         () -> new NotFoundException("department", request.getDepartmentId())
                 );
-        if (!department.getBranch().equals(branch)) throw new InvalidRequestException("Invalid department in branch");
+        if (!department.getChiNhanh().equals(branch)) throw new InvalidRequestException("Invalid department in branch");
         staff.setChiNhanh(branch);
         staff.setKhoaPhong(department);
         if (request.getRoomId() != null) {
@@ -161,7 +161,7 @@ public class AccountService {
                             "room",
                             request.getRoomId())
             );
-            if (!room.getDepartment().equals(department))
+            if (!room.getKhoaPhong().equals(department))
                 throw new InvalidRequestException("Invalid room in department");
             staff.setPhongKham(room);
         }
